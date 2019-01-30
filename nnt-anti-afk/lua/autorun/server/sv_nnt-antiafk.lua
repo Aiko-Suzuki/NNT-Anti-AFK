@@ -1,9 +1,6 @@
 AikoAntiAFK = AikoAntiAFK or {}
 
 
--- Enable Bypass for SuperAdmin
-AikoAntiAFK.SPBypass = true
-
 -- Starting to load Script !
 print("AntiAkf : Checking if config file are there")
 function firstloadconfiguration()
@@ -12,6 +9,7 @@ function firstloadconfiguration()
             if (file.Size( "aikoaddons/AntiAfkwarntime.txt", "DATA" )  > 0) then
                 Config = file.Read( "aikoaddons/AntiAfktime.txt", "DATA" )
                 Config2 = file.Read( "aikoaddons/AntiAfkwarntime.txt", "DATA" )
+                Config3 = file.Read( "aikoaddons/AntiAfkSPbypass.txt", "DATA" )
                 configtime = tonumber(Config , 10)
                 configwarn = tonumber(Config2 , 10)
                 print("AntiAkf : Loading of config finished !")
@@ -21,28 +19,32 @@ function firstloadconfiguration()
             firstloadconfiguration()
         end
     end
-if (file.Exists( "aikoaddons", "DATA" ) == true) then
-    if (file.Size( "aikoaddons/AntiAfktime.txt", "DATA" ) > 0) and (file.Size( "aikoaddons/AntiAfkwarntime.txt", "DATA" )  > 0) then
-        loadconfiguration()
+    if (file.Exists( "aikoaddons", "DATA" ) == true) then
+        if (file.Size( "aikoaddons/AntiAfktime.txt", "DATA" ) > 0) and (file.Size( "aikoaddons/AntiAfkwarntime.txt", "DATA" )  > 0) and (file.Size( "aikoaddons/AntiAfkSPbypass.txt", "DATA" )  > 0) then
+            loadconfiguration()
+        else
+            if (file.Size( "aikoaddons/AntiAfktime.txt", "DATA" ) > 0) then
+                print("AntiAkf : file not found / now creating file 'AntiAfktime.txt'")
+                file.Write( "aikoaddons/AntiAfktime.txt", "600" )
+            end
+            if (file.Size( "aikoaddons/AntiAfkwarntime.txt", "DATA" )  > 0) then
+                print("AntiAkf : file not found / now creating file 'AntiAfkwarntime.txt'")
+                file.Write( "aikoaddons/AntiAfkwarntime.txt", "300" )
+            end
+            if (file.Size( "aikoaddons/AntiAfkwarntime.txt", "DATA" )  > 0) then
+                print("AntiAkf : file not found / now creating file 'AntiAfkSPbypass.txt'")
+                file.Write( "aikoaddons/AntiAfkSPbypass.txt", "false" )
+            end
+            loadconfiguration()
+        end
     else
-        if (file.Size( "aikoaddons/AntiAfktime.txt", "DATA" ) > 0) then
-            print("AntiAkf : file not found / now creating file 'AntiAfktime.txt'")
-            file.Write( "aikoaddons/AntiAfktime.txt", "600" )
-        end
-        if (file.Size( "aikoaddons/AntiAfkwarntime.txt", "DATA" )  > 0) then
-        print("AntiAkf : file not found / now creating file 'AntiAfkwarntime.txt'")
+        print("AntiAkf : file not found / now creating file")
+        file.CreateDir( "aikoaddons" )
+        file.Write( "aikoaddons/AntiAfktime.txt", "600" )
         file.Write( "aikoaddons/AntiAfkwarntime.txt", "300" )
-        end
+        file.Write( "aikoaddons/AntiAfkSPbypass.txt", "false" )
         loadconfiguration()
     end
-    
-else
-    print("AntiAkf : file not found / now creating file")
-    file.CreateDir( "aikoaddons" )
-    file.Write( "aikoaddons/AntiAfktime.txt", "600" )
-    file.Write( "aikoaddons/AntiAfkwarntime.txt", "300" )
-    loadconfiguration()
-end
 end
 
 
@@ -54,23 +56,13 @@ util.AddNetworkString( "CurrentTime" )
 util.AddNetworkString( "ClientMessages" )
 util.AddNetworkString( "Refresh" )
 util.AddNetworkString( "ChangeWarnTime" )
+util.AddNetworkString( "ChangeSPBypass" )
 util.AddNetworkString( "RefreshTime1" )
 util.AddNetworkString( "RefreshTime2" )
+util.AddNetworkString( "RefreshTime3" )
 util.AddNetworkString( "AntiAfkSendHUDInfo" )
 
 
-net.Receive("Refresh", function(len, ply)
-        if (ply:GetUserGroup() == "superadmin") then
-            net.Start("RefreshTime2")
-                net.WriteString(AFK_WARN_TIME)
-            net.Send(ply)
-            net.Start("RefreshTime1")
-                net.WriteString(AFK_TIME)
-            net.Send(ply)
-        else
-            ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
-        end
-end)
 
 
 
@@ -88,11 +80,33 @@ end
 
 
 
+
+
 AFK_WARN_TIME = tonumber(file.Read( "AikoAddons/AntiAfkwarntime.txt", "DATA" ) ,10 )
 
 AFK_TIME = tonumber(file.Read( "AikoAddons/AntiAfktime.txt", "DATA" ), 10 )
 
+AFK_SuperAdminBYPASS = file.Read( "AikoAddons/AntiAfkSPbypass.txt", "DATA" )
+
 AFK_REPEAT = AFK_TIME - AFK_WARN_TIME
+
+
+
+net.Receive("Refresh", function(len, ply)
+        if (ply:GetUserGroup() == "superadmin") then
+            net.Start("RefreshTime2")
+                net.WriteString(AFK_WARN_TIME)
+            net.Send(ply)
+            net.Start("RefreshTime1")
+                net.WriteString(AFK_TIME)
+            net.Send(ply)
+            net.Start("RefreshTime3")
+                net.WriteString(AFK_SuperAdminBYPASS)
+            net.Send(ply)
+        else
+            ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+        end
+end)
 
 concommand.Add( "setafktime", function( ply, cmd, args )
 	 if (ply:GetUserGroup() == "superadmin") then
@@ -141,6 +155,20 @@ net.Receive("ChangeWarnTime", function(len, ply)
     file.Write( "aikoaddons/AntiAfkwarntime.txt", SomeShittyTest )
         net.Start("RefreshTime2")
             net.WriteString(SomeShittyTest)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+    end
+end)
+
+
+net.Receive("ChangeSPBypass", function(len, ply)
+    if (ply:GetUserGroup() == "superadmin") then
+    SomeShittyTest1 = net.ReadString()
+    AFK_SuperAdminBYPASS = SomeShittyTest1
+    file.Write( "aikoaddons/AntiAfkSPbypass.txt", SomeShittyTest1 )
+        net.Start("RefreshTime3")
+            net.WriteString(SomeShittyTest1)
         net.Send(ply)
     else
         ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
@@ -205,7 +233,7 @@ hook.Add("Think", "HandleAFKPlayers", function()
 			local afktime = ply.NextAFK - AFK_TIME
 			if (CurTime() >= afktime + AFK_WARN_TIME) and (!ply.Warning) and (!ply.SuperAbuse) then 
 			    if (ply:GetUserGroup() == "superadmin") and (!ply.SuperAbuse) then
-		            if not AikoAntiAFK.SPBypass == true then
+		            if AFK_SuperAdminBYPASS == 'false' then
 			            ply:SetRenderMode( RENDERMODE_TRANSALPHA )
 			            ply:Fire( "alpha", 150, 0 )
                         net.Start("AntiAfkSendHUDInfo")
@@ -323,7 +351,8 @@ util.AddNetworkString( "AFKHUD1" )
 util.AddNetworkString( "AFKHUD2" )
 util.AddNetworkString( "AFKHUDR" )
 util.AddNetworkString( "AFKHUDSP1" )
-util.AddNetworkString( "AFKHUDSPR" )
+util.AddNetworkString( "AFKHUDSP2" )
+util.AddNetworkString( "AFKHUDRSP" )
 
 hook.Add("KeyPress", "PlayerMoved", function(ply, key)
     if ply:GetVelocity():Length() > 0 or ply:InVehicle() then
@@ -371,7 +400,7 @@ end )
 
 net.Receive("AFKHUD2", function(len, ply)
         if (ply:GetUserGroup() == "superadmin") then
-            net.Start("AFKHUDSPR")
+            net.Start("AFKHUDRSP")
                 net.WriteString(AFK_TIME - math.Round(ply.NextAFK - CurTime()))
             net.Send(ply)
         else

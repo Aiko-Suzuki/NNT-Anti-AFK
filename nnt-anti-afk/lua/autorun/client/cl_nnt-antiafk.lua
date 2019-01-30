@@ -207,16 +207,16 @@ local function AntiafkMainHUDSP()
 
 
 
-	net.Start("AFKHUDSP2")
+	net.Start("AFKHUD2")
 	net.SendToServer(LocalPlayer())
 	net.Receive("AFKHUDRSP", function(len)
 		ReceiveVar = net.ReadString()
-		SignM:SetText( "You are gone be kicked for afk in ".. timeToStr(ReceiveVar) .." !" )
+		SignM:SetText( "You afk since ".. timeToStr(ReceiveVar) .." !" )
 		VarTimeleft = ReceiveVar
 		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, 0, function()
 			x = VarTimeleft + 1
 			VarTimeleft = x
-			SignM:SetText( "You are gone be kicked for afk in ".. timeToStr(VarTimeleft) .." !" )
+			SignM:SetText( "You afk since ".. timeToStr(VarTimeleft) .." !" )
 		end)
 	end)
 
@@ -238,7 +238,9 @@ local function AntiafkAdminPanel()
     PanelOff = nil
     SomeShittyTest = "undefined"
     SomeShittyTest1 = "undefined"
-    net.Start("Refresh")
+	SomeShittyTest2 = "undefined"
+    	
+	net.Start("Refresh")
         net.SendToServer(ply)
         net.Receive("RefreshTime1", function(lan)
             SomeShittyTest = net.ReadString()
@@ -246,7 +248,9 @@ local function AntiafkAdminPanel()
         net.Receive("RefreshTime2", function(lan)
             SomeShittyTest1 = net.ReadString()
     	end)
-
+		net.Receive("RefreshTime3", function(lan)
+            SomeShittyTest2 = net.ReadString()
+    	end)
 
 
 
@@ -257,6 +261,7 @@ local function AntiafkAdminPanel()
 	list_window:SetDraggable( true )
 	list_window:ShowCloseButton( true )
 	list_window:MakePopup()	
+
 	function list_window:Paint(w, h)
 		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 225))
 	end
@@ -269,7 +274,7 @@ local function AntiafkAdminPanel()
 
     local TextEntry = vgui.Create( "DNumberWang")
     TextEntry:SetParent( list_window )
-    TextEntry:SetPos( 22, 100 )
+    TextEntry:SetPos( 22, 130 )
     TextEntry:SetSize( 65, 25 )
     TextEntry:SetMin( 180 )
     TextEntry.OnEnter = function( self )
@@ -278,7 +283,7 @@ local function AntiafkAdminPanel()
 
     local TextEntry2 = vgui.Create( "DNumberWang")
     TextEntry2:SetParent( list_window )
-    TextEntry2:SetPos( 120, 100 )
+    TextEntry2:SetPos( 120, 130 )
     TextEntry2:SetSize( 65, 25 )
     TextEntry2:SetMin( 180 )
     TextEntry2.OnEnter = function( self )
@@ -286,14 +291,16 @@ local function AntiafkAdminPanel()
     end
 
     local info = vgui.Create( "DLabel", list_window )
-    info:SetPos( 200, 60 )
+    info:SetPos( 200, 110 )
     info:SetSize(280, 100)
     info:SetText('Current Time : ' .. SomeShittyTest )
+	info:SetColor(Color(255,255,0))
 
     local info2 = vgui.Create( "DLabel", list_window )
-    info2:SetPos( 200, 45 )
+    info2:SetPos( 200, 122 )
     info2:SetSize(280, 100)
     info2:SetText('Warn Time : ' .. "Refresh !" )
+	info2:SetColor(Color(255,255,0))
     net.Receive("RefreshTime1", function(lan)
         SomeShittyTest = net.ReadString()
         info:SetText('Current Time : ' .. SomeShittyTest )
@@ -302,12 +309,47 @@ local function AntiafkAdminPanel()
         SomeShittyTest1 = net.ReadString()
         info2:SetText('Warn Time : ' .. SomeShittyTest1 )
     end)
+
+
+	local checkboxSPbypass = vgui.Create( "DCheckBoxLabel", list_window )
+	checkboxSPbypass:SetPos( 22, 105 )
+	checkboxSPbypass:SetText( "Bypass SP" )		
+
+	local info3 = vgui.Create( "DLabel", list_window )
+    info3:SetPos( 22, 45 )
+    info3:SetSize(280, 100)
+    info3:SetText('SuperAdmin bypass : '.. SomeShittyTest2  )
+	info3:SetColor(Color(255,255,0))
+	net.Receive("RefreshTime3", function(lan)
+        SomeShittyTest2 = net.ReadString()
+        info3:SetText('SuperAdmin bypass : ' .. SomeShittyTest2 )
+    end)
+	if SomeShittyTest2 == "true" then
+			checkboxSPbypass:SetValue( 1 )
+	end
+	timer.Create("Checkifvalueistruefromafk", 0.01, 1, function()
+		if SomeShittyTest2 == "true" then
+			checkboxSPbypass:SetValue( 1 )
+		end
+	end)
+	
+	function checkboxSPbypass:OnChange( val )
+		if val then
+			net.Start("ChangeSPBypass")
+				net.WriteString("true")
+			net.SendToServer()
+		else
+			net.Start("ChangeSPBypass")
+				net.WriteString("false")
+			net.SendToServer()
+		end
+	end
     
 
     local list_btn = vgui.Create("DButton")
 	list_btn:SetParent( list_window )
 	list_btn:SetText( "SET KICK" )
-	list_btn:SetPos( 22, 140)
+	list_btn:SetPos( 22, 160)
 	list_btn:SetSize( 65, 20 )
     list_btn:SetColor(Color(255, 255, 255))
 	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -318,7 +360,7 @@ local function AntiafkAdminPanel()
     local list_btn2 = vgui.Create("DButton")
 	list_btn2:SetParent( list_window )
 	list_btn2:SetText( "SET WARN" )
-	list_btn2:SetPos( 120, 140)
+	list_btn2:SetPos( 120, 160)
 	list_btn2:SetSize( 65, 20 )
     list_btn2:SetColor(Color(255, 255, 255))
 	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -331,8 +373,8 @@ local function AntiafkAdminPanel()
     local RE_btn = vgui.Create("DButton")
 	RE_btn:SetParent( list_window )
 	RE_btn:SetText( "REFRESH" )
-	RE_btn:SetPos( 200, 120)
-	RE_btn:SetSize( 50, 15 )
+	RE_btn:SetPos( 213, 125 )
+	RE_btn:SetSize( 55, 20 )
     RE_btn:SetColor(Color(255, 255, 255))
 	RE_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	RE_btn.DoClick = function ()
@@ -346,12 +388,17 @@ local function AntiafkAdminPanel()
                 SomeShittyTest1 = net.ReadString()
                 info2:SetText('Warn Time : ' .. SomeShittyTest1 )
             end)
+			net.Receive("RefreshTime3", function(lan)
+            	SomeShittyTest2 = net.ReadString()
+				 info3:SetText('SuperAdmin bypass : ' .. SomeShittyTest2 )
+    		end)
     end
 
 	local Sign = vgui.Create( "DLabel", list_window )
 	Sign:SetPos( 100, 180 )
 	Sign:SetSize(150 , 25)
 	Sign:SetText( "Made by Aiko Suzuki !" )
+
 
 
 
