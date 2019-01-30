@@ -240,7 +240,7 @@ hook.Add("Think", "HandleAFKPlayers", function()
                             net.WriteString("AntiafkMainHUDSP")
                         net.Send(ply)
                         for k, v in pairs( player.GetAll() ) do
-                            v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 198, 0, 0 ),'" ..ply:Nick().."'.. ' is now AFK ' )")
+                            v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                         end
 			            local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
 			            ply:SetCollisionGroup(11)
@@ -249,7 +249,7 @@ hook.Add("Think", "HandleAFKPlayers", function()
 	                    ply:ChatPrint("AntiAFK : you are superadmin so u bypass the anti afk system !")
 	                    ply.SuperAbuse = true
 	                    for k, v in pairs( player.GetAll() ) do
-                            v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 198, 0, 0 ),'" ..ply:Nick().."'.. ' is now AFK ' )")
+                            v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                         end
 	               end
 			    else
@@ -262,7 +262,7 @@ hook.Add("Think", "HandleAFKPlayers", function()
                         net.WriteString("AntiafkMainHUD")
                     net.Send(ply)
 				    for k, v in pairs( player.GetAll() ) do
-                        v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 198, 0, 0 ),'" ..ply:Nick().."'..' is now AFK ' )")
+                        v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                     end
 				    local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
 				    
@@ -361,9 +361,8 @@ hook.Add("KeyPress", "PlayerMoved", function(ply, key)
 		    ply.Warning = false
 		    ply.SuperAbuse = false
 		    print(ply:Name() .. " est plus AFK !")
-		    ply:ChatPrint(" tu n'es plus AFK !")
             for k, v in pairs( player.GetAll() ) do
-                v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 198, 0, 0 ),'" ..ply:Nick().."'.. ' is no longer AFK ' )")
+                v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 0, 0, 198 ), ' is no longer AFK ' )")
             end
 		    local AikoAfkTimeAfter = hook.Call( "AikoAfkTimeAfter", GAMEMODE, ply )
 		    if (ply:GetUserGroup() == "superadmin") then 

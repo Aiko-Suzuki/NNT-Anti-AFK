@@ -473,20 +473,20 @@ end
 net.Start("AntiAfkSendHUDInfo")
 
 net.Receive("AntiAfkSendHUDInfo", function()
-	data = net.ReadString()
-	if (data == "AntiafkAdminSetAfk") then
+	local data1 = net.ReadString()
+	if (data1 == "AntiafkAdminSetAfk") then
 		
 		AntiafkAdminSetAfk()
 
-	elseif (data == "AntiafkMainHUD") then
+	elseif (data1 == "AntiafkMainHUD") then
 		
 		AntiafkMainHUD()
 
-	elseif (data == "AntiafkMainHUDSP") then
+	elseif (data1 == "AntiafkMainHUDSP") then
 
 		AntiafkMainHUDSP()
 
-	elseif (data == "AntiafkAdminPanel") then
+	elseif (data1 == "AntiafkAdminPanel") then
 
 		AntiafkAdminPanel()
 
