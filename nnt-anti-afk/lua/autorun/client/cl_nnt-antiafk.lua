@@ -1,5 +1,3 @@
-
-
 local function AntiafkMainHUD()
 
 	local w = ScrW() / 2 
@@ -113,6 +111,7 @@ local function AntiafkMainHUD()
 		timer.Destroy("AFK:"..LocalPlayer():SteamID())
 		timer.Destroy("AFKS:"..LocalPlayer():SteamID())
 		AfkPanelHUD:Close()
+		return
 	end)
 
 	surface.PlaySound("buttons/button18.wav")
@@ -223,11 +222,13 @@ local function AntiafkMainHUDSP()
 
 
 	net.Start("AFKHUDSP1")
-	net.Receive("AFKHUDSP1", function(len)
-		AfkPanelHUD:Close()
+	net.Receive("AFKHUDSP1", function()
+		if AfkPanelHUD:IsValid() then
+			AfkPanelHUD:Close()
+		end
 		timer.Destroy("AFK:"..LocalPlayer():SteamID())
+		return
 	end)
-
 
 end
 
@@ -327,7 +328,7 @@ local function AntiafkAdminPanel()
 	if SomeShittyTest2 == "true" then
 			checkboxSPbypass:SetValue( 1 )
 	end
-	timer.Create("Checkifvalueistruefromafk", 0.01, 1, function()
+	timer.Create("Checkifvalueistruefromafk", 2, 1, function()
 		if SomeShittyTest2 == "true" then
 			checkboxSPbypass:SetValue( 1 )
 		end
@@ -392,6 +393,11 @@ local function AntiafkAdminPanel()
             	SomeShittyTest2 = net.ReadString()
 				 info3:SetText('SuperAdmin bypass : ' .. SomeShittyTest2 )
     		end)
+		timer.Create("Checkifvalueistruefromafk", 0.1, 1, function()
+			if SomeShittyTest2 == "true" then
+				checkboxSPbypass:SetValue( 1 )
+			end
+	    end)
     end
 
 	local Sign = vgui.Create( "DLabel", list_window )
@@ -486,4 +492,3 @@ net.Receive("AntiAfkSendHUDInfo", function()
 
 	end
 end)
-
