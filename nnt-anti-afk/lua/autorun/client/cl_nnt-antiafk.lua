@@ -328,7 +328,7 @@ local function AntiafkAdminPanel()
 	if SomeShittyTest2 == "true" then
 			checkboxSPbypass:SetValue( 1 )
 	end
-	timer.Create("Checkifvalueistruefromafk", 2, 1, function()
+	timer.Create("Checkifvalueistruefromafk", 0.5, 1, function()
 		if SomeShittyTest2 == "true" then
 			checkboxSPbypass:SetValue( 1 )
 		end
@@ -393,7 +393,7 @@ local function AntiafkAdminPanel()
             	SomeShittyTest2 = net.ReadString()
 				 info3:SetText('SuperAdmin bypass : ' .. SomeShittyTest2 )
     		end)
-		timer.Create("Checkifvalueistruefromafk", 0.1, 1, function()
+		timer.Create("Checkifvalueistruefromafk", 1, 1, function()
 			if SomeShittyTest2 == "true" then
 				checkboxSPbypass:SetValue( 1 )
 			end

@@ -399,7 +399,6 @@ end )
 
 
 
-
 net.Receive("AFKHUD2", function(len, ply)
         if (ply:GetUserGroup() == "superadmin") then
             net.Start("AFKHUDRSP")
