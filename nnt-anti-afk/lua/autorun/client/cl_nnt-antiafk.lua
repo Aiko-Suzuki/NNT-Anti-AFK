@@ -1,3 +1,13 @@
+local AntiAfkTranslate = {
+	["MAINTEXT"] = "AFK WARNING !",
+	["WARN"] = "You are gonna be kicked for afk in ",
+	["CANCEL"] = "Press any key to cancel !",
+	["REMOVEWARN"] = "Press any key remove the warning !",
+	["MOVEKEY"] = "(Moving Key / Space / Use key / Reload Key / Zoom key)",
+	["SP-WARNING"] = "You afk since "
+}
+
+
 local function AntiafkMainHUD()
 
 	local w = ScrW() / 2 
@@ -55,34 +65,34 @@ local function AntiafkMainHUD()
     SignL:SetSize( 600, 50)
     SignL:SetFont("AFKLarge")
     SignL:SetColor(Color(255, 0, 0, 255))
-	SignL:SetText( "AFK WARNING !" )
+	SignL:SetText( AntiAfkTranslate["MAINTEXT"] )
 
     local SignM = vgui.Create( "DLabel", AfkPanelHUD )
 	SignM:SetPos( w-225,  ScrH() / 6)
     SignM:SetSize( 800, 50)
     SignM:SetFont("AFKMedium")
     SignM:SetColor(Color(255, 255, 255, 255))
-	SignM:SetText( "You are gonna be kicked for afk in ".. VarTimeleft .." !" )
+	SignM:SetText( AntiAfkTranslate["WARN"].. VarTimeleft .." !" )
 
 	local SignS = vgui.Create( "DLabel", AfkPanelHUD )
 	SignS:SetPos( w-80,  ScrH() / 4.8)
     SignS:SetSize( 300, 50)
     SignS:SetFont("AFKsmall")
     SignS:SetColor(Color(255, 255, 255, 255))
-	SignS:SetText( "Press any key to cancel !" )
+	SignS:SetText( AntiAfkTranslate["CANCEL"] )
 
     local SignK = vgui.Create( "DLabel", AfkPanelHUD )
 	SignK:SetPos( w-170,  ScrH() / 4.1)
     SignK:SetSize( 500, 50)
     SignK:SetFont("AFKsmallK")
     SignK:SetColor(Color(255, 255, 255, 255))
-	SignK:SetText( "(Moving Key / Space / Use key / Reload Key / Zoom key)" )
+	SignK:SetText( AntiAfkTranslate["MOVEKEY"] )
 
 	net.Start("AFKHUD2")
 	net.SendToServer(LocalPlayer())
 	net.Receive("AFKHUDR", function(len)
 		ReceiveVar = net.ReadString()
-		SignM:SetText( "You are gone be kicked for afk in ".. timeToStr(ReceiveVar) .." !" )
+		SignM:SetText( AntiAfkTranslate["WARN"].. timeToStr(ReceiveVar) .." !" )
 		VarTimeleft = ReceiveVar
 		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, ReceiveVar, function()
 			if LocalPlayer():IsSuperAdmin() then
@@ -93,7 +103,7 @@ local function AntiafkMainHUD()
 			end
 			x = VarTimeleft - 1
 			VarTimeleft = x
-			SignM:SetText( "You are gone be kicked for afk in ".. timeToStr(VarTimeleft) .." !" )
+			SignM:SetText( AntiAfkTranslate["WARN"].. timeToStr(VarTimeleft) .." !" )
 		end)
 	end)
 
@@ -181,28 +191,28 @@ local function AntiafkMainHUDSP()
     SignL:SetSize( 600, 50)
     SignL:SetFont("AFKLarge")
     SignL:SetColor(Color(255, 0, 0, 255))
-	SignL:SetText( "AFK WARNING !" )
+	SignL:SetText( AntiAfkTranslate["MAINTEXT"])
 
     local SignM = vgui.Create( "DLabel", AfkPanelHUD )
 	SignM:SetPos( w-135,  ScrH() / 6)
     SignM:SetSize( 800, 50)
     SignM:SetFont("AFKMedium")
     SignM:SetColor(Color(255, 255, 255, 255))
-	SignM:SetText( "You afk since ".. "00h 00m 00s" .." ! " )
+	SignM:SetText( AntiAfkTranslate["SP-WARNING"].. "00h 00m 00s" .." ! " )
 
 	local SignS = vgui.Create( "DLabel", AfkPanelHUD )
 	SignS:SetPos( w-118,  ScrH() / 4.8)
     SignS:SetSize( 300, 50)
     SignS:SetFont("AFKsmall")
     SignS:SetColor(Color(255, 255, 255, 255))
-	SignS:SetText( "Press any key remove the warning !" )
+	SignS:SetText( AntiAfkTranslate["REMOVEWARN"] )
 
     local SignK = vgui.Create( "DLabel", AfkPanelHUD )
 	SignK:SetPos( w-170,  ScrH() / 4.1)
     SignK:SetSize( 500, 50)
     SignK:SetFont("AFKsmallK")
     SignK:SetColor(Color(255, 255, 255, 255))
-	SignK:SetText( "(Moving Key / Space / Use key / Reload Key / Zoom key)" )
+	SignK:SetText( AntiAfkTranslate["MOVEKEY"] )
 
 
 
@@ -210,12 +220,12 @@ local function AntiafkMainHUDSP()
 	net.SendToServer(LocalPlayer())
 	net.Receive("AFKHUDRSP", function(len)
 		ReceiveVar = net.ReadString()
-		SignM:SetText( "You afk since ".. timeToStr(ReceiveVar) .." !" )
+		SignM:SetText( AntiAfkTranslate["SP-WARNING"].. timeToStr(ReceiveVar) .." !" )
 		VarTimeleft = ReceiveVar
 		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, 0, function()
 			x = VarTimeleft + 1
 			VarTimeleft = x
-			SignM:SetText( "You afk since ".. timeToStr(VarTimeleft) .." !" )
+			SignM:SetText( AntiAfkTranslate["SP-WARNING"].. timeToStr(VarTimeleft) .." !" )
 		end)
 	end)
 
@@ -231,6 +241,88 @@ local function AntiafkMainHUDSP()
 	end)
 
 end
+
+local function AntiafkAdminPanelGroups()
+	
+
+    local w = ScrW() / 2 
+    local h = ScrH() / 2
+
+	local AdminPanelGroups = vgui.Create( "DFrame" )
+	AdminPanelGroups:SetPos( w-200, h-200 )
+	AdminPanelGroups:SetSize( 400, 430 )
+	AdminPanelGroups:SetTitle( "Anti AFK bypass Groupss" )
+	AdminPanelGroups:SetDraggable( true )
+	AdminPanelGroups:ShowCloseButton( true )
+	AdminPanelGroups:MakePopup()	
+	function AdminPanelGroups:Paint(w, h)
+		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 175))
+	end
+	
+	
+
+	local AdminPanelGroups_view = vgui.Create("DListView")
+	AdminPanelGroups_view:SetParent(AdminPanelGroups)
+	AdminPanelGroups_view:SetPos(0, 30)
+	AdminPanelGroups_view:SetSize(400, 300)
+	AdminPanelGroups_view:SetMultiSelect(false)
+	AdminPanelGroups_view.OnRowSelected = function( panel, rowIndex, row )
+			tagroups = row:GetValue(1)
+	end
+	AdminPanelGroups_view:AddColumn("Groups")
+		net.Start("AntiAfkloaBypassGroups")
+		net.SendToServer()
+		net.Receive("AntiAfksenBypassGroups", function(len)
+			AdminPanelGroups_view:Clear()
+			x = net.ReadTable()
+			for k,v in pairs(x) do
+				AdminPanelGroups_view:AddLine(v)
+			end
+		end)
+
+
+    local TextEntry = vgui.Create( "DTextEntry")
+    TextEntry:SetParent( AdminPanelGroups )
+    TextEntry:SetPos( 150, 340 )
+    TextEntry:SetSize( 100, 30 )
+    TextEntry.OnEnter = function( self )
+	    chat.AddText( self:GetValue() )	-- print the form's text as server text
+    end
+
+	local list_btn = vgui.Create("DButton")
+	list_btn:SetParent( AdminPanelGroups )
+	list_btn:SetText( "Add Groups" )
+	list_btn:SetPos( 220, 380)
+	list_btn:SetSize( 150, 25 )
+    list_btn:SetColor(Color(255, 255, 255))
+	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	list_btn.DoClick = function ()
+		net.Start("AntiAddBypassGroups")
+			net.WriteString(TextEntry:GetValue())
+		net.SendToServer()
+	end
+
+	local list_btn2 = vgui.Create("DButton")
+	list_btn2:SetParent( AdminPanelGroups )
+	list_btn2:SetText( "Del Groups" )
+	list_btn2:SetPos( 30, 380)
+	list_btn2:SetSize( 150, 25 )
+    list_btn2:SetColor(Color(255, 255, 255))
+	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	list_btn2.DoClick = function ()
+		net.Start("AntiRemBypassGroups")
+			net.WriteString(tagroups)
+		net.SendToServer()
+	end
+
+	local Sign = vgui.Create( "DLabel", AdminPanelGroups )
+	Sign:SetPos( 25, 410 )
+	Sign:SetSize(150 , 25)
+	Sign:SetText( "Made by Aiko Suzuki !" )
+	
+	
+end
+
 
 local function AntiafkAdminPanel()
 	
@@ -314,7 +406,7 @@ local function AntiafkAdminPanel()
 
 	local checkboxSPbypass = vgui.Create( "DCheckBoxLabel", list_window )
 	checkboxSPbypass:SetPos( 22, 105 )
-	checkboxSPbypass:SetText( "Bypass SP" )		
+	checkboxSPbypass:SetText( "Groups Bypass" )		
 
 	local info3 = vgui.Create( "DLabel", list_window )
     info3:SetPos( 22, 45 )
@@ -323,7 +415,7 @@ local function AntiafkAdminPanel()
 	info3:SetColor(Color(255,255,0))
 	net.Receive("RefreshTime3", function(lan)
         SomeShittyTest2 = net.ReadString()
-        info3:SetText('SuperAdmin bypass : ' .. SomeShittyTest2 )
+        info3:SetText('Groups Bypass : ' .. SomeShittyTest2 )
     end)
 	if SomeShittyTest2 == "true" then
 			checkboxSPbypass:SetValue( 1 )
@@ -400,6 +492,18 @@ local function AntiafkAdminPanel()
 	    end)
     end
 
+	local Groups_btn = vgui.Create("DButton")
+	Groups_btn:SetParent( list_window )
+	Groups_btn:SetText( "Groups" )
+	Groups_btn:SetPos( 213, 90 )
+	Groups_btn:SetSize( 55, 20 )
+    Groups_btn:SetColor(Color(255, 255, 255))
+	Groups_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Groups_btn.DoClick = function ()
+		list_window:Close()
+		AntiafkAdminPanelGroups()
+	end
+
 	local Sign = vgui.Create( "DLabel", list_window )
 	Sign:SetPos( 100, 180 )
 	Sign:SetSize(150 , 25)
@@ -470,6 +574,9 @@ local function AntiafkAdminSetAfk()
 	
 end
 
+
+
+
 net.Start("AntiAfkSendHUDInfo")
 
 net.Receive("AntiAfkSendHUDInfo", function()
@@ -489,6 +596,7 @@ net.Receive("AntiAfkSendHUDInfo", function()
 	elseif (data1 == "AntiafkAdminPanel") then
 
 		AntiafkAdminPanel()
-
+	elseif (data1 == "AntiafkAdminPanelGroups") then
+		AntiafkAdminPanelGroups()
 	end
 end)
