@@ -12,6 +12,8 @@ AFKDefaultConfig.Settings = {
         ["BYPASS"] = false
 }
 
+
+
 -- Starting to load Script !
 print("AntiAkf : Checking if config file are there")
 
