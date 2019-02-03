@@ -173,6 +173,9 @@ end)
 net.Receive("AntiAddBypassGroups", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
+        if string.StartWith(SomeShittyTest , " " ) then return end
+		if SomeShittyTest == "" then return end
+        if table.HasValue(AFK_ADMINBYPASS_GROUPS,SomeShittyTest ) then return end
         AntiAFKChangeConfigData("BypassGroups",SomeShittyTest,"ADD")
         net.Start("AntiAfksenBypassGroups")
             net.WriteTable(AFK_ADMINBYPASS_GROUPS)

@@ -274,8 +274,8 @@ local function AntiafkAdminPanelGroups()
 		net.SendToServer()
 		net.Receive("AntiAfksenBypassGroups", function(len)
 			AdminPanelGroups_view:Clear()
-			x = net.ReadTable()
-			for k,v in pairs(x) do
+			antiusergroupsstring = net.ReadTable()
+			for k,v in pairs(antiusergroupsstring) do
 				AdminPanelGroups_view:AddLine(v)
 			end
 		end)
@@ -297,6 +297,15 @@ local function AntiafkAdminPanelGroups()
     list_btn:SetColor(Color(255, 255, 255))
 	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn.DoClick = function ()
+		if string.StartWith(TextEntry:GetValue() , " " ) then 
+			LocalPlayer():ChatPrint('You cannot add group starting with a space !')
+		return end
+		if TextEntry:GetValue() == "" then 
+			LocalPlayer():ChatPrint('You cannot add a empty group !')
+		return end
+		if table.HasValue(antiusergroupsstring, TextEntry:GetValue()) then 
+			LocalPlayer():ChatPrint('User group ' .. TextEntry:GetValue() ..' is already there !')
+		return end
 		net.Start("AntiAddBypassGroups")
 			net.WriteString(TextEntry:GetValue())
 		net.SendToServer()
