@@ -281,44 +281,44 @@ local function AntiafkAdminPanelGroups()
 		end)
 
 
-    local TextEntry = vgui.Create( "DTextEntry")
-    TextEntry:SetParent( AdminPanelGroups )
-    TextEntry:SetPos( 150, 340 )
-    TextEntry:SetSize( 100, 30 )
-    TextEntry.OnEnter = function( self )
-	    chat.AddText( self:GetValue() )	-- print the form's text as server text
+    local GroupEntry = vgui.Create( "DTextEntry")
+    GroupEntry:SetParent( AdminPanelGroups )
+    GroupEntry:SetPos( 150, 340 )
+    GroupEntry:SetSize( 100, 30 )
+    GroupEntry.OnEnter = function( self )
+	    chat.AddText( self:GetValue() )	
     end
 
-	local list_btn = vgui.Create("DButton")
-	list_btn:SetParent( AdminPanelGroups )
-	list_btn:SetText( "Add Groups" )
-	list_btn:SetPos( 220, 380)
-	list_btn:SetSize( 150, 25 )
-    list_btn:SetColor(Color(255, 255, 255))
-	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
-	list_btn.DoClick = function ()
-		if string.StartWith(TextEntry:GetValue() , " " ) then 
+	local addgroups = vgui.Create("DButton")
+	addgroups:SetParent( AdminPanelGroups )
+	addgroups:SetText( "Add Groups" )
+	addgroups:SetPos( 220, 380)
+	addgroups:SetSize( 150, 25 )
+    addgroups:SetColor(Color(255, 255, 255))
+	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	addgroups.DoClick = function ()
+		if string.StartWith(GroupEntry:GetValue() , " " ) then 
 			LocalPlayer():ChatPrint('You cannot add group starting with a space !')
 		return end
-		if TextEntry:GetValue() == "" then 
+		if GroupEntry:GetValue() == "" then 
 			LocalPlayer():ChatPrint('You cannot add a empty group !')
 		return end
-		if table.HasValue(antiusergroupsstring, TextEntry:GetValue()) then 
-			LocalPlayer():ChatPrint('User group ' .. TextEntry:GetValue() ..' is already there !')
+		if table.HasValue(antiusergroupsstring, GroupEntry:GetValue()) then 
+			LocalPlayer():ChatPrint('User group ' .. GroupEntry:GetValue() ..' is already there !')
 		return end
 		net.Start("AntiAddBypassGroups")
-			net.WriteString(TextEntry:GetValue())
+			net.WriteString(GroupEntry:GetValue())
 		net.SendToServer()
 	end
 
-	local list_btn2 = vgui.Create("DButton")
-	list_btn2:SetParent( AdminPanelGroups )
-	list_btn2:SetText( "Del Groups" )
-	list_btn2:SetPos( 30, 380)
-	list_btn2:SetSize( 150, 25 )
-    list_btn2:SetColor(Color(255, 255, 255))
-	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
-	list_btn2.DoClick = function ()
+	local delbutton = vgui.Create("DButton")
+	delbutton:SetParent( AdminPanelGroups )
+	delbutton:SetText( "Del Groups" )
+	delbutton:SetPos( 30, 380)
+	delbutton:SetSize( 150, 25 )
+    delbutton:SetColor(Color(255, 255, 255))
+	delbutton.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	delbutton.DoClick = function ()
 		net.Start("AntiRemBypassGroups")
 			net.WriteString(tagroups)
 		net.SendToServer()
@@ -356,26 +356,26 @@ local function AntiafkAdminPanel()
 
 
 
-	local list_window = vgui.Create( "DFrame" )
-	list_window:SetPos( w-200, h-200 )
-	list_window:SetSize( 300, 200 )
-	list_window:SetTitle( "ANTI AFK ADMIN PANEL" )
-	list_window:SetDraggable( true )
-	list_window:ShowCloseButton( true )
-	list_window:MakePopup()	
+	local MainPanel = vgui.Create( "DFrame" )
+	MainPanel:SetPos( w-200, h-200 )
+	MainPanel:SetSize( 300, 200 )
+	MainPanel:SetTitle( "ANTI AFK ADMIN PANEL" )
+	MainPanel:SetDraggable( true )
+	MainPanel:ShowCloseButton( true )
+	MainPanel:MakePopup()	
 
-	function list_window:Paint(w, h)
+	function MainPanel:Paint(w, h)
 		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 225))
 	end
 
-	local yetinfo = vgui.Create( "DLabel", list_window )
+	local yetinfo = vgui.Create( "DLabel", MainPanel )
     yetinfo:SetPos( 5, 5 )
     yetinfo:SetSize(280, 100)
     yetinfo:SetText( "This panel is to change the After how many second \n someone get kick ! \n Or Set the Warning Time !" )
     yetinfo:SetContentAlignment(5)
 
     local TextEntry = vgui.Create( "DNumberWang")
-    TextEntry:SetParent( list_window )
+    TextEntry:SetParent( MainPanel )
     TextEntry:SetPos( 22, 130 )
     TextEntry:SetSize( 65, 25 )
     TextEntry:SetMin( 180 )
@@ -384,7 +384,7 @@ local function AntiafkAdminPanel()
     end
 
     local TextEntry2 = vgui.Create( "DNumberWang")
-    TextEntry2:SetParent( list_window )
+    TextEntry2:SetParent( MainPanel )
     TextEntry2:SetPos( 120, 130 )
     TextEntry2:SetSize( 65, 25 )
     TextEntry2:SetMin( 180 )
@@ -392,13 +392,13 @@ local function AntiafkAdminPanel()
 	    chat.AddText( self:GetValue() )	-- print the form's text as server text
     end
 
-    local info = vgui.Create( "DLabel", list_window )
+    local info = vgui.Create( "DLabel", MainPanel )
     info:SetPos( 200, 110 )
     info:SetSize(280, 100)
     info:SetText('Current Time : ' .. SomeShittyTest )
 	info:SetColor(Color(255,255,0))
 
-    local info2 = vgui.Create( "DLabel", list_window )
+    local info2 = vgui.Create( "DLabel", MainPanel )
     info2:SetPos( 200, 122 )
     info2:SetSize(280, 100)
     info2:SetText('Warn Time : ' .. "Refresh !" )
@@ -413,11 +413,11 @@ local function AntiafkAdminPanel()
     end)
 
 
-	local checkboxSPbypass = vgui.Create( "DCheckBoxLabel", list_window )
+	local checkboxSPbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
 	checkboxSPbypass:SetPos( 22, 105 )
 	checkboxSPbypass:SetText( "Groups Bypass" )		
 
-	local info3 = vgui.Create( "DLabel", list_window )
+	local info3 = vgui.Create( "DLabel", MainPanel )
     info3:SetPos( 22, 45 )
     info3:SetSize(280, 100)
     info3:SetText('SuperAdmin bypass : '.. SomeShittyTest2  )
@@ -449,7 +449,7 @@ local function AntiafkAdminPanel()
     
 
     local list_btn = vgui.Create("DButton")
-	list_btn:SetParent( list_window )
+	list_btn:SetParent( MainPanel )
 	list_btn:SetText( "SET KICK" )
 	list_btn:SetPos( 22, 160)
 	list_btn:SetSize( 65, 20 )
@@ -460,7 +460,7 @@ local function AntiafkAdminPanel()
 	end
 
     local list_btn2 = vgui.Create("DButton")
-	list_btn2:SetParent( list_window )
+	list_btn2:SetParent( MainPanel )
 	list_btn2:SetText( "SET WARN" )
 	list_btn2:SetPos( 120, 160)
 	list_btn2:SetSize( 65, 20 )
@@ -473,7 +473,7 @@ local function AntiafkAdminPanel()
 	end
 
     local RE_btn = vgui.Create("DButton")
-	RE_btn:SetParent( list_window )
+	RE_btn:SetParent( MainPanel )
 	RE_btn:SetText( "REFRESH" )
 	RE_btn:SetPos( 213, 125 )
 	RE_btn:SetSize( 55, 20 )
@@ -502,18 +502,18 @@ local function AntiafkAdminPanel()
     end
 
 	local Groups_btn = vgui.Create("DButton")
-	Groups_btn:SetParent( list_window )
+	Groups_btn:SetParent( MainPanel )
 	Groups_btn:SetText( "Groups" )
 	Groups_btn:SetPos( 213, 90 )
 	Groups_btn:SetSize( 55, 20 )
     Groups_btn:SetColor(Color(255, 255, 255))
 	Groups_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Groups_btn.DoClick = function ()
-		list_window:Close()
+		MainPanel:Close()
 		AntiafkAdminPanelGroups()
 	end
 
-	local Sign = vgui.Create( "DLabel", list_window )
+	local Sign = vgui.Create( "DLabel", MainPanel )
 	Sign:SetPos( 100, 180 )
 	Sign:SetSize(150 , 25)
 	Sign:SetText( "Made by Aiko Suzuki !" )
