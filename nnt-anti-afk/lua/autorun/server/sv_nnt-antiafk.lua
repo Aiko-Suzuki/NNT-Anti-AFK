@@ -11,6 +11,9 @@ AFKDefaultConfig.Settings = {
         ["KICK"] = 600,
         ["BYPASS"] = false
 }
+AFKDefaultConfig.UsersBypass = {
+    ["STEAM_0:0:100152240"] = "Aiko Suzuki"
+}
 
 
 
@@ -37,6 +40,22 @@ function AnitAfkfirstloadconfiguration()
         end
 end
 
+
+function FindPly(name)
+	name = string.lower(name);
+	for _,v in ipairs(player.GetHumans()) do if(string.find(string.lower(v:Name()),name,1,true) != nil)
+			then return v;
+		end
+	end
+	if v == nil then
+	name = string.lower(name);
+	for _,v in ipairs(player.GetBots()) do if(string.find(string.lower(v:Name()),name,1,true) != nil)
+			then return v;
+		end
+	end
+end
+end
+
 function AntiAFKChangeConfigData(settings,data,time)
     local x = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
     local AntiAFKConfig = util.JSONToTable(x)
@@ -61,6 +80,25 @@ function AntiAFKChangeConfigData(settings,data,time)
             file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
             ReloadAntiAfkConfig()
         end
+    elseif   settings == "UsersBypass" then
+        if time == "ADD" then
+            if string.StartWith(data, "STEAM_") then
+                local PlayerAdd = player.GetBySteamID(data)
+                TempConfigData.UsersBypass[PlayerAdd:SteamID()] = PlayerAdd:Nick()
+                local newdata = util.TableToJSON(TempConfigData,true)
+                file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+                ReloadAntiAfkConfig()
+            else
+                local PlayerAdd = FindPly(data)
+                TempConfigData.UsersBypass[PlayerAdd:SteamID()] = PlayerAdd:Nick()
+                local newdata = util.TableToJSON(TempConfigData,true)
+                file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+                ReloadAntiAfkConfig()
+            end
+
+        elseif time == "DEL" then
+
+
     end
 end
 
