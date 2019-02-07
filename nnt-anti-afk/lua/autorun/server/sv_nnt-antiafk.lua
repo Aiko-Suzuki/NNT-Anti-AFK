@@ -9,10 +9,11 @@ AFKDefaultConfig.BypassGroups = {
 AFKDefaultConfig.Settings = {
         ["WARN"] = 300,
         ["KICK"] = 600,
-        ["BYPASS"] = false
+        ["BYPASS"] = false,
+        ["UBYPASS"] = false
 }
 AFKDefaultConfig.UsersBypass = {
-    ["STEAM_0:0:100152240"] = "Aiko Suzuki"
+    "STEAM_0:0:100152240"
 }
 
 
@@ -22,7 +23,8 @@ print("AntiAkf : Checking if config file are there")
 
 
 
-function AnitAfkfirstloadconfiguration()
+
+local function AnitAfkfirstloadconfiguration()
         if not file.Exists( "aikoaddons", "DATA" ) then file.CreateDir("aikoaddons") end
         if (file.Size( "aikoaddons/AntiAfkConfig.txt", "DATA" ) > 0) then
                 local x = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
@@ -41,7 +43,11 @@ function AnitAfkfirstloadconfiguration()
 end
 
 
-function FindPly(name)
+
+
+
+
+local function FindPly(name)
 	name = string.lower(name);
 	for _,v in ipairs(player.GetHumans()) do if(string.find(string.lower(v:Name()),name,1,true) != nil)
 			then return v;
@@ -56,7 +62,7 @@ function FindPly(name)
 end
 end
 
-function AntiAFKChangeConfigData(settings,data,time)
+local function AntiAFKChangeConfigData(settings,data,time)
     local x = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
     local AntiAFKConfig = util.JSONToTable(x)
     local TempConfigData = AntiAFKConfig
@@ -64,6 +70,7 @@ function AntiAFKChangeConfigData(settings,data,time)
         if data == "WARN" then  TempConfigData.Settings.WARN = time end
         if data == "KICK" then  TempConfigData.Settings.KICK = time end
         if data == "BYPASS" then  TempConfigData.Settings.BYPASS = time end
+        if data == "UBYPASS" then TempConfigData.Settings.UBYPASS = time end
         local newdata = util.TableToJSON(TempConfigData,true)
         file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
         ReloadAntiAfkConfig()
@@ -83,33 +90,38 @@ function AntiAFKChangeConfigData(settings,data,time)
     elseif   settings == "UsersBypass" then
         if time == "ADD" then
             if string.StartWith(data, "STEAM_") then
-                local PlayerAdd = player.GetBySteamID(data)
-                TempConfigData.UsersBypass[PlayerAdd:SteamID()] = PlayerAdd:Nick()
+                local count = table.Count(AntiAFKConfig.UsersBypass)
+                table.insert(TempConfigData.UsersBypass, count + 1 , data)
                 local newdata = util.TableToJSON(TempConfigData,true)
                 file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
                 ReloadAntiAfkConfig()
             else
-                local PlayerAdd = FindPly(data)
-                TempConfigData.UsersBypass[PlayerAdd:SteamID()] = PlayerAdd:Nick()
+                local count = table.Count(AntiAFKConfig.UsersBypass)
+                table.insert(TempConfigData.UsersBypass, count + 1 , FindPly(data):SteamID())
                 local newdata = util.TableToJSON(TempConfigData,true)
                 file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
                 ReloadAntiAfkConfig()
             end
 
         elseif time == "DEL" then
-
-
+            table.RemoveByValue(TempConfigData.UsersBypass,data)
+            local newdata = util.TableToJSON(TempConfigData,true)
+            file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+            ReloadAntiAfkConfig()
+        end
     end
 end
 
-function ReloadAntiAfkConfig()
+local function ReloadAntiAfkConfig()
     local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
     AntiAFKConfig = util.JSONToTable(noewmotherfucker)
     AFK_WARN_TIME = AntiAFKConfig.Settings.WARN
     AFK_TIME = AntiAFKConfig.Settings.KICK
     AFK_ADMINBYPASS = AntiAFKConfig.Settings.BYPASS
+    AFK_ADMINUBYPASS = AntiAFKConfig.Settings.UBYPASS
     AFK_ADMINBYPASS_GROUPS = AntiAFKConfig.BypassGroups
     AFK_REPEAT = AFK_TIME - AFK_WARN_TIME
+    AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
 end
 
 
@@ -123,17 +135,33 @@ print("FINISH RELOAD CONF")
 
 util.AddNetworkString( "CurrentTime" )
 util.AddNetworkString( "ClientMessages" )
+
 util.AddNetworkString( "Refresh" )
+
 util.AddNetworkString( "ChangeWarnTime" )
 util.AddNetworkString( "ChangeSPBypass" )
+util.AddNetworkString( "ChangeUBypass" )
+
+
 util.AddNetworkString( "RefreshTime1" )
 util.AddNetworkString( "RefreshTime2" )
 util.AddNetworkString( "RefreshTime3" )
+util.AddNetworkString( "RefreshTime4" )
+
+
 util.AddNetworkString( "AntiAfkSendHUDInfo" )
+
+
 util.AddNetworkString( "AntiAddBypassGroups" )
 util.AddNetworkString( "AntiAfksenBypassGroups" )
 util.AddNetworkString( "AntiAfkloaBypassGroups" )
 util.AddNetworkString( "AntiRemBypassGroups" )
+
+
+util.AddNetworkString( "AntiAddBypassUsers" )
+util.AddNetworkString( "AntiAfksenBypassUsers" )
+util.AddNetworkString( "AntiAfkloaBypassUsers" )
+util.AddNetworkString( "AntiRemBypassUsers" )
 
 
 
@@ -151,8 +179,11 @@ net.Receive("Refresh", function(len, ply)
             net.Start("RefreshTime3")
                 net.WriteString(tostring(AFK_ADMINBYPASS))
             net.Send(ply)
+            net.Start("RefreshTime4")
+                net.WriteString(tostring(AFK_ADMINUBYPASS))
+            net.Send(ply)
         else
-            ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+            ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
         end
 end)
 
@@ -204,9 +235,51 @@ net.Receive("ChangeWarnTime", function(len, ply)
             net.WriteString(AFK_WARN_TIME)
         net.Send(ply)
     else
-        ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
     end
 end)
+
+
+net.Receive("AntiAddBypassUsers", function(len, ply)
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest = net.ReadString()
+        if string.StartWith(SomeShittyTest , " " ) then return end
+		if SomeShittyTest == "" then return end
+        if table.HasValue(AFK_ADMINBYPASS_USERS,SomeShittyTest ) then return end
+        AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"ADD")
+        net.Start("AntiAfksenBypassUsers")
+            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("AntiRemBypassUsers", function(len, ply)
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest = net.ReadString()
+        AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"DEL")
+        net.Start("AntiAfksenBypassUsers")
+            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("AntiAfkloaBypassUsers", function(len, ply)
+    if (ply:GetUserGroup() == "superadmin") then
+        ply:ChatPrint("Received!")
+        net.Start("AntiAfksenBypassUsers")
+            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+
+
 
 net.Receive("AntiAddBypassGroups", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
@@ -219,7 +292,7 @@ net.Receive("AntiAddBypassGroups", function(len, ply)
             net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
-        ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
     end
 end)
 
@@ -231,7 +304,7 @@ net.Receive("AntiRemBypassGroups", function(len, ply)
             net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
-        ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
     end
 end)
 
@@ -242,7 +315,7 @@ net.Receive("AntiAfkloaBypassGroups", function(len, ply)
             net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
-        ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
     end
 end)
 
@@ -250,13 +323,25 @@ end)
 
 net.Receive("ChangeSPBypass", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest1 =tobool( net.ReadString() )
+        SomeShittyTest1 = tobool( net.ReadString() )
         AntiAFKChangeConfigData("Settings","BYPASS", SomeShittyTest1)
         net.Start("RefreshTime3")
             net.WriteString(tostring(AFK_ADMINBYPASS))
         net.Send(ply)
     else
-        ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("ChangeUBypass", function(len, ply)
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest1 = tobool( net.ReadString() )
+        AntiAFKChangeConfigData("Settings","UBYPASS", SomeShittyTest1)
+        net.Start("RefreshTime4")
+            net.WriteString(tostring(AFK_ADMINUBYPASS))
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
     end
 end)
 
@@ -316,20 +401,74 @@ hook.Add("Think", "HandleAFKPlayers", function()
 			end
 		
 			local afktime = ply.NextAFK - AFK_TIME
-			if (CurTime() >= afktime + AFK_WARN_TIME) and (!ply.Warning) and (!ply.SuperAbuse) then 
-			    if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) then
+			if (CurTime() >= afktime + AFK_WARN_TIME) and (!ply.Warning) and (!ply.SuperAbuse) then
+
+
+
+
+
+                if table.HasValue(AFK_ADMINBYPASS_USERS, ply:SteamID() ) and (!ply.SuperAbuse) and (!ply.Warning) then
+		            if AFK_ADMINUBYPASS == false then
+                        if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
+		                    if AFK_ADMINBYPASS == false then
+			                    ply:SetRenderMode( RENDERMODE_TRANSALPHA )
+			                    ply:Fire( "alpha", 150, 0 )
+                                net.Start("AntiAfkSendHUDInfo")
+                                    net.WriteString("AntiafkMainHUD")
+                                net.Send(ply)
+                                for k, v in pairs( player.GetAll() ) do
+                                    v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
+                                end
+			                    local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
+			                    ply:SetCollisionGroup(11)
+			                    ply.Warning = true
+                                return
+	                        else
+	                            ply:ChatPrint("AntiAFK : you are "..ply:GetUserGroup().." so u bypass the anti afk system !")
+	                            ply.SuperAbuse = true
+	                            for k, v in pairs( player.GetAll() ) do
+                                    v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
+                                end
+                                return
+	                        end
+                        else
+			                ply:SetRenderMode( RENDERMODE_TRANSALPHA )
+			                ply:Fire( "alpha", 150, 0 )
+                            net.Start("AntiAfkSendHUDInfo")
+                                net.WriteString("AntiafkMainHUD")
+                            net.Send(ply)
+                            for k, v in pairs( player.GetAll() ) do
+                                v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
+                            end
+			                local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
+			                ply:SetCollisionGroup(11)
+			                ply.Warning = true
+                        end
+	                else
+	                    ply:ChatPrint("AntiAFK : you are are whitelisted so u bypass the anti afk system !")
+	                    ply.SuperAbuse = true
+	                    for k, v in pairs( player.GetAll() ) do
+                            v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
+                        end
+	                end
+
+
+
+
+
+			    elseif table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
 		            if AFK_ADMINBYPASS == false then
 			            ply:SetRenderMode( RENDERMODE_TRANSALPHA )
 			            ply:Fire( "alpha", 150, 0 )
                         net.Start("AntiAfkSendHUDInfo")
-                            net.WriteString("AntiafkMainHUDSP")
+                            net.WriteString("AntiafkMainHUD")
                         net.Send(ply)
                         for k, v in pairs( player.GetAll() ) do
                             v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                         end
 			            local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
 			            ply:SetCollisionGroup(11)
-			            ply.SuperAbuse = true
+			            ply.Warning = true
 	                else
 	                    ply:ChatPrint("AntiAFK : you are "..ply:GetUserGroup().." so u bypass the anti afk system !")
 	                    ply.SuperAbuse = true
@@ -385,7 +524,7 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
             net.Send(ply)
             local AikoAfkCommands = hook.Call( "AikoAfkCommands", GAMEMODE, ply , commands)
         else
-            ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+            ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
             local AikoAfkCommandsFail = hook.Call( "AikoAfkCommandsFail", GAMEMODE, ply , commands)
         end
         return"";
@@ -401,7 +540,7 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
             net.Send(ply)
             local AikoAfkCommands = hook.Call( "AikoAfkCommands", GAMEMODE, ply , commands)
         else
-            ply:ChatPrint("AnitAfk : You don't the permission to accces the panel !")
+            ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
             local AikoAfkCommandsFail = hook.Call( "AikoAfkCommandsFail", GAMEMODE, ply , commands)
         end
       
@@ -435,14 +574,11 @@ end)
 util.AddNetworkString( "AFKHUD1" )
 util.AddNetworkString( "AFKHUD2" )
 util.AddNetworkString( "AFKHUDR" )
-util.AddNetworkString( "AFKHUDSP1" )
-util.AddNetworkString( "AFKHUDSP2" )
-util.AddNetworkString( "AFKHUDRSP" )
 
 hook.Add("KeyPress", "PlayerMoved", function(ply, key)
     if ply:GetVelocity():Length() > 0 or ply:InVehicle() then
 	    ply.NextAFK = CurTime() + AFK_TIME
-	    if ply.Warning == true || ply.SuperAbuse == true then
+	    if ply.Warning == true or ply.SuperAbuse == true then
 		    ply.Warning = false
 		    ply.SuperAbuse = false
 		    print(ply:Name() .. " est plus AFK !")
@@ -450,21 +586,45 @@ hook.Add("KeyPress", "PlayerMoved", function(ply, key)
                 v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 0, 0, 198 ), ' is no longer AFK ' )")
             end
 		    local AikoAfkTimeAfter = hook.Call( "AikoAfkTimeAfter", GAMEMODE, ply )
-		    if (ply:GetUserGroup() == "superadmin") then 
-		       ply:SetCollisionGroup(0)
-		        net.Start("AFKHUDSP1")
-                    net.WriteString("true")
-                net.Send(ply)
-            	ply:SetRenderMode( RENDERMODE_NORMAL )
-		        ply:Fire( "alpha", 255, 0 )
-		    else 
-		    net.Start("AFKHUD1")
-                net.WriteString("true")
-            net.Send(ply)
-            ply:SetCollisionGroup(0)
-            ply:SetRenderMode( RENDERMODE_NORMAL )
-		    ply:Fire( "alpha", 255, 0 )
-            end
+
+
+
+
+
+                if table.HasValue(AFK_ADMINBYPASS_USERS, ply:SteamID() ) and (!ply.SuperAbuse) and (!ply.Warning) then
+		            if AFK_ADMINUBYPASS == false then
+                        if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
+		                    if AFK_ADMINBYPASS == false then
+		                        net.Start("AFKHUD1")
+                                    net.WriteString("true")
+                                net.Send(ply)
+                                ply:SetCollisionGroup(0)
+                                ply:SetRenderMode( RENDERMODE_NORMAL )
+		                        ply:Fire( "alpha", 255, 0 )
+                                return
+	                        else
+	                            return
+	                        end
+                        else
+                           	net.Start("AFKHUD1")
+                                net.WriteString("true")
+                            net.Send(ply)
+                            ply:SetCollisionGroup(0)
+                            ply:SetRenderMode( RENDERMODE_NORMAL )
+		                    ply:Fire( "alpha", 255, 0 )
+                            return
+                        end
+	                else
+	                    return
+	                end
+                else    
+		            net.Start("AFKHUD1")
+                        net.WriteString("true")
+                    net.Send(ply)
+                    ply:SetCollisionGroup(0)
+                    ply:SetRenderMode( RENDERMODE_NORMAL )
+		            ply:Fire( "alpha", 255, 0 )
+                end
 		    
 	    end
 	end
@@ -485,13 +645,7 @@ end )
 
 
 net.Receive("AFKHUD2", function(len, ply)
-        if (ply:GetUserGroup() == "superadmin") then
-            net.Start("AFKHUDRSP")
-                net.WriteString(AFK_TIME - math.Round(ply.NextAFK - CurTime()))
-            net.Send(ply)
-        else
             net.Start("AFKHUDR")
                 net.WriteString(math.Round(ply.NextAFK - CurTime()))
             net.Send(ply)
-        end
 end)

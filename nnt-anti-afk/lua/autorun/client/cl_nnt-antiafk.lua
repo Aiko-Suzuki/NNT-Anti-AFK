@@ -95,12 +95,6 @@ local function AntiafkMainHUD()
 		SignM:SetText( AntiAfkTranslate["WARN"].. timeToStr(ReceiveVar) .." !" )
 		VarTimeleft = ReceiveVar
 		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, ReceiveVar, function()
-			if LocalPlayer():IsSuperAdmin() then
-				timer.Destroy("AFK:"..LocalPlayer():SteamID())
-				timer.Destroy("AFKS:"..LocalPlayer():SteamID())
-				AfkPanelHUD:Close()
-				return
-			end
 			x = VarTimeleft - 1
 			VarTimeleft = x
 			SignM:SetText( AntiAfkTranslate["WARN"].. timeToStr(VarTimeleft) .." !" )
@@ -117,11 +111,9 @@ local function AntiafkMainHUD()
 
 	net.Start("AFKHUD1")
 	net.Receive("AFKHUD1", function(len)
-		if LocalPlayer():IsSuperAdmin() then return end
 		timer.Destroy("AFK:"..LocalPlayer():SteamID())
 		timer.Destroy("AFKS:"..LocalPlayer():SteamID())
 		AfkPanelHUD:Close()
-		return
 	end)
 
 	surface.PlaySound("buttons/button18.wav")
@@ -132,115 +124,6 @@ local function AntiafkMainHUD()
 end
 
 
-local function AntiafkMainHUDSP()
-	
-
-	local w = ScrW() / 2 
-    local h = ScrH() / 2
-
-    VarTimeleft = "undefined"
-    surface.CreateFont( "AFKLarge", {
-	font = "Arial",
-	extended = false,
-	size = 60,
-    } )
-    surface.CreateFont( "AFKMedium", {
-	font = "Arial",
-	extended = false,
-	size = 30,
-    } )
-    surface.CreateFont( "AFKsmall", {
-	font = "Arial",
-	extended = false,
-	size = 21,
-    } )
-    surface.CreateFont( "AFKsmallK", {
-	font = "Arial",
-	extended = false,
-	size = 18,
-    } )
-
-
-
-	function timeToStr( time )
-	local tmp = time
-	local s = tmp % 60
-	tmp = math.floor( tmp / 60 )
-	local m = tmp % 60
-	tmp = math.floor( tmp / 60 )
-	local h = tmp
-		return string.format( "%02ih %02im %02is", h, m, s )
-	end
-
-	local AfkPanelHUD = vgui.Create( "DFrame" )
-	AfkPanelHUD:SetPos( 0, h-200 )
-	AfkPanelHUD:SetSize( ScrW(), 400 )
-	AfkPanelHUD:SetTitle( "" )
-	AfkPanelHUD:SetDraggable( true )
-	AfkPanelHUD:ShowCloseButton( false )
-	AfkPanelHUD:MakePopup()	
-	AfkPanelHUD:SetKeyBoardInputEnabled()
-    AfkPanelHUD:SetMouseInputEnabled()
-	AfkPanelHUD:SetDraggable(false)
-	function AfkPanelHUD:Paint(w, h)
-		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 235))
-	end
-
-	local SignL = vgui.Create( "DLabel", AfkPanelHUD )
-	SignL:SetPos( w-175,  ScrH() / 10)
-    SignL:SetSize( 600, 50)
-    SignL:SetFont("AFKLarge")
-    SignL:SetColor(Color(255, 0, 0, 255))
-	SignL:SetText( AntiAfkTranslate["MAINTEXT"])
-
-    local SignM = vgui.Create( "DLabel", AfkPanelHUD )
-	SignM:SetPos( w-135,  ScrH() / 6)
-    SignM:SetSize( 800, 50)
-    SignM:SetFont("AFKMedium")
-    SignM:SetColor(Color(255, 255, 255, 255))
-	SignM:SetText( AntiAfkTranslate["SP-WARNING"].. "00h 00m 00s" .." ! " )
-
-	local SignS = vgui.Create( "DLabel", AfkPanelHUD )
-	SignS:SetPos( w-118,  ScrH() / 4.8)
-    SignS:SetSize( 300, 50)
-    SignS:SetFont("AFKsmall")
-    SignS:SetColor(Color(255, 255, 255, 255))
-	SignS:SetText( AntiAfkTranslate["REMOVEWARN"] )
-
-    local SignK = vgui.Create( "DLabel", AfkPanelHUD )
-	SignK:SetPos( w-170,  ScrH() / 4.1)
-    SignK:SetSize( 500, 50)
-    SignK:SetFont("AFKsmallK")
-    SignK:SetColor(Color(255, 255, 255, 255))
-	SignK:SetText( AntiAfkTranslate["MOVEKEY"] )
-
-
-
-	net.Start("AFKHUD2")
-	net.SendToServer(LocalPlayer())
-	net.Receive("AFKHUDRSP", function(len)
-		ReceiveVar = net.ReadString()
-		SignM:SetText( AntiAfkTranslate["SP-WARNING"].. timeToStr(ReceiveVar) .." !" )
-		VarTimeleft = ReceiveVar
-		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, 0, function()
-			x = VarTimeleft + 1
-			VarTimeleft = x
-			SignM:SetText( AntiAfkTranslate["SP-WARNING"].. timeToStr(VarTimeleft) .." !" )
-		end)
-	end)
-
-
-
-	net.Start("AFKHUDSP1")
-	net.Receive("AFKHUDSP1", function()
-		if AfkPanelHUD:IsValid() then
-			AfkPanelHUD:Close()
-		end
-		timer.Destroy("AFK:"..LocalPlayer():SteamID())
-		return
-	end)
-
-end
 
 
 local function AntiafkAdminPanelUsers()
