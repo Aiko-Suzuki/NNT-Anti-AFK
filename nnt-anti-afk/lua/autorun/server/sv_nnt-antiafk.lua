@@ -372,14 +372,10 @@ end)
 
 
 concommand.Add( "afktime", function( ply, cmd, args )
-    if (file.Exists( "AikoAddons/AntiAfktime.txt", "DATA" ) == true) then
         ply:ChatPrint("AntiAfk: Time before kick " .. AFK_TIME.. " secondes")
         ply:ChatPrint("AntiAfk: You should get a warning " .. AFK_WARN_TIME .. " secondes after being afk ")
         ply:ChatPrint("AntiAfk: Its been " ..  AFK_TIME - math.Round(ply.NextAFK - CurTime()) .. " secondes since u are afk !") 
         ply:ChatPrint(" AntiAfk : "..  math.Round(ply.NextAFK - CurTime()) .. " Secondes left before the kick")
-    else
-        ply:ChatPrint("false")
-    end
 end)
 
 local t
@@ -604,11 +600,6 @@ hook.Add("KeyPress", "PlayerMoved", function(ply, key)
                 v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 0, 0, 198 ), ' is no longer AFK ' )")
             end
 		    local AikoAfkTimeAfter = hook.Call( "AikoAfkTimeAfter", GAMEMODE, ply )
-
-
-
-
-
                 if table.HasValue(AFK_ADMINBYPASS_USERS, ply:SteamID() ) and (!ply.SuperAbuse) and (!ply.Warning) then
 		            if AFK_ADMINUBYPASS == false then
                         if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
@@ -643,7 +634,6 @@ hook.Add("KeyPress", "PlayerMoved", function(ply, key)
                     ply:SetRenderMode( RENDERMODE_NORMAL )
 		            ply:Fire( "alpha", 255, 0 )
                 end
-		    
 	    end
 	end
 end)
@@ -653,9 +643,9 @@ hook.Add("PlayerDisconnected", "AntiAfkunloadply", function(ply)
 end)
 
 concommand.Add( "Something", function( ply, cmd, args )
-    	ply:SendLua('surface.PlaySound("buttons/button18.wav")')
-		ply:SendLua('surface.PlaySound("buttons/button18.wav")')
-		ply:SendLua('surface.PlaySound("buttons/button18.wav")')
+    ply:SendLua('surface.PlaySound("buttons/button18.wav")')
+	ply:SendLua('surface.PlaySound("buttons/button18.wav")')
+	ply:SendLua('surface.PlaySound("buttons/button18.wav")')
 end )
 
 
@@ -663,7 +653,7 @@ end )
 
 
 net.Receive("AFKHUD2", function(len, ply)
-            net.Start("AFKHUDR")
-                net.WriteString(math.Round(ply.NextAFK - CurTime()))
-            net.Send(ply)
+    net.Start("AFKHUDR")
+        net.WriteString(math.Round(ply.NextAFK - CurTime()))
+    net.Send(ply)
 end)
