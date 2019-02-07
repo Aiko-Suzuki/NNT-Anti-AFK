@@ -43,9 +43,14 @@ function AnitAfkfirstloadconfiguration()
         end
 end
 
-
-
-
+local function UPDATEConfigFile()
+    local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
+    local AntiAFKConfig2 = util.JSONToTable(noewmotherfucker)
+    table.Merge(AntiAFKConfig2, AFKDefaultConfig)
+    local newdata = util.TableToJSON(AntiAFKConfig2,true)
+    file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+    ReloadAntiAfkConfig()
+end
 
 
 local function FindPly(name)
@@ -134,6 +139,7 @@ Timer = {}
 AnitAfkfirstloadconfiguration()
 print("RELOAD CONF")
 ReloadAntiAfkConfig()
+UPDATEConfigFile()
 print("FINISH RELOAD CONF")
 
 util.AddNetworkString( "CurrentTime" )
