@@ -165,7 +165,7 @@ local function AntiafkAdminPanelUsers()
 			antiuserstring = net.ReadTable()
 			for k,v in pairs(antiuserstring) do
 				if !IsValid(player.GetBySteamID(v)) then 
-					local plyname = "Not Found"
+					local plyname = "Not Connected !"
 					AdminPanelUsers_view:AddLine(v,plyname)
 				else
 					local plyname = player.GetBySteamID(v):Nick()
@@ -192,13 +192,13 @@ local function AntiafkAdminPanelUsers()
 	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	addgroups.DoClick = function ()
 		if string.StartWith(UserEntry:GetValue() , " " ) then 
-			LocalPlayer():ChatPrint('You cannot add group starting with a space !')
+			LocalPlayer():ChatPrint('You cannot add a user starting with a space !')
 		return end
 		if UserEntry:GetValue() == "" then 
-			LocalPlayer():ChatPrint('You cannot add a empty group !')
+			LocalPlayer():ChatPrint('You cannot add a empty user !')
 		return end
 		if table.HasValue(antiuserstring, UserEntry:GetValue()) then 
-			LocalPlayer():ChatPrint('User group ' .. UserEntry:GetValue() ..' is already there !')
+			LocalPlayer():ChatPrint('User ' .. UserEntry:GetValue() ..' is already there !')
 		return end
 		net.Start("AntiAddBypassUsers")
 			net.WriteString(UserEntry:GetValue())
@@ -393,24 +393,18 @@ local function AntiafkAdminPanel()
         info2:SetText('Warn Time : ' .. SomeShittyTest1 )
     end)
 
-
+	-- Groups Bypass
 	local checkboxSPbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxSPbypass:SetPos( 22, 105 )
+	checkboxSPbypass:SetPos( 22, 90 )
 	checkboxSPbypass:SetText( "Groups Bypass" )		
 
-	local info3 = vgui.Create( "DLabel", MainPanel )
-    info3:SetPos( 22, 45 )
-    info3:SetSize(280, 100)
-    info3:SetText('SuperAdmin bypass : '.. SomeShittyTest2  )
-	info3:SetColor(Color(255,255,0))
 	net.Receive("RefreshTime3", function(lan)
         SomeShittyTest2 = net.ReadString()
-        info3:SetText('Groups Bypass : ' .. SomeShittyTest2 )
     end)
 	if SomeShittyTest2 == "true" then
 			checkboxSPbypass:SetValue( 1 )
 	end
-	timer.Create("Checkifvalueistruefromafk", 0.5, 1, function()
+	timer.Create("Checkifvalueistruefromafk", 0.2, 1, function()
 		if SomeShittyTest2 == "true" then
 			checkboxSPbypass:SetValue( 1 )
 		end
@@ -429,24 +423,18 @@ local function AntiafkAdminPanel()
 	end
 
 
-
+	-- User Bypass
 	local checkboxUbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxUbypass:SetPos( 22, 30 )
+	checkboxUbypass:SetPos( 22, 70 )
 	checkboxUbypass:SetText( "User Bypass" )		
 
-	local info4 = vgui.Create( "DLabel", MainPanel )
-    info4:SetPos( 22, 10 )
-    info4:SetSize(280, 100)
-    info4:SetText('Users bypass : '.. SomeShittyTest3  )
-	info4:SetColor(Color(255,255,0))
 	net.Receive("RefreshTime4", function(lan)
         SomeShittyTest3 = net.ReadString()
-        info4:SetText('Users bypass : ' .. SomeShittyTest3 )
     end)
 	if SomeShittyTest3 == "true" then
 			checkboxUbypass:SetValue( 1 )
 	end
-	timer.Create("Checkifvalueistruefromafk1", 0.5, 1, function()
+	timer.Create("Checkifvalueistruefromafk1", 0.2, 1, function()
 		if SomeShittyTest3 == "true" then
 			checkboxUbypass:SetValue( 1 )
 		end
@@ -459,6 +447,33 @@ local function AntiafkAdminPanel()
 			net.SendToServer()
 		else
 			net.Start("ChangeUBypass")
+				net.WriteString("false")
+			net.SendToServer()
+		end
+	end
+
+
+	-- Anti AFK ENABLE
+	local checkboxAntiAFK = vgui.Create( "DCheckBoxLabel", MainPanel )
+	checkboxAntiAFK:SetPos( 22, 50 )
+	checkboxAntiAFK:SetText( "Activate AntiAFK" )		
+
+	net.Receive("RefreshTime5", function(lan)
+        SomeShittyTest4 = net.ReadString()
+    end)
+	timer.Create("Checkifvalueistruefromafk2", 0.2, 1, function()
+		if SomeShittyTest4 == "true" then
+			checkboxAntiAFK:SetValue( 1 )
+		end
+	end)
+	
+	function checkboxAntiAFK:OnChange( val )
+		if val then
+			net.Start("ChangeEnableAntiAFK")
+				net.WriteString("true")
+			net.SendToServer()
+		else
+			net.Start("ChangeEnableAntiAFK")
 				net.WriteString("false")
 			net.SendToServer()
 		end
@@ -489,34 +504,6 @@ local function AntiafkAdminPanel()
             net.SendToServer()
 	end
 
-    local RE_btn = vgui.Create("DButton")
-	RE_btn:SetParent( MainPanel )
-	RE_btn:SetText( "REFRESH" )
-	RE_btn:SetPos( 213, 125 )
-	RE_btn:SetSize( 55, 20 )
-    RE_btn:SetColor(Color(255, 255, 255))
-	RE_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
-	RE_btn.DoClick = function ()
-            net.Start("Refresh")
-            net.SendToServer(ply)
-            net.Receive("RefreshTime1", function(lan)
-                SomeShittyTest = net.ReadString()
-                info:SetText('Current Time : ' .. SomeShittyTest )
-            end)
-            net.Receive("RefreshTime2", function(lan)
-                SomeShittyTest1 = net.ReadString()
-                info2:SetText('Warn Time : ' .. SomeShittyTest1 )
-            end)
-			net.Receive("RefreshTime3", function(lan)
-            	SomeShittyTest2 = net.ReadString()
-				 info3:SetText('SuperAdmin bypass : ' .. SomeShittyTest2 )
-    		end)
-			timer.Create("Checkifvalueistruefromafk", 1, 1, function()
-			if SomeShittyTest2 == "true" then
-				checkboxSPbypass:SetValue( 1 )
-			end
-	    end)
-    end
 
 	local Groups_btn = vgui.Create("DButton")
 	Groups_btn:SetParent( MainPanel )

@@ -10,7 +10,8 @@ AFKDefaultConfig.Settings = {
         ["WARN"] = 300,
         ["KICK"] = 600,
         ["BYPASS"] = false,
-        ["UBYPASS"] = false
+        ["UBYPASS"] = false,
+        ["ANTIAFK"] = true
 }
 AFKDefaultConfig.UsersBypass = {
     "STEAM_0:0:100152240"
@@ -61,16 +62,16 @@ local function FindPly(name)
 	end
 end
 end
-
 function ReloadAntiAfkConfig()
     local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
     AntiAFKConfig = util.JSONToTable(noewmotherfucker)
     AFK_WARN_TIME = AntiAFKConfig.Settings.WARN
     AFK_TIME = AntiAFKConfig.Settings.KICK
+    AFK_REPEAT = AFK_TIME - AFK_WARN_TIME
+    AFK_ENABLE =  AntiAFKConfig.Settings.ANTIAFK
     AFK_ADMINBYPASS = AntiAFKConfig.Settings.BYPASS
     AFK_ADMINUBYPASS = AntiAFKConfig.Settings.UBYPASS
     AFK_ADMINBYPASS_GROUPS = AntiAFKConfig.BypassGroups
-    AFK_REPEAT = AFK_TIME - AFK_WARN_TIME
     AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
 end
 
@@ -79,6 +80,7 @@ function AntiAFKChangeConfigData(settings,data,time)
     local AntiAFKConfig = util.JSONToTable(x)
     local TempConfigData = AntiAFKConfig
     if settings == "Settings" then
+        if data == "ANTIAFK" then  TempConfigData.Settings.ANTIAFK = time end
         if data == "WARN" then  TempConfigData.Settings.WARN = time end
         if data == "KICK" then  TempConfigData.Settings.KICK = time end
         if data == "BYPASS" then  TempConfigData.Settings.BYPASS = time end
@@ -124,17 +126,6 @@ function AntiAFKChangeConfigData(settings,data,time)
     end
 end
 
-function ReloadAntiAfkConfig()
-    local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
-    AntiAFKConfig = util.JSONToTable(noewmotherfucker)
-    AFK_WARN_TIME = AntiAFKConfig.Settings.WARN
-    AFK_TIME = AntiAFKConfig.Settings.KICK
-    AFK_ADMINBYPASS = AntiAFKConfig.Settings.BYPASS
-    AFK_ADMINUBYPASS = AntiAFKConfig.Settings.UBYPASS
-    AFK_ADMINBYPASS_GROUPS = AntiAFKConfig.BypassGroups
-    AFK_REPEAT = AFK_TIME - AFK_WARN_TIME
-    AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
-end
 
 
 
@@ -153,12 +144,13 @@ util.AddNetworkString( "Refresh" )
 util.AddNetworkString( "ChangeWarnTime" )
 util.AddNetworkString( "ChangeSPBypass" )
 util.AddNetworkString( "ChangeUBypass" )
-
+util.AddNetworkString( "ChangeEnableAntiAFK" )
 
 util.AddNetworkString( "RefreshTime1" )
 util.AddNetworkString( "RefreshTime2" )
 util.AddNetworkString( "RefreshTime3" )
 util.AddNetworkString( "RefreshTime4" )
+util.AddNetworkString( "RefreshTime5" )
 
 
 util.AddNetworkString( "AntiAfkSendHUDInfo" )
@@ -193,6 +185,9 @@ net.Receive("Refresh", function(len, ply)
             net.Send(ply)
             net.Start("RefreshTime4")
                 net.WriteString(tostring(AFK_ADMINUBYPASS))
+            net.Send(ply)
+            net.Start("RefreshTime5")
+                net.WriteString(tostring(AFK_ENABLE))
             net.Send(ply)
         else
             ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
@@ -357,6 +352,18 @@ net.Receive("ChangeUBypass", function(len, ply)
     end
 end)
 
+net.Receive("ChangeEnableAntiAFK", function(len, ply)
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest1 = tobool( net.ReadString() )
+        AntiAFKChangeConfigData("Settings","ANTIAFK", SomeShittyTest1)
+        net.Start("RefreshTime5")
+            net.WriteString(tostring(AFK_ENABLE))
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
 
 concommand.Add( "afktime", function( ply, cmd, args )
     if (file.Exists( "AikoAddons/AntiAfktime.txt", "DATA" ) == true) then
@@ -405,20 +412,18 @@ hook.Add("PlayerInitialSpawn", "MakeAFKVar", function(ply)
 	ply.NextAFK = CurTime() + AFK_TIME
 end)
 
-hook.Add("Think", "HandleAFKPlayers", function()
+hook.Add("Think", "NNT-AFKPLAYERS", function()
 	for _, ply in pairs (player.GetAll()) do
 		if ( ply:IsConnected() and ply:IsFullyAuthenticated() ) then
+            if !AFK_ENABLE then
+                    ply.NextAFK = CurTime() + AFK_TIME
+                return 
+            end
 			if (!ply.NextAFK) then
 				ply.NextAFK = CurTime() + AFK_TIME
 			end
-		
 			local afktime = ply.NextAFK - AFK_TIME
 			if (CurTime() >= afktime + AFK_WARN_TIME) and (!ply.Warning) and (!ply.SuperAbuse) then
-
-
-
-
-
                 if table.HasValue(AFK_ADMINBYPASS_USERS, ply:SteamID() ) and (!ply.SuperAbuse) and (!ply.Warning) then
 		            if AFK_ADMINUBYPASS == false then
                         if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
@@ -463,11 +468,6 @@ hook.Add("Think", "HandleAFKPlayers", function()
                             v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                         end
 	                end
-
-
-
-
-
 			    elseif table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
 		            if AFK_ADMINBYPASS == false then
 			            ply:SetRenderMode( RENDERMODE_TRANSALPHA )
