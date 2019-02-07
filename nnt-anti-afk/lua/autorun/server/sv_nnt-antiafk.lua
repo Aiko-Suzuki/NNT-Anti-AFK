@@ -43,15 +43,6 @@ function AnitAfkfirstloadconfiguration()
         end
 end
 
-local function UPDATEConfigFile()
-    local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
-    local AntiAFKConfig2 = util.JSONToTable(noewmotherfucker)
-    table.Merge(AntiAFKConfig2, AFKDefaultConfig)
-    local newdata = util.TableToJSON(AntiAFKConfig2,true)
-    file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
-    ReloadAntiAfkConfig()
-end
-
 
 local function FindPly(name)
 	name = string.lower(name);
@@ -60,13 +51,15 @@ local function FindPly(name)
 		end
 	end
 	if v == nil then
-	name = string.lower(name);
-	for _,v in ipairs(player.GetBots()) do if(string.find(string.lower(v:Name()),name,1,true) != nil)
-			then return v;
-		end
-	end
+	    name = string.lower(name);
+	    for _,v in ipairs(player.GetBots()) do if(string.find(string.lower(v:Name()),name,1,true) != nil)
+			    then return v;
+		    end
+	    end
+    end
 end
-end
+
+
 function ReloadAntiAfkConfig()
     local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
     AntiAFKConfig = util.JSONToTable(noewmotherfucker)
@@ -139,7 +132,7 @@ Timer = {}
 AnitAfkfirstloadconfiguration()
 print("RELOAD CONF")
 ReloadAntiAfkConfig()
-UPDATEConfigFile()
+
 print("FINISH RELOAD CONF")
 
 util.AddNetworkString( "CurrentTime" )
@@ -222,7 +215,17 @@ concommand.Add( "setafktime", function( ply, cmd, args )
 end)
 
 
-
+concommand.Add("AntiAfkUpdate", function(ply)
+    if (ply:GetUserGroup() == "superadmin") then
+        local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
+        local AntiAFKConfig2 = util.JSONToTable(noewmotherfucker)
+        table.Merge(AntiAFKConfig2, AFKDefaultConfig)
+        local newdata = util.TableToJSON(AntiAFKConfig2,true)
+        file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+        ReloadAntiAfkConfig()
+        ply:ChatPrint("AntiAfk : Config file as been update")
+    end
+end)
 
 concommand.Add( "setplayerlang", function( ply, cmd, args )
     if (ply:GetUserGroup() == "superadmin") then
