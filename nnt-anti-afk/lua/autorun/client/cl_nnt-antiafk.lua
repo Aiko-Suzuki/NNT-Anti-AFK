@@ -242,6 +242,108 @@ local function AntiafkMainHUDSP()
 
 end
 
+
+local function AntiafkAdminPanelUsers()
+	
+
+    local w = ScrW() / 2 
+    local h = ScrH() / 2
+
+	local AdminPanelUsers = vgui.Create( "DFrame" )
+	AdminPanelUsers:SetPos( w-200, h-200 )
+	AdminPanelUsers:SetSize( 400, 430 )
+	AdminPanelUsers:SetTitle( "Anti AFK bypass Groupss" )
+	AdminPanelUsers:SetDraggable( true )
+	AdminPanelUsers:ShowCloseButton( true )
+	AdminPanelUsers:MakePopup()	
+	function AdminPanelUsers:Paint(w, h)
+		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 175))
+	end
+	
+	
+
+	local AdminPanelUsers_view = vgui.Create("DListView")
+	AdminPanelUsers_view:SetParent(AdminPanelUsers)
+	AdminPanelUsers_view:SetPos(0, 30)
+	AdminPanelUsers_view:SetSize(400, 300)
+	AdminPanelUsers_view:SetMultiSelect(false)
+	--AdminPanelUsers_view.OnClickLine = function(parent,selected,isselected) print(selected:GetValue(1)) end
+	AdminPanelUsers_view.OnRowSelected = function(parent,selected,isselected) print(isselected:GetValue(1))
+			tauser = isselected:GetValue(1)
+	end
+	AdminPanelUsers_view:AddColumn("SteamID")
+	AdminPanelUsers_view:AddColumn("Name")
+
+		net.Start("AntiAfkloaBypassUsers")
+		net.SendToServer()
+		net.Receive("AntiAfksenBypassUsers", function(len)
+			LocalPlayer():ChatPrint("receve")
+			AdminPanelUsers_view:Clear()
+			antiuserstring = net.ReadTable()
+			for k,v in pairs(antiuserstring) do
+				if !IsValid(player.GetBySteamID(v)) then 
+					local plyname = "Not Found"
+					AdminPanelUsers_view:AddLine(v,plyname)
+				else
+					local plyname = player.GetBySteamID(v):Nick()
+					AdminPanelUsers_view:AddLine(v,plyname)
+				end
+			end
+		end)
+
+
+    local UserEntry = vgui.Create( "DTextEntry")
+    UserEntry:SetParent( AdminPanelUsers )
+    UserEntry:SetPos( 150, 340 )
+    UserEntry:SetSize( 100, 30 )
+    UserEntry.OnEnter = function( self )
+	    chat.AddText( self:GetValue() )	
+    end
+
+	local addgroups = vgui.Create("DButton")
+	addgroups:SetParent( AdminPanelUsers )
+	addgroups:SetText( "Add User" )
+	addgroups:SetPos( 220, 380)
+	addgroups:SetSize( 150, 25 )
+    addgroups:SetColor(Color(255, 255, 255))
+	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	addgroups.DoClick = function ()
+		if string.StartWith(UserEntry:GetValue() , " " ) then 
+			LocalPlayer():ChatPrint('You cannot add group starting with a space !')
+		return end
+		if UserEntry:GetValue() == "" then 
+			LocalPlayer():ChatPrint('You cannot add a empty group !')
+		return end
+		if table.HasValue(antiuserstring, UserEntry:GetValue()) then 
+			LocalPlayer():ChatPrint('User group ' .. UserEntry:GetValue() ..' is already there !')
+		return end
+		net.Start("AntiAddBypassUsers")
+			net.WriteString(UserEntry:GetValue())
+		net.SendToServer()
+	end
+
+	local delbutton = vgui.Create("DButton")
+	delbutton:SetParent( AdminPanelUsers )
+	delbutton:SetText( "Del User" )
+	delbutton:SetPos( 30, 380)
+	delbutton:SetSize( 150, 25 )
+    delbutton:SetColor(Color(255, 255, 255))
+	delbutton.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	delbutton.DoClick = function ()
+		net.Start("AntiRemBypassUsers")
+			net.WriteString(tauser)
+		net.SendToServer()
+	end
+
+	local Sign = vgui.Create( "DLabel", AdminPanelUsers )
+	Sign:SetPos( 25, 410 )
+	Sign:SetSize(150 , 25)
+	Sign:SetText( "Made by Aiko Suzuki !" )
+	
+	
+end
+
+
 local function AntiafkAdminPanelGroups()
 	
 
@@ -341,6 +443,7 @@ local function AntiafkAdminPanel()
     SomeShittyTest = "undefined"
     SomeShittyTest1 = "undefined"
 	SomeShittyTest2 = "undefined"
+	SomeShittyTest3 = "undefined"
     	
 	net.Start("Refresh")
         net.SendToServer(ply)
@@ -368,11 +471,6 @@ local function AntiafkAdminPanel()
 		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 225))
 	end
 
-	local yetinfo = vgui.Create( "DLabel", MainPanel )
-    yetinfo:SetPos( 5, 5 )
-    yetinfo:SetSize(280, 100)
-    yetinfo:SetText( "This panel is to change the After how many second \n someone get kick ! \n Or Set the Warning Time !" )
-    yetinfo:SetContentAlignment(5)
 
     local TextEntry = vgui.Create( "DNumberWang")
     TextEntry:SetParent( MainPanel )
@@ -446,6 +544,42 @@ local function AntiafkAdminPanel()
 			net.SendToServer()
 		end
 	end
+
+
+
+	local checkboxUbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
+	checkboxUbypass:SetPos( 22, 30 )
+	checkboxUbypass:SetText( "User Bypass" )		
+
+	local info4 = vgui.Create( "DLabel", MainPanel )
+    info4:SetPos( 22, 10 )
+    info4:SetSize(280, 100)
+    info4:SetText('Users bypass : '.. SomeShittyTest3  )
+	info4:SetColor(Color(255,255,0))
+	net.Receive("RefreshTime4", function(lan)
+        SomeShittyTest3 = net.ReadString()
+        info4:SetText('Users bypass : ' .. SomeShittyTest3 )
+    end)
+	if SomeShittyTest3 == "true" then
+			checkboxUbypass:SetValue( 1 )
+	end
+	timer.Create("Checkifvalueistruefromafk1", 0.5, 1, function()
+		if SomeShittyTest3 == "true" then
+			checkboxUbypass:SetValue( 1 )
+		end
+	end)
+	
+	function checkboxUbypass:OnChange( val )
+		if val then
+			net.Start("ChangeUBypass")
+				net.WriteString("true")
+			net.SendToServer()
+		else
+			net.Start("ChangeUBypass")
+				net.WriteString("false")
+			net.SendToServer()
+		end
+	end
     
 
     local list_btn = vgui.Create("DButton")
@@ -509,8 +643,18 @@ local function AntiafkAdminPanel()
     Groups_btn:SetColor(Color(255, 255, 255))
 	Groups_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Groups_btn.DoClick = function ()
-		MainPanel:Close()
 		AntiafkAdminPanelGroups()
+	end
+
+	local Users_btn = vgui.Create("DButton")
+	Users_btn:SetParent( MainPanel )
+	Users_btn:SetText( "Users" )
+	Users_btn:SetPos( 213, 65 )
+	Users_btn:SetSize( 55, 20 )
+    Users_btn:SetColor(Color(255, 255, 255))
+	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Users_btn.DoClick = function ()
+		AntiafkAdminPanelUsers()
 	end
 
 	local Sign = vgui.Create( "DLabel", MainPanel )
