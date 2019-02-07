@@ -24,7 +24,7 @@ print("AntiAkf : Checking if config file are there")
 
 
 
-local function AnitAfkfirstloadconfiguration()
+function AnitAfkfirstloadconfiguration()
         if not file.Exists( "aikoaddons", "DATA" ) then file.CreateDir("aikoaddons") end
         if (file.Size( "aikoaddons/AntiAfkConfig.txt", "DATA" ) > 0) then
                 local x = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
@@ -62,7 +62,19 @@ local function FindPly(name)
 end
 end
 
-local function AntiAFKChangeConfigData(settings,data,time)
+function ReloadAntiAfkConfig()
+    local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
+    AntiAFKConfig = util.JSONToTable(noewmotherfucker)
+    AFK_WARN_TIME = AntiAFKConfig.Settings.WARN
+    AFK_TIME = AntiAFKConfig.Settings.KICK
+    AFK_ADMINBYPASS = AntiAFKConfig.Settings.BYPASS
+    AFK_ADMINUBYPASS = AntiAFKConfig.Settings.UBYPASS
+    AFK_ADMINBYPASS_GROUPS = AntiAFKConfig.BypassGroups
+    AFK_REPEAT = AFK_TIME - AFK_WARN_TIME
+    AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
+end
+
+function AntiAFKChangeConfigData(settings,data,time)
     local x = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
     local AntiAFKConfig = util.JSONToTable(x)
     local TempConfigData = AntiAFKConfig
@@ -112,7 +124,7 @@ local function AntiAFKChangeConfigData(settings,data,time)
     end
 end
 
-local function ReloadAntiAfkConfig()
+function ReloadAntiAfkConfig()
     local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
     AntiAFKConfig = util.JSONToTable(noewmotherfucker)
     AFK_WARN_TIME = AntiAFKConfig.Settings.WARN
