@@ -217,7 +217,6 @@ end)
 
 concommand.Add("AntiAfkUpdate", function(ply)
     if (ply:GetUserGroup() == "superadmin") then
-
         local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
         local AntiAFKConfig2 = util.JSONToTable(noewmotherfucker)
         table.Merge(AntiAFKConfig2, AFKDefaultConfig)
@@ -225,17 +224,6 @@ concommand.Add("AntiAfkUpdate", function(ply)
         file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
         ReloadAntiAfkConfig()
         ply:ChatPrint("AntiAfk : Config file as been update")
-
-    elseif !ply:IsValid() then
-
-        local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
-        local AntiAFKConfig2 = util.JSONToTable(noewmotherfucker)
-        table.Merge(AntiAFKConfig2, AFKDefaultConfig)
-        local newdata = util.TableToJSON(AntiAFKConfig2,true)
-        file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
-        ReloadAntiAfkConfig()
-        print("AntiAfk : Config file as been update")
-        
     end
 end)
 
