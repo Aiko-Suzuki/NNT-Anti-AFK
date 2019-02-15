@@ -7,6 +7,12 @@ This is my home made anti-afk-sytem
 - User Whitelist
 - GroupsWhitelist
 
+Chat Command:
+- /setafk
+- /afkpanel
+- /afkhelp
+- /afkhelp
+
 # Preview
 #### Bypass
 ![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/Screenshot_26.png)
