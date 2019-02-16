@@ -16,6 +16,7 @@ This is my home made anti-afk-sytem
 - Control panel (live actualisation)
 - User Whitelist
 - GroupsWhitelist
+- Multiple Language support
 
 Chat Command:
 - /setafk
