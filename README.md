@@ -16,6 +16,7 @@ This is my home made anti-afk-sytem
 - Control panel (live actualisation)
 - User Whitelist
 - GroupsWhitelist
+- Multiple Language support
 
 Chat Command:
 - /setafk
@@ -23,17 +24,16 @@ Chat Command:
 - /afkhelp
 - /afkhelp
 
-#### If you want a other translation please create a ticket with the following model
-
-###### ONLY REPLACE THE TEXT FOLLOWING TEXT:
-- the EN
-- AFK WARNING !
-- You are gonna be kicked for afk in
-- Press any key to cancel !
-- Press any key remove the warning !
-- (Moving Key / Space / Use key / Reload Key / Zoom key)
+Currentely supported language:
 - English
+- Français
+- Español
+- Italiano (No sure if its 100% trustable - google translate)
+- Deutsch (No sure if its 100% trustable - google translate)
+- 中文 (No sure if its 100% trustable - google translate)
 
+
+#### If you want a other translation please create a ticket with the following model
 
 ```
 AntiAfkTranslate.EN = {
