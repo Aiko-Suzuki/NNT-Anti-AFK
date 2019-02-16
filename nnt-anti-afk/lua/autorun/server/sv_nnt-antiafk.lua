@@ -1,4 +1,4 @@
-AikoAntiAFK = AikoAntiAFK or {}
+AntiAFKPlayerEyesTrack = {}
 
 AntiAFKConfig = {}
 
@@ -11,7 +11,8 @@ AFKDefaultConfig.Settings = {
         ["KICK"] = 600,
         ["BYPASS"] = false,
         ["UBYPASS"] = false,
-        ["ANTIAFK"] = true
+        ["ANTIAFK"] = true,
+        ["LANGUAGE"] = "FR"
 }
 AFKDefaultConfig.UsersBypass = {
     "STEAM_0:0:100152240"
@@ -26,17 +27,17 @@ print("AntiAkf : Checking if config file are there")
 
 
 function AnitAfkfirstloadconfiguration()
-        if not file.Exists( "aikoaddons", "DATA" ) then file.CreateDir("aikoaddons") end
-        if (file.Size( "aikoaddons/AntiAfkConfig.txt", "DATA" ) > 0) then
-                local x = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
+        if not file.Exists( "nnt-antiafk", "DATA" ) then file.CreateDir("nnt-antiafk") end
+        if (file.Size( "nnt-antiafk/AntiAfkConfig.txt", "DATA" ) > 0) then
+                local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
                 AntiAFKConfig = util.JSONToTable(x)
                 print("AntiAkf : Loading of config finished !")
         else
             print("AntiAfk: Config not found reloading ...\nAnd Creating File !")
             local x = util.TableToJSON(AFKDefaultConfig,true)
-            file.Write("aikoaddons/AntiAfkConfig.txt",x)
-            if (file.Size( "aikoaddons/AntiAfkwarntime.txt", "DATA" )  > 0) then
-                local x = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
+            file.Write("nnt-antiafk/AntiAfkConfig.txt",x)
+            if (file.Size( "nnt-antiafk/AntiAfkwarntime.txt", "DATA" )  > 0) then
+                local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
                 AntiAFKConfig = util.JSONToTable(x)
                 print("AntiAkf : Loading of config finished !")
             end
@@ -61,7 +62,7 @@ end
 
 
 function ReloadAntiAfkConfig()
-    local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
+    local noewmotherfucker = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
     AntiAFKConfig = util.JSONToTable(noewmotherfucker)
     AFK_WARN_TIME = AntiAFKConfig.Settings.WARN
     AFK_TIME = AntiAFKConfig.Settings.KICK
@@ -71,10 +72,16 @@ function ReloadAntiAfkConfig()
     AFK_ADMINUBYPASS = AntiAFKConfig.Settings.UBYPASS
     AFK_ADMINBYPASS_GROUPS = AntiAFKConfig.BypassGroups
     AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
+    AFK_LANGUAGE =  AntiAFKConfig.Settings.LANGUAGE
+    if #player.GetAll( ) > 0 then
+        net.Start("AntiAfkSendHUDInfo")
+            net.WriteString(AFK_LANGUAGE)
+        net.Broadcast()
+    end
 end
 
 function AntiAFKChangeConfigData(settings,data,time)
-    local x = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
+    local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
     local AntiAFKConfig = util.JSONToTable(x)
     local TempConfigData = AntiAFKConfig
     if settings == "Settings" then
@@ -83,20 +90,26 @@ function AntiAFKChangeConfigData(settings,data,time)
         if data == "KICK" then  TempConfigData.Settings.KICK = time end
         if data == "BYPASS" then  TempConfigData.Settings.BYPASS = time end
         if data == "UBYPASS" then TempConfigData.Settings.UBYPASS = time end
+        if data == "LANGUAGE" then
+            if time == "FR" or time == "EN" or time == "ES" or time == "TR" or time == "IT" or time == "DE" or time == "ZH" then
+                TempConfigData.Settings.LANGUAGE = time
+                print("SHITTTT")
+            end
+        end
         local newdata = util.TableToJSON(TempConfigData,true)
-        file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+        file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
         ReloadAntiAfkConfig()
     elseif settings == "BypassGroups" then
         if time == "DEL" then
             table.RemoveByValue(TempConfigData.BypassGroups,data)
             local newdata = util.TableToJSON(TempConfigData,true)
-            file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+            file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
             ReloadAntiAfkConfig()
         elseif time == "ADD" then
             local count = table.Count(AntiAFKConfig.BypassGroups)
             table.insert(TempConfigData.BypassGroups, count + 1 , data)
             local newdata = util.TableToJSON(TempConfigData,true)
-            file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+            file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
             ReloadAntiAfkConfig()
         end
     elseif   settings == "UsersBypass" then
@@ -105,20 +118,20 @@ function AntiAFKChangeConfigData(settings,data,time)
                 local count = table.Count(AntiAFKConfig.UsersBypass)
                 table.insert(TempConfigData.UsersBypass, count + 1 , data)
                 local newdata = util.TableToJSON(TempConfigData,true)
-                file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+                file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
                 ReloadAntiAfkConfig()
             else
                 local count = table.Count(AntiAFKConfig.UsersBypass)
                 table.insert(TempConfigData.UsersBypass, count + 1 , FindPly(data):SteamID())
                 local newdata = util.TableToJSON(TempConfigData,true)
-                file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+                file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
                 ReloadAntiAfkConfig()
             end
 
         elseif time == "DEL" then
             table.RemoveByValue(TempConfigData.UsersBypass,data)
             local newdata = util.TableToJSON(TempConfigData,true)
-            file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+            file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
             ReloadAntiAfkConfig()
         end
     end
@@ -167,7 +180,34 @@ util.AddNetworkString( "AntiAfkloaBypassUsers" )
 util.AddNetworkString( "AntiRemBypassUsers" )
 
 
-
+net.Receive("AntiAfkSendHUDInfo", function(len,ply)
+    if (ply:GetUserGroup() == "superadmin") then
+        local data4 = net.ReadString()
+        if data4 == "EN" then
+            print("receiving data EN")
+            AntiAFKChangeConfigData("Settings","LANGUAGE","EN")
+        elseif data4 == "FR"  then
+            print("receiving data FR")
+            AntiAFKChangeConfigData("Settings","LANGUAGE","FR")
+        elseif data4 == "ES"  then
+            print("receiving data ES")
+            AntiAFKChangeConfigData("Settings","LANGUAGE","ES")
+        elseif data4 == "TR"  then
+            print("receiving data TR")
+            AntiAFKChangeConfigData("Settings","LANGUAGE","TR")
+        elseif data4 == "IT"  then
+            print("receiving data IT")
+            AntiAFKChangeConfigData("Settings","LANGUAGE","IT")
+        elseif data4 == "DE"  then
+            print("receiving data DE")
+            AntiAFKChangeConfigData("Settings","LANGUAGE","DE")
+        elseif data4 == "ZH"  then
+            print("receiving data ZH")
+            AntiAFKChangeConfigData("Settings","LANGUAGE","ZH")
+        end
+        print("Finish")
+    end
+end)
 
 
 
@@ -210,38 +250,23 @@ concommand.Add( "setafktime", function( ply, cmd, args )
 	         else
 	             ply:ChatPrint("AntiAfk: Please Enter a valide time")
 	         end
-	     end     
+	     end
 	 end
 end)
 
 
 concommand.Add("AntiAfkUpdate", function(ply)
     if (ply:GetUserGroup() == "superadmin") then
-        local noewmotherfucker = file.Read("aikoaddons/AntiAfkConfig.txt","DATA")
+        local noewmotherfucker = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
         local AntiAFKConfig2 = util.JSONToTable(noewmotherfucker)
         table.Merge(AntiAFKConfig2, AFKDefaultConfig)
         local newdata = util.TableToJSON(AntiAFKConfig2,true)
-        file.Write("aikoaddons/AntiAfkConfig.txt",newdata)
+        file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
         ReloadAntiAfkConfig()
         ply:ChatPrint("AntiAfk : Config file as been update")
     end
 end)
 
-concommand.Add( "setplayerlang", function( ply, cmd, args )
-    if (ply:GetUserGroup() == "superadmin") then
-        targetply = findply(args[1])
-        arguments = tostring(args[2])
-        if (targetply:IsBot() == false) then
-            targetply:SendLua("RunConsoleCommand( 'gmod_language', '".. arguments .. "' )")
-            timer.Simple( 2, function() targetply:SendLua("RunConsoleCommand( 'spawnmenu_reload' )") end)
-            
-            ply:ChatPrint("AntiAFK: U have set the language of " .. targetply:Nick() .. " to " .. arguments )
-        end
-    else
-    ply:ChatPrint("AntiAfk : U are not a SuperAdmin !")
-    end
-    
-end)
 
 net.Receive("ChangeWarnTime", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
@@ -377,7 +402,7 @@ end)
 concommand.Add( "afktime", function( ply, cmd, args )
         ply:ChatPrint("AntiAfk: Time before kick " .. AFK_TIME.. " secondes")
         ply:ChatPrint("AntiAfk: You should get a warning " .. AFK_WARN_TIME .. " secondes after being afk ")
-        ply:ChatPrint("AntiAfk: Its been " ..  AFK_TIME - math.Round(ply.NextAFK - CurTime()) .. " secondes since u are afk !") 
+        ply:ChatPrint("AntiAfk: Its been " ..  AFK_TIME - math.Round(ply.NextAFK - CurTime()) .. " secondes since u are afk !")
         ply:ChatPrint(" AntiAfk : "..  math.Round(ply.NextAFK - CurTime()) .. " Secondes left before the kick")
 end)
 
@@ -410,11 +435,14 @@ concommand.Add( "setafkplayer", function( ply, cmd, args )
     else
     ply:ChatPrint("AntiAfk : U are not a SuperAdmin !")
     end
-    
+
 end)
 
 hook.Add("PlayerInitialSpawn", "MakeAFKVar", function(ply)
 	ply.NextAFK = CurTime() + AFK_TIME
+    net.Start("AntiAfkSendHUDInfo")
+            net.WriteString(AFK_LANGUAGE)
+    net.Send(ply)
 end)
 
 hook.Add("Think", "NNT-AFKPLAYERS", function()
@@ -422,7 +450,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 		if ( ply:IsConnected() and ply:IsFullyAuthenticated() ) then
             if !AFK_ENABLE then
                     ply.NextAFK = CurTime() + AFK_TIME
-                return 
+                return
             end
 			if (!ply.NextAFK) then
 				ply.NextAFK = CurTime() + AFK_TIME
@@ -438,6 +466,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                                 net.Start("AntiAfkSendHUDInfo")
                                     net.WriteString("AntiafkMainHUD")
                                 net.Send(ply)
+                                AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
                                 for k, v in pairs( player.GetAll() ) do
                                     v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                                 end
@@ -459,6 +488,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                             net.Start("AntiAfkSendHUDInfo")
                                 net.WriteString("AntiafkMainHUD")
                             net.Send(ply)
+                            AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
                             for k, v in pairs( player.GetAll() ) do
                                 v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                             end
@@ -480,6 +510,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                         net.Start("AntiAfkSendHUDInfo")
                             net.WriteString("AntiafkMainHUD")
                         net.Send(ply)
+                        AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
                         for k, v in pairs( player.GetAll() ) do
                             v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                         end
@@ -502,11 +533,12 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 				    net.Start("AntiAfkSendHUDInfo")
                         net.WriteString("AntiafkMainHUD")
                     net.Send(ply)
+                    AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
 				    for k, v in pairs( player.GetAll() ) do
                         v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 198, 0, 0 ), ' is now AFK ' )")
                     end
 				    local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
-				    
+
 				end
 			elseif (CurTime() >= afktime + AFK_TIME) and (ply.Warning) then
 				ply.Warning = nil
@@ -521,7 +553,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 end)
 
 hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
-    
+
     -----------------------------------------------------------------
     -----------------------------------------------------------------
     if (string.StartWith( text , "/afktime" ) == true) then
@@ -529,13 +561,13 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
         local AikoAfkCommands = hook.Call( "AikoAfkCommands", GAMEMODE, ply , commands)
         ply:ConCommand("afktime")
         return"";
-        
+
     -----------------------------------------------------------------
     -----------------------------------------------------------------
     elseif(string.StartWith( text , "/setafk" ) == true) then
         commands = "/setafk"
         if (ply:GetUserGroup() == "superadmin") then
-            
+
             net.Start("AntiAfkSendHUDInfo")
                 net.WriteString("AntiafkAdminSetAfk")
             net.Send(ply)
@@ -545,10 +577,10 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
             local AikoAfkCommandsFail = hook.Call( "AikoAfkCommandsFail", GAMEMODE, ply , commands)
         end
         return"";
-        
-    
-    
-    
+
+
+
+
     elseif(string.StartWith( text , "/afkpanel" ) == true) then
         commands = "/afkpanel"
         if (ply:GetUserGroup() == "superadmin") then
@@ -560,11 +592,11 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
             ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
             local AikoAfkCommandsFail = hook.Call( "AikoAfkCommandsFail", GAMEMODE, ply , commands)
         end
-      
+
         return"";
-        
-        
-        
+
+
+
     -----------------------------------------------------------------
     -----------------------------------------------------------------
     elseif(string.StartWith( text , "/afkhelp" ) == true) then
@@ -582,7 +614,7 @@ end )
 
 
 net.Receive("CurrentTime", function(len, ply)
-            net.Start("ClientMessages")
+        net.Start("ClientMessages")
             Sometime = AFK_WARN_TIME
             net.WriteString(Sometime)
         net.Broadcast()
@@ -593,7 +625,8 @@ util.AddNetworkString( "AFKHUD2" )
 util.AddNetworkString( "AFKHUDR" )
 
 hook.Add("KeyPress", "PlayerMoved", function(ply, key)
-    if ply:GetVelocity():Length() > 0 or ply:InVehicle() then
+    ply:ChatPrint(ply:GetVelocity():Length())
+    if ply:InVehicle() or !ply:InVehicle() and !(ply:GetAimVector() == AntiAFKPlayerEyesTrack[ply:SteamID()]) then
 	    ply.NextAFK = CurTime() + AFK_TIME
 	    if ply.Warning == true or ply.SuperAbuse == true then
 		    ply.Warning = false
@@ -629,7 +662,7 @@ hook.Add("KeyPress", "PlayerMoved", function(ply, key)
 	                else
 	                    return
 	                end
-                else    
+                else
 		            net.Start("AFKHUD1")
                         net.WriteString("true")
                     net.Send(ply)
@@ -640,19 +673,6 @@ hook.Add("KeyPress", "PlayerMoved", function(ply, key)
 	    end
 	end
 end)
-
-hook.Add("PlayerDisconnected", "AntiAfkunloadply", function(ply)
-    
-end)
-
-concommand.Add( "Something", function( ply, cmd, args )
-    ply:SendLua('surface.PlaySound("buttons/button18.wav")')
-	ply:SendLua('surface.PlaySound("buttons/button18.wav")')
-	ply:SendLua('surface.PlaySound("buttons/button18.wav")')
-end )
-
-
-
 
 
 net.Receive("AFKHUD2", function(len, ply)
