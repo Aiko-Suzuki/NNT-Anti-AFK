@@ -34,16 +34,6 @@ Currentely supported language:
 
 #### If you want a other translation please create a ticket with the following model
 
-###### ONLY REPLACE THE TEXT FOLLOWING TEXT:
-- the EN
-- AFK WARNING !
-- You are gonna be kicked for afk in
-- Press any key to cancel !
-- Press any key remove the warning !
-- (Moving Key / Space / Use key / Reload Key / Zoom key)
-- English
-
-
 ```
 AntiAfkTranslate.EN = {
 	["MAINTEXT"] = "AFK WARNING !",
