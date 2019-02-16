@@ -12,7 +12,7 @@ if you want the blogs modules sorry but you will need to try by yourself
 
 ![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/Screenshot_27.png)
 
-This is my home made anti-afk-sytem
+NNT-ANTI-AFK:
 - Control panel (live actualisation)
 - User Whitelist
 - GroupsWhitelist
