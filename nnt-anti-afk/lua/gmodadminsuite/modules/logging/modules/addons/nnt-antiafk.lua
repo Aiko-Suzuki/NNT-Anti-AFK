@@ -1,5 +1,3 @@
-if (not AikoAntiAFK) then return end
-
 local MODULE = GAS.Logging:MODULE()
 
 MODULE.Category = "[NNT] Anti-AFK"
