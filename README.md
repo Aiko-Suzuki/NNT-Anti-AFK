@@ -10,7 +10,7 @@ if you want the blogs modules sorry but you will need to try by yourself
 
 ## Information
 
-![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/Screenshot_27.png)
+![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/warning.png)
 
 NNT-ANTI-AFK:
 - Control panel (live actualisation)
@@ -48,11 +48,11 @@ AntiAfkTranslate.EN = {
 
 ## Preview
 #### Bypass
-![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/Screenshot_26.png)
+![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/userandgroupsbypass.png)
 #### Panel
-![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/Screenshot_29.png)
+![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/panel.png)
 #### AfkMessages
-![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/Screenshot_30.png)
+![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/afkmessages.png)
 ### NOTE
 Bypass:
   - When user is whitelisted bypass it will still show in the chat when he goes afk it will only not kick him for afk
