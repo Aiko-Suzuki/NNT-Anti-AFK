@@ -1,5 +1,3 @@
-if not AikoAntiAFK then return end
-
 local MODULE = bLogs:Module()
 
 MODULE.Category = "[NNT] Anti-AFK"
