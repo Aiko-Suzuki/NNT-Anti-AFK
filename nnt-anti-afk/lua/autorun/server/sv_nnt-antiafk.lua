@@ -93,7 +93,6 @@ function AntiAFKChangeConfigData(settings,data,time)
         if data == "LANGUAGE" then
             if time == "FR" or time == "EN" or time == "ES" or time == "TR" or time == "IT" or time == "DE" or time == "ZH" then
                 TempConfigData.Settings.LANGUAGE = time
-                print("SHITTTT")
             end
         end
         local newdata = util.TableToJSON(TempConfigData,true)
@@ -205,7 +204,6 @@ net.Receive("AntiAfkSendHUDInfo", function(len,ply)
             print("receiving data ZH")
             AntiAFKChangeConfigData("Settings","LANGUAGE","ZH")
         end
-        print("Finish")
     end
 end)
 
@@ -625,7 +623,6 @@ util.AddNetworkString( "AFKHUD2" )
 util.AddNetworkString( "AFKHUDR" )
 
 hook.Add("KeyPress", "PlayerMoved", function(ply, key)
-    ply:ChatPrint(ply:GetVelocity():Length())
     if ply:InVehicle() or !ply:InVehicle() and !(ply:GetAimVector() == AntiAFKPlayerEyesTrack[ply:SteamID()]) then
 	    ply.NextAFK = CurTime() + AFK_TIME
 	    if ply.Warning == true or ply.SuperAbuse == true then
