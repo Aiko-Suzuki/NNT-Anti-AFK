@@ -26,6 +26,7 @@ Chat Command:
 #### If you want a other translation please create a ticket with the following model
 
 ###### ONLY REPLACE THE TEXT FOLLOWING TEXT:
+- the EN
 - AFK WARNING !
 - You are gonna be kicked for afk in
 - Press any key to cancel !
@@ -41,7 +42,7 @@ AntiAfkTranslate.EN = {
 	["CANCEL"] = "Press any key to cancel !",
 	["REMOVEWARN"] = "Press any key remove the warning !",
 	["MOVEKEY"] = "(Moving Key / Space / Use key / Reload Key / Zoom key)",
-    ["NAME"] = "English"
+	["NAME"] = "English"
 }
 ```
 
