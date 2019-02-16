@@ -31,6 +31,7 @@ Chat Command:
 - Press any key to cancel !
 - Press any key remove the warning !
 - (Moving Key / Space / Use key / Reload Key / Zoom key)
+- English
 
 
 ```
@@ -39,7 +40,8 @@ AntiAfkTranslate.EN = {
 	["WARN"] = "You are gonna be kicked for afk in",
 	["CANCEL"] = "Press any key to cancel !",
 	["REMOVEWARN"] = "Press any key remove the warning !",
-	["MOVEKEY"] = "(Moving Key / Space / Use key / Reload Key / Zoom key)"
+	["MOVEKEY"] = "(Moving Key / Space / Use key / Reload Key / Zoom key)",
+    ["NAME"] = "English"
 }
 ```
 
