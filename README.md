@@ -23,6 +23,15 @@ Chat Command:
 - /afkhelp
 - /afkhelp
 
+Currentely supported language:
+- English
+- Français
+- Español
+- Italiano (No sure if its 100% trustable - google translate)
+- Deutsch (No sure if its 100% trustable - google translate)
+- 中文 (No sure if its 100% trustable - google translate)
+
+
 #### If you want a other translation please create a ticket with the following model
 
 ###### ONLY REPLACE THE TEXT FOLLOWING TEXT:
