@@ -1,3 +1,15 @@
+--[[
+ /$$$$$$$  /$$$$$$$$ /$$$$$$$$ /$$$$$$  /$$   /$$ /$$    /$$$$$$$$       /$$$$$$$   /$$$$$$  /$$$$$$$$ /$$$$$$
+| $$__  $$| $$_____/| $$_____//$$__  $$| $$  | $$| $$   |__  $$__/      | $$__  $$ /$$__  $$|__  $$__//$$__  $$
+| $$  \ $$| $$      | $$     | $$  \ $$| $$  | $$| $$      | $$         | $$  \ $$| $$  \ $$   | $$  | $$  \ $$
+| $$  | $$| $$$$$   | $$$$$  | $$$$$$$$| $$  | $$| $$      | $$         | $$  | $$| $$$$$$$$   | $$  | $$$$$$$$
+| $$  | $$| $$__/   | $$__/  | $$__  $$| $$  | $$| $$      | $$         | $$  | $$| $$__  $$   | $$  | $$__  $$
+| $$  | $$| $$      | $$     | $$  | $$| $$  | $$| $$      | $$         | $$  | $$| $$  | $$   | $$  | $$  | $$
+| $$$$$$$/| $$$$$$$$| $$     | $$  | $$|  $$$$$$/| $$$$$$$$| $$         | $$$$$$$/| $$  | $$   | $$  | $$  | $$
+|_______/ |________/|__/     |__/  |__/ \______/ |________/|__/         |_______/ |__/  |__/   |__/  |__/  |__/
+]]
+
+
 AntiAFKPlayerEyesTrack = {}
 
 AntiAFKConfig = {}
@@ -18,12 +30,22 @@ AFKDefaultConfig.UsersBypass = {
     "STEAM_0:0:100152240"
 }
 
-
+--[[
+ /$$                                 /$$        /$$$$$$                       /$$$$$$  /$$
+| $$                                | $$       /$$__  $$                     /$$__  $$|__/
+| $$        /$$$$$$   /$$$$$$   /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$ | $$  \__/ /$$  /$$$$$$
+| $$       /$$__  $$ |____  $$ /$$__  $$      | $$       /$$__  $$| $$__  $$| $$$$    | $$ /$$__  $$
+| $$      | $$  \ $$  /$$$$$$$| $$  | $$      | $$      | $$  \ $$| $$  \ $$| $$_/    | $$| $$  \ $$
+| $$      | $$  | $$ /$$__  $$| $$  | $$      | $$    $$| $$  | $$| $$  | $$| $$      | $$| $$  | $$
+| $$$$$$$$|  $$$$$$/|  $$$$$$$|  $$$$$$$      |  $$$$$$/|  $$$$$$/| $$  | $$| $$      | $$|  $$$$$$$
+|________/ \______/  \_______/ \_______/       \______/  \______/ |__/  |__/|__/      |__/ \____  $$
+                                                                                           /$$  \ $$
+                                                                                          |  $$$$$$/
+                                                                                           \______/
+]]
 
 -- Starting to load Script !
 print("AntiAkf : Checking if config file are there")
-
-
 
 
 function AnitAfkfirstloadconfiguration()
@@ -59,7 +81,16 @@ local function FindPly(name)
 	    end
     end
 end
-
+--[[
+  /$$$$$$  /$$$$$$$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$        /$$$$$$  /$$$$$$$$        /$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$$$$$  /$$$$$$
+ /$$__  $$| $$_____/ /$$__  $$|__  $$__/|_  $$_/ /$$__  $$| $$$ | $$       /$$__  $$| $$_____/       /$$__  $$ /$$__  $$| $$$ | $$| $$_____/|_  $$_/ /$$__  $$
+| $$  \__/| $$      | $$  \__/   | $$     | $$  | $$  \ $$| $$$$| $$      | $$  \ $$| $$            | $$  \__/| $$  \ $$| $$$$| $$| $$        | $$  | $$  \__/
+| $$ /$$$$| $$$$$   |  $$$$$$    | $$     | $$  | $$  | $$| $$ $$ $$      | $$  | $$| $$$$$         | $$      | $$  | $$| $$ $$ $$| $$$$$     | $$  | $$ /$$$$
+| $$|_  $$| $$__/    \____  $$   | $$     | $$  | $$  | $$| $$  $$$$      | $$  | $$| $$__/         | $$      | $$  | $$| $$  $$$$| $$__/     | $$  | $$|_  $$
+| $$  \ $$| $$       /$$  \ $$   | $$     | $$  | $$  | $$| $$\  $$$      | $$  | $$| $$            | $$    $$| $$  | $$| $$\  $$$| $$        | $$  | $$  \ $$
+|  $$$$$$/| $$$$$$$$|  $$$$$$/   | $$    /$$$$$$|  $$$$$$/| $$ \  $$      |  $$$$$$/| $$            |  $$$$$$/|  $$$$$$/| $$ \  $$| $$       /$$$$$$|  $$$$$$/
+ \______/ |________/ \______/    |__/   |______/ \______/ |__/  \__/       \______/ |__/             \______/  \______/ |__/  \__/|__/      |______/ \______/
+]]
 
 function ReloadAntiAfkConfig()
     local noewmotherfucker = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
@@ -137,49 +168,81 @@ function AntiAFKChangeConfigData(settings,data,time)
 end
 
 
+--[[
+ /$$        /$$$$$$   /$$$$$$  /$$$$$$$
+| $$       /$$__  $$ /$$__  $$| $$__  $$
+| $$      | $$  \ $$| $$  \ $$| $$  \ $$
+| $$      | $$  | $$| $$$$$$$$| $$  | $$
+| $$      | $$  | $$| $$__  $$| $$  | $$
+| $$      | $$  | $$| $$  | $$| $$  | $$
+| $$$$$$$$|  $$$$$$/| $$  | $$| $$$$$$$/
+|________/ \______/ |__/  |__/|_______/
+]]
 
+local Timer = {}
 
-Timer = {}
-
-AnitAfkfirstloadconfiguration()
+AnitAfkfirstloadconfiguration() -- Just loading the function to load the config after checking if the file are there
 print("RELOAD CONF")
-ReloadAntiAfkConfig()
-
+ReloadAntiAfkConfig() -- reload the config to load all the config with the following format AFK_WARN_TIME, AFK_TIME, AFK_REPEAT, AFK_ENABLE, AFK_ADMINBYPASS, AFK_ADMINUBYPASS, AFK_ADMINBYPASS_GROUPS, AFK_ADMINBYPASS_USERS, AFK_LANGUAGE
 print("FINISH RELOAD CONF")
 
-util.AddNetworkString( "CurrentTime" )
-util.AddNetworkString( "ClientMessages" )
 
-util.AddNetworkString( "Refresh" )
 
-util.AddNetworkString( "ChangeWarnTime" )
-util.AddNetworkString( "ChangeSPBypass" )
-util.AddNetworkString( "ChangeUBypass" )
-util.AddNetworkString( "ChangeEnableAntiAFK" )
+--[[
+ /$$   /$$             /$$           /$$       /$$ /$$
+| $$$ | $$            | $$          | $$      |__/| $$
+| $$$$| $$  /$$$$$$  /$$$$$$        | $$       /$$| $$$$$$$   /$$$$$$  /$$$$$$   /$$$$$$  /$$   /$$
+| $$ $$ $$ /$$__  $$|_  $$_/        | $$      | $$| $$__  $$ /$$__  $$|____  $$ /$$__  $$| $$  | $$
+| $$  $$$$| $$$$$$$$  | $$          | $$      | $$| $$  \ $$| $$  \__/ /$$$$$$$| $$  \__/| $$  | $$
+| $$\  $$$| $$_____/  | $$ /$$      | $$      | $$| $$  | $$| $$      /$$__  $$| $$      | $$  | $$
+| $$ \  $$|  $$$$$$$  |  $$$$/      | $$$$$$$$| $$| $$$$$$$/| $$     |  $$$$$$$| $$      |  $$$$$$$
+|__/  \__/ \_______/   \___/        |________/|__/|_______/ |__/      \_______/|__/       \____  $$
+                                                                                          /$$  | $$
+                                                                                         |  $$$$$$/
+                                                                                          \______/
+]]
 
-util.AddNetworkString( "RefreshTime1" )
+util.AddNetworkString( "Refresh" ) -- REFRESH SOME PANEL BUTTON
+
+util.AddNetworkString( "ChangeWarnTime" ) -- CHANGE WARNING TIME
+util.AddNetworkString( "ChangeGroupsBypass" ) -- CHANGE GROUPS BYPASS ENABLE/DISABLE
+util.AddNetworkString( "ChangeUBypass" ) -- CHANGE USERS BYPASS ENABLE/DISABLE
+util.AddNetworkString( "ChangeEnableAntiAFK" ) -- CHANGE ANTIAFK ENABLE/DISABLE
+
+util.AddNetworkString( "RefreshTime1" ) -- REFRESH THE ADMIN PANEL DATA
 util.AddNetworkString( "RefreshTime2" )
 util.AddNetworkString( "RefreshTime3" )
 util.AddNetworkString( "RefreshTime4" )
 util.AddNetworkString( "RefreshTime5" )
 
+util.AddNetworkString( "AntiAfkSendHUDInfo" ) -- BASIC HUD INFO LANGUAGE/WHAT TO OPEN
 
-util.AddNetworkString( "AntiAfkSendHUDInfo" )
-
-
-util.AddNetworkString( "AntiAddBypassGroups" )
+util.AddNetworkString( "AntiAddBypassGroups" )-- BYPASS USER NET
 util.AddNetworkString( "AntiAfksenBypassGroups" )
 util.AddNetworkString( "AntiAfkloaBypassGroups" )
 util.AddNetworkString( "AntiRemBypassGroups" )
 
-
-util.AddNetworkString( "AntiAddBypassUsers" )
+util.AddNetworkString( "AntiAddBypassUsers" ) -- BYPASSGROUPS NET
 util.AddNetworkString( "AntiAfksenBypassUsers" )
 util.AddNetworkString( "AntiAfkloaBypassUsers" )
 util.AddNetworkString( "AntiRemBypassUsers" )
 
 
-net.Receive("AntiAfkSendHUDInfo", function(len,ply)
+util.AddNetworkString( "AFKHUD1" ) -- HUD REQUEST AND RESPOND
+util.AddNetworkString( "AFKHUD2" )
+util.AddNetworkString( "AFKHUDR" )
+
+
+
+
+net.Receive("AFKHUD2", function(len, ply)
+    net.Start("AFKHUDR")
+        net.WriteString(math.Round(ply.NextAFK - CurTime()))
+    net.Send(ply)
+end)
+
+
+net.Receive("AntiAfkSendHUDInfo", function(len,ply) -- CHANGING THE LANGUAGE !
     if (ply:GetUserGroup() == "superadmin") then
         local data4 = net.ReadString()
         if data4 == "EN" then
@@ -209,7 +272,7 @@ end)
 
 
 
-net.Receive("Refresh", function(len, ply)
+net.Receive("Refresh", function(len, ply) -- REFRESHING THE ADMIN PANEL
         if (ply:GetUserGroup() == "superadmin") then
             net.Start("RefreshTime2")
                 net.WriteString(AFK_WARN_TIME)
@@ -231,7 +294,165 @@ net.Receive("Refresh", function(len, ply)
         end
 end)
 
-concommand.Add( "setafktime", function( ply, cmd, args )
+
+net.Receive("ChangeWarnTime", function(len, ply) -- CHANGING WARN TIME
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest = tonumber(net.ReadString() , 10)
+        AntiAFKChangeConfigData("Settings","WARN",SomeShittyTest)
+        net.Start("RefreshTime2")
+            net.WriteString(AFK_WARN_TIME)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+
+net.Receive("AntiAddBypassUsers", function(len, ply) -- ADD USER TO THE USERS WHITELIST
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest = net.ReadString()
+        if string.StartWith(SomeShittyTest , " " ) then return end
+		if SomeShittyTest == "" then return end
+        if table.HasValue(AFK_ADMINBYPASS_USERS,SomeShittyTest ) then return end
+        AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"ADD")
+        net.Start("AntiAfksenBypassUsers")
+            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("AntiRemBypassUsers", function(len, ply) -- REMOVE USER FROM THE WHITE LIST
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest = net.ReadString()
+        AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"DEL")
+        net.Start("AntiAfksenBypassUsers")
+            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("AntiAfkloaBypassUsers", function(len, ply) -- LOAD USER FROM THE WHITELIST
+    if (ply:GetUserGroup() == "superadmin") then
+        ply:ChatPrint("Received!")
+        net.Start("AntiAfksenBypassUsers")
+            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+
+
+
+net.Receive("AntiAddBypassGroups", function(len, ply) -- ADD GROUPS TO THE GROUPS WHITELIST
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest = net.ReadString()
+        if string.StartWith(SomeShittyTest , " " ) then return end
+		if SomeShittyTest == "" then return end
+        if table.HasValue(AFK_ADMINBYPASS_GROUPS,SomeShittyTest ) then return end
+        AntiAFKChangeConfigData("BypassGroups",SomeShittyTest,"ADD")
+        net.Start("AntiAfksenBypassGroups")
+            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("AntiRemBypassGroups", function(len, ply)  -- REMOVE GROUPS FROM THE GROUPS WHITELIST
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest = net.ReadString()
+        AntiAFKChangeConfigData("BypassGroups",SomeShittyTest,"DEL")
+        net.Start("AntiAfksenBypassGroups")
+            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("AntiAfkloaBypassGroups", function(len, ply) -- LOAD GROUPS FROM THE GROUPS WHITELIST
+    if (ply:GetUserGroup() == "superadmin") then
+        ply:ChatPrint("Received!")
+        net.Start("AntiAfksenBypassGroups")
+            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+
+
+net.Receive("ChangeGroupsBypass", function(len, ply) -- ENABLE / DISABLE GROUPS WHITELIST
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest1 = tobool( net.ReadString() )
+        AntiAFKChangeConfigData("Settings","BYPASS", SomeShittyTest1)
+        net.Start("RefreshTime3")
+            net.WriteString(tostring(AFK_ADMINBYPASS))
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("ChangeUBypass", function(len, ply) -- ENABLE / DISABLE USERS WHITELIST
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest1 = tobool( net.ReadString() )
+        AntiAFKChangeConfigData("Settings","UBYPASS", SomeShittyTest1)
+        net.Start("RefreshTime4")
+            net.WriteString(tostring(AFK_ADMINUBYPASS))
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+net.Receive("ChangeEnableAntiAFK", function(len, ply) -- ENABLE / DISABLE THE ANTIAFK
+    if (ply:GetUserGroup() == "superadmin") then
+        SomeShittyTest1 = tobool( net.ReadString() )
+        AntiAFKChangeConfigData("Settings","ANTIAFK", SomeShittyTest1)
+        net.Start("RefreshTime5")
+            net.WriteString(tostring(AFK_ENABLE))
+        net.Send(ply)
+    else
+        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
+    end
+end)
+
+--[[
+  /$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$  /$$       /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
+ /$$__  $$ /$$__  $$| $$$ | $$ /$$__  $$ /$$__  $$| $$      | $$_____/       /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$ /$$__  $$| $$$ | $$| $$__  $$
+| $$  \__/| $$  \ $$| $$$$| $$| $$  \__/| $$  \ $$| $$      | $$            | $$  \__/| $$  \ $$| $$$$  /$$$$| $$$$  /$$$$| $$  \ $$| $$$$| $$| $$  \ $$
+| $$      | $$  | $$| $$ $$ $$|  $$$$$$ | $$  | $$| $$      | $$$$$         | $$      | $$  | $$| $$ $$/$$ $$| $$ $$/$$ $$| $$$$$$$$| $$ $$ $$| $$  | $$
+| $$      | $$  | $$| $$  $$$$ \____  $$| $$  | $$| $$      | $$__/         | $$      | $$  | $$| $$  $$$| $$| $$  $$$| $$| $$__  $$| $$  $$$$| $$  | $$
+| $$    $$| $$  | $$| $$\  $$$ /$$  \ $$| $$  | $$| $$      | $$            | $$    $$| $$  | $$| $$\  $ | $$| $$\  $ | $$| $$  | $$| $$\  $$$| $$  | $$
+|  $$$$$$/|  $$$$$$/| $$ \  $$|  $$$$$$/|  $$$$$$/| $$$$$$$$| $$$$$$$$      |  $$$$$$/|  $$$$$$/| $$ \/  | $$| $$ \/  | $$| $$  | $$| $$ \  $$| $$$$$$$/
+ \______/  \______/ |__/  \__/ \______/  \______/ |________/|________/       \______/  \______/ |__/     |__/|__/     |__/|__/  |__/|__/  \__/|_______/
+]]
+
+local function findply( name )
+	name = string.lower(name);
+	for _,v in ipairs(player.GetHumans()) do if(string.find(string.lower(v:Name()),name,1,true) != nil)
+			then
+			    return v;
+		end
+	end
+end
+
+concommand.Add( "afktime", function( ply, cmd, args )
+        ply:ChatPrint("AntiAfk: Time before kick " .. AFK_TIME.. " secondes")
+        ply:ChatPrint("AntiAfk: You should get a warning " .. AFK_WARN_TIME .. " secondes after being afk ")
+        ply:ChatPrint("AntiAfk: Its been " ..  AFK_TIME - math.Round(ply.NextAFK - CurTime()) .. " secondes since u are afk !")
+        ply:ChatPrint(" AntiAfk : "..  math.Round(ply.NextAFK - CurTime()) .. " Secondes left before the kick")
+end)
+
+concommand.Add( "setafktime", function( ply, cmd, args ) -- need to change this in net library ...
 	 if (ply:GetUserGroup() == "superadmin") then
 	     arguments = tonumber(args[1] , 10)
 	     if (type(arguments) == "number") then
@@ -265,156 +486,7 @@ concommand.Add("AntiAfkUpdate", function(ply)
     end
 end)
 
-
-net.Receive("ChangeWarnTime", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest = tonumber(net.ReadString() , 10)
-        AntiAFKChangeConfigData("Settings","WARN",SomeShittyTest)
-        net.Start("RefreshTime2")
-            net.WriteString(AFK_WARN_TIME)
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-
-net.Receive("AntiAddBypassUsers", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest = net.ReadString()
-        if string.StartWith(SomeShittyTest , " " ) then return end
-		if SomeShittyTest == "" then return end
-        if table.HasValue(AFK_ADMINBYPASS_USERS,SomeShittyTest ) then return end
-        AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"ADD")
-        net.Start("AntiAfksenBypassUsers")
-            net.WriteTable(AFK_ADMINBYPASS_USERS)
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-net.Receive("AntiRemBypassUsers", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest = net.ReadString()
-        AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"DEL")
-        net.Start("AntiAfksenBypassUsers")
-            net.WriteTable(AFK_ADMINBYPASS_USERS)
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-net.Receive("AntiAfkloaBypassUsers", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        ply:ChatPrint("Received!")
-        net.Start("AntiAfksenBypassUsers")
-            net.WriteTable(AFK_ADMINBYPASS_USERS)
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-
-
-
-net.Receive("AntiAddBypassGroups", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest = net.ReadString()
-        if string.StartWith(SomeShittyTest , " " ) then return end
-		if SomeShittyTest == "" then return end
-        if table.HasValue(AFK_ADMINBYPASS_GROUPS,SomeShittyTest ) then return end
-        AntiAFKChangeConfigData("BypassGroups",SomeShittyTest,"ADD")
-        net.Start("AntiAfksenBypassGroups")
-            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-net.Receive("AntiRemBypassGroups", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest = net.ReadString()
-        AntiAFKChangeConfigData("BypassGroups",SomeShittyTest,"DEL")
-        net.Start("AntiAfksenBypassGroups")
-            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-net.Receive("AntiAfkloaBypassGroups", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        ply:ChatPrint("Received!")
-        net.Start("AntiAfksenBypassGroups")
-            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-
-
-net.Receive("ChangeSPBypass", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest1 = tobool( net.ReadString() )
-        AntiAFKChangeConfigData("Settings","BYPASS", SomeShittyTest1)
-        net.Start("RefreshTime3")
-            net.WriteString(tostring(AFK_ADMINBYPASS))
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-net.Receive("ChangeUBypass", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest1 = tobool( net.ReadString() )
-        AntiAFKChangeConfigData("Settings","UBYPASS", SomeShittyTest1)
-        net.Start("RefreshTime4")
-            net.WriteString(tostring(AFK_ADMINUBYPASS))
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-net.Receive("ChangeEnableAntiAFK", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
-        SomeShittyTest1 = tobool( net.ReadString() )
-        AntiAFKChangeConfigData("Settings","ANTIAFK", SomeShittyTest1)
-        net.Start("RefreshTime5")
-            net.WriteString(tostring(AFK_ENABLE))
-        net.Send(ply)
-    else
-        ply:ChatPrint("AnitAfk : You don't have the permission to accces the panel !")
-    end
-end)
-
-
-concommand.Add( "afktime", function( ply, cmd, args )
-        ply:ChatPrint("AntiAfk: Time before kick " .. AFK_TIME.. " secondes")
-        ply:ChatPrint("AntiAfk: You should get a warning " .. AFK_WARN_TIME .. " secondes after being afk ")
-        ply:ChatPrint("AntiAfk: Its been " ..  AFK_TIME - math.Round(ply.NextAFK - CurTime()) .. " secondes since u are afk !")
-        ply:ChatPrint(" AntiAfk : "..  math.Round(ply.NextAFK - CurTime()) .. " Secondes left before the kick")
-end)
-
-local t
-function findply( name )
-	name = string.lower(name);
-	for _,v in ipairs(player.GetHumans()) do if(string.find(string.lower(v:Name()),name,1,true) != nil)
-			then
-			    return v;
-		end
-	end
-end
-
-concommand.Add( "setafkplayer", function( ply, cmd, args )
+concommand.Add( "setafkplayer", function( ply, cmd, args )-- need to change this in net library ...
     if (ply:GetUserGroup() == "superadmin") then
         targetply = findply(args[1])
         arguments = tonumber(args[2] , 10)
@@ -435,8 +507,18 @@ concommand.Add( "setafkplayer", function( ply, cmd, args )
     end
 
 end)
+--[[
+  /$$$$$$  /$$$$$$$$ /$$   /$$       /$$   /$$  /$$$$$$  /$$   /$$ /$$$$$$$  /$$       /$$$$$$ /$$   /$$  /$$$$$$
+ /$$__  $$| $$_____/| $$  /$$/      | $$  | $$ /$$__  $$| $$$ | $$| $$__  $$| $$      |_  $$_/| $$$ | $$ /$$__  $$
+| $$  \ $$| $$      | $$ /$$/       | $$  | $$| $$  \ $$| $$$$| $$| $$  \ $$| $$        | $$  | $$$$| $$| $$  \__/
+| $$$$$$$$| $$$$$   | $$$$$/        | $$$$$$$$| $$$$$$$$| $$ $$ $$| $$  | $$| $$        | $$  | $$ $$ $$| $$ /$$$$
+| $$__  $$| $$__/   | $$  $$        | $$__  $$| $$__  $$| $$  $$$$| $$  | $$| $$        | $$  | $$  $$$$| $$|_  $$
+| $$  | $$| $$      | $$\  $$       | $$  | $$| $$  | $$| $$\  $$$| $$  | $$| $$        | $$  | $$\  $$$| $$  \ $$
+| $$  | $$| $$      | $$ \  $$      | $$  | $$| $$  | $$| $$ \  $$| $$$$$$$/| $$$$$$$$ /$$$$$$| $$ \  $$|  $$$$$$/
+|__/  |__/|__/      |__/  \__/      |__/  |__/|__/  |__/|__/  \__/|_______/ |________/|______/|__/  \__/ \______/
+]]
 
-hook.Add("PlayerInitialSpawn", "MakeAFKVar", function(ply)
+hook.Add("PlayerInitialSpawn", "MakeAFKVarAndSendLanguage", function(ply) -- little hook to send the language to the player
 	ply.NextAFK = CurTime() + AFK_TIME
     net.Start("AntiAfkSendHUDInfo")
             net.WriteString(AFK_LANGUAGE)
@@ -550,6 +632,65 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 	end
 end)
 
+hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
+    if ply:InVehicle() or !ply:InVehicle() and !(ply:GetAimVector() == AntiAFKPlayerEyesTrack[ply:SteamID()]) then
+	    ply.NextAFK = CurTime() + AFK_TIME
+	    if ply.Warning == true or ply.SuperAbuse == true then
+		    ply.Warning = false
+		    ply.SuperAbuse = false
+		    print(ply:Name() .. " est plus AFK !")
+            for k, v in pairs( player.GetAll() ) do
+                v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 0, 0, 198 ), ' is no longer AFK ' )")
+            end
+		    local AikoAfkTimeAfter = hook.Call( "AikoAfkTimeAfter", GAMEMODE, ply )
+                if table.HasValue(AFK_ADMINBYPASS_USERS, ply:SteamID() ) and (!ply.SuperAbuse) and (!ply.Warning) then
+		            if AFK_ADMINUBYPASS == false then
+                        if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
+		                    if AFK_ADMINBYPASS == false then
+		                        net.Start("AFKHUD1")
+                                    net.WriteString("true")
+                                net.Send(ply)
+                                ply:SetCollisionGroup(0)
+                                ply:SetRenderMode( RENDERMODE_NORMAL )
+		                        ply:Fire( "alpha", 255, 0 )
+                                return
+	                        else
+	                            return
+	                        end
+                        else
+                           	net.Start("AFKHUD1")
+                                net.WriteString("true")
+                            net.Send(ply)
+                            ply:SetCollisionGroup(0)
+                            ply:SetRenderMode( RENDERMODE_NORMAL )
+		                    ply:Fire( "alpha", 255, 0 )
+                            return
+                        end
+	                else
+	                    return
+	                end
+                else
+		            net.Start("AFKHUD1")
+                        net.WriteString("true")
+                    net.Send(ply)
+                    ply:SetCollisionGroup(0)
+                    ply:SetRenderMode( RENDERMODE_NORMAL )
+		            ply:Fire( "alpha", 255, 0 )
+                end
+	    end
+	end
+end)
+--[[
+  /$$$$$$  /$$   /$$  /$$$$$$  /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
+ /$$__  $$| $$  | $$ /$$__  $$|__  $$__/       /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$ /$$__  $$| $$$ | $$| $$__  $$
+| $$  \__/| $$  | $$| $$  \ $$   | $$         | $$  \__/| $$  \ $$| $$$$  /$$$$| $$$$  /$$$$| $$  \ $$| $$$$| $$| $$  \ $$
+| $$      | $$$$$$$$| $$$$$$$$   | $$         | $$      | $$  | $$| $$ $$/$$ $$| $$ $$/$$ $$| $$$$$$$$| $$ $$ $$| $$  | $$
+| $$      | $$__  $$| $$__  $$   | $$         | $$      | $$  | $$| $$  $$$| $$| $$  $$$| $$| $$__  $$| $$  $$$$| $$  | $$
+| $$    $$| $$  | $$| $$  | $$   | $$         | $$    $$| $$  | $$| $$\  $ | $$| $$\  $ | $$| $$  | $$| $$\  $$$| $$  | $$
+|  $$$$$$/| $$  | $$| $$  | $$   | $$         |  $$$$$$/|  $$$$$$/| $$ \/  | $$| $$ \/  | $$| $$  | $$| $$ \  $$| $$$$$$$/
+ \______/ |__/  |__/|__/  |__/   |__/          \______/  \______/ |__/     |__/|__/     |__/|__/  |__/|__/  \__/|_______/
+]]
+
 hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
 
     -----------------------------------------------------------------
@@ -609,71 +750,3 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
     end
 end )
 
-
-
-net.Receive("CurrentTime", function(len, ply)
-        net.Start("ClientMessages")
-            Sometime = AFK_WARN_TIME
-            net.WriteString(Sometime)
-        net.Broadcast()
-end)
-
-util.AddNetworkString( "AFKHUD1" )
-util.AddNetworkString( "AFKHUD2" )
-util.AddNetworkString( "AFKHUDR" )
-
-hook.Add("KeyPress", "PlayerMoved", function(ply, key)
-    if ply:InVehicle() or !ply:InVehicle() and !(ply:GetAimVector() == AntiAFKPlayerEyesTrack[ply:SteamID()]) then
-	    ply.NextAFK = CurTime() + AFK_TIME
-	    if ply.Warning == true or ply.SuperAbuse == true then
-		    ply.Warning = false
-		    ply.SuperAbuse = false
-		    print(ply:Name() .. " est plus AFK !")
-            for k, v in pairs( player.GetAll() ) do
-                v:SendLua("chat.AddText( Color( 255, 255, 255 ), '[AntiAfk]: ',Color( 0, 198, 0 ),'" ..ply:Nick().."',Color( 0, 0, 198 ), ' is no longer AFK ' )")
-            end
-		    local AikoAfkTimeAfter = hook.Call( "AikoAfkTimeAfter", GAMEMODE, ply )
-                if table.HasValue(AFK_ADMINBYPASS_USERS, ply:SteamID() ) and (!ply.SuperAbuse) and (!ply.Warning) then
-		            if AFK_ADMINUBYPASS == false then
-                        if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
-		                    if AFK_ADMINBYPASS == false then
-		                        net.Start("AFKHUD1")
-                                    net.WriteString("true")
-                                net.Send(ply)
-                                ply:SetCollisionGroup(0)
-                                ply:SetRenderMode( RENDERMODE_NORMAL )
-		                        ply:Fire( "alpha", 255, 0 )
-                                return
-	                        else
-	                            return
-	                        end
-                        else
-                           	net.Start("AFKHUD1")
-                                net.WriteString("true")
-                            net.Send(ply)
-                            ply:SetCollisionGroup(0)
-                            ply:SetRenderMode( RENDERMODE_NORMAL )
-		                    ply:Fire( "alpha", 255, 0 )
-                            return
-                        end
-	                else
-	                    return
-	                end
-                else
-		            net.Start("AFKHUD1")
-                        net.WriteString("true")
-                    net.Send(ply)
-                    ply:SetCollisionGroup(0)
-                    ply:SetRenderMode( RENDERMODE_NORMAL )
-		            ply:Fire( "alpha", 255, 0 )
-                end
-	    end
-	end
-end)
-
-
-net.Receive("AFKHUD2", function(len, ply)
-    net.Start("AFKHUDR")
-        net.WriteString(math.Round(ply.NextAFK - CurTime()))
-    net.Send(ply)
-end)
