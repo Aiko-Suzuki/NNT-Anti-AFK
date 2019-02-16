@@ -1,72 +1,41 @@
+--[[
+ /$$$$$$$$ /$$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$  /$$        /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$
+|__  $$__/| $$__  $$ /$$__  $$| $$$ | $$ /$$__  $$| $$       /$$__  $$|__  $$__/|_  $$_/ /$$__  $$| $$$ | $$
+   | $$   | $$  \ $$| $$  \ $$| $$$$| $$| $$  \__/| $$      | $$  \ $$   | $$     | $$  | $$  \ $$| $$$$| $$
+   | $$   | $$$$$$$/| $$$$$$$$| $$ $$ $$|  $$$$$$ | $$      | $$$$$$$$   | $$     | $$  | $$  | $$| $$ $$ $$
+   | $$   | $$__  $$| $$__  $$| $$  $$$$ \____  $$| $$      | $$__  $$   | $$     | $$  | $$  | $$| $$  $$$$
+   | $$   | $$  \ $$| $$  | $$| $$\  $$$ /$$  \ $$| $$      | $$  | $$   | $$     | $$  | $$  | $$| $$\  $$$
+   | $$   | $$  | $$| $$  | $$| $$ \  $$|  $$$$$$/| $$$$$$$$| $$  | $$   | $$    /$$$$$$|  $$$$$$/| $$ \  $$
+   |__/   |__/  |__/|__/  |__/|__/  \__/ \______/ |________/|__/  |__/   |__/   |______/ \______/ |__/  \__/
+]]
+
 AntiAfkTranslate = AntiAfkTranslate or {}
 
+AntiAfkDisponibleLang = {}
 
+AntiAfkLanguage = "EN"
 
-AntiAfkTranslate.choselanguage = "EN"
+for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
+	include("nnt-antiafk/lang/" .. v)
+    print("Loaded " ..v )
+end
 
-AntiAfkTranslate.EN = {
-	["MAINTEXT"] = "AFK WARNING !",
-	["WARN"] = "You are gonna be kicked for afk in",
-	["CANCEL"] = "Press any key to cancel !",
-	["REMOVEWARN"] = "Press any key remove the warning !",
-	["MOVEKEY"] = "(Moving Key / Space / Use key / Reload Key / Zoom key)",
-	["NAME"] = "English"
-}
+AntiAfkDisponibleLang = {}
 
-AntiAfkTranslate.FR = {
-	["MAINTEXT"] = "AFK AVERTISSEMENT!",
-	["WARN"] = "Vous allez être kick pour afk dans",
-	["CANCEL"] = "Appuyez sur n'importe quelle touche pour annuler!",
-	["REMOVEWARN"] = "Appuyez sur n'importe quelle touche pour supprimer l'avertissement!",
-	["MOVEKEY"] = "(Touche de Déplacement / Espace / Utiliser/ Recharger / Zoom)",
-	["NAME"] = "Français"
-}
+for k,v in pairs(AntiAfkTranslate) do
+	table.insert(AntiAfkDisponibleLang, table.Count(AntiAfkDisponibleLang) + 1,k)
+end
 
-AntiAfkTranslate.ES = {
-    ["MAINTEXT"] = "Advertencia de AFK !",
-    ["WARN"] = "Seras kickeado por estar AFK en",
-    ["CANCEL"] = "Presiona cualquier tecla para cancelar !",
-    ["REMOVEWARN"] = "Presiona cualquier tecla para remover la advertencia !",
-    ["MOVEKEY"] = "(Tecla de Movimiento / Espacio / Tecla de Uso / Tecla de Recarga / Tecla de Zoom)",
-    ["SP-WARNING"] = "Tu has estado AFK desde",
-	["NAME"] = "ESPAÑOL"
-}
-
-AntiAfkTranslate.TR = {
-    ["MAINTEXT"] = "AFK UYARI !",
-    ["WARN"] = "Afk için tekmeleyeceksin",
-    ["CANCEL"] = "İptal etmek için herhangi bir tuşa basın.l !",
-    ["REMOVEWARN"] = "Herhangi bir tuşa basarak uyarıyı kaldırın !",
-    ["MOVEKEY"] = "(Hareketli Anahtar/ Uzay / Anahtar kullanın / Anahtarı Yeniden Yükle / Yakınlaştırma tuşu)",
-	["NAME"] = "Türkçe"
-}
-
-AntiAfkTranslate.IT = {
-    ["MAINTEXT"] = "ATTENZIONE AFK!",
-    ["WARN"] = "Sarai preso a calci in Afghanistan",
-    ["CANCEL"] = "Premere un tasto qualsiasi per annullare!",
-    ["REMOVEWARN"] = "Premere un tasto qualsiasi per rimuovere l'avviso!",
-    ["MOVEKEY"] = "(Chiave commovente / Spazio / Usa chiave / Ricarica la chiave / Tasto Zoom)",
-	["NAME"] = "Italiano"
-}
-
-AntiAfkTranslate.DE= {
-    ["MAINTEXT"] = "AFK WARNUNG!",
-    ["WARN"] = "Sie werden für afk in getreten werden",
-    ["CANCEL"] = "Drücken Sie eine beliebige Taste, um abzubrechen!",
-    ["REMOVEWARN"] = "Drücken Sie eine beliebige Taste, um die Warnung zu entfernen!",
-    ["MOVEKEY"] = "(Schlüssel verschieben / Schlüssel verwenden / Use key / Schlüssel neu laden / Zoomtaste)",
-	["NAME"] = "Deutsch"
-}
-
-AntiAfkTranslate.ZH = {
-    ["MAINTEXT"] = "AFK警告 !",
-    ["WARN"] = "你将被踢进去 ",
-    ["CANCEL"] = "按任意键取消 !",
-    ["REMOVEWARN"] = "按任意键删除警告 !",
-    ["MOVEKEY"] = "(移动密钥 / 空间 / 使用密钥 / 重新加载密钥 / 缩放键)",
-	["NAME"] = "中文"
-}
+--[[
+ /$$      /$$  /$$$$$$  /$$$$$$$  /$$   /$$ /$$$$$$ /$$   /$$  /$$$$$$        /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
+| $$  /$ | $$ /$$__  $$| $$__  $$| $$$ | $$|_  $$_/| $$$ | $$ /$$__  $$      | $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
+| $$ /$$$| $$| $$  \ $$| $$  \ $$| $$$$| $$  | $$  | $$$$| $$| $$  \__/      | $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
+| $$/$$ $$ $$| $$$$$$$$| $$$$$$$/| $$ $$ $$  | $$  | $$ $$ $$| $$ /$$$$      | $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
+| $$$$_  $$$$| $$__  $$| $$__  $$| $$  $$$$  | $$  | $$  $$$$| $$|_  $$      | $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
+| $$$/ \  $$$| $$  | $$| $$  \ $$| $$\  $$$  | $$  | $$\  $$$| $$  \ $$      | $$      | $$  | $$| $$\  $$$| $$      | $$
+| $$/   \  $$| $$  | $$| $$  | $$| $$ \  $$ /$$$$$$| $$ \  $$|  $$$$$$/      | $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
+|__/     \__/|__/  |__/|__/  |__/|__/  \__/|______/|__/  \__/ \______/       |__/      |__/  |__/|__/  \__/|________/|________/
+]]
 
 local function AntiafkMainHUD()
 
@@ -125,7 +94,7 @@ local function AntiafkMainHUD()
     SignL:SetSize( ScrW(), ScrH() / 4.5)
     SignL:SetFont("AFKLarge")
     SignL:SetColor(Color(255, 0, 0, 255))
-	SignL:SetText( AntiAfkTranslate[AntiAfkTranslate.choselanguage]["MAINTEXT"] )
+	SignL:SetText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] )
 
     local SignM = vgui.Create( "DLabel", AfkPanelHUD )
 	SignM:SetPos( 0, 0)
@@ -133,7 +102,7 @@ local function AntiafkMainHUD()
     SignM:SetSize( ScrW(), ScrH() / 3)
     SignM:SetFont("AFKMedium")
     SignM:SetColor(Color(255, 255, 255, 255))
-	SignM:SetText( AntiAfkTranslate[AntiAfkTranslate.choselanguage]["WARN"].." ".. VarTimeleft .." !" )
+	SignM:SetText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].." ".. VarTimeleft .." !" )
 
 	local SignS = vgui.Create( "DLabel", AfkPanelHUD )
 	SignS:SetPos( 0, 0)
@@ -141,7 +110,7 @@ local function AntiafkMainHUD()
     SignS:SetSize( ScrW(), ScrH() / 2.4)
     SignS:SetFont("AFKsmall")
     SignS:SetColor(Color(255, 255, 255, 255))
-	SignS:SetText( AntiAfkTranslate[AntiAfkTranslate.choselanguage]["CANCEL"] )
+	SignS:SetText( AntiAfkTranslate[AntiAfkLanguage]["CANCEL"] )
 
     local SignK = vgui.Create( "DLabel", AfkPanelHUD )
 	SignK:SetPos( 0, 0)
@@ -149,18 +118,18 @@ local function AntiafkMainHUD()
     SignK:SetSize( ScrW(), ScrH() / 2)
     SignK:SetFont("AFKsmallK")
     SignK:SetColor(Color(255, 255, 255, 255))
-	SignK:SetText( AntiAfkTranslate[AntiAfkTranslate.choselanguage]["MOVEKEY"] )
+	SignK:SetText( AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"] )
 
 	net.Start("AFKHUD2")
 	net.SendToServer(LocalPlayer())
 	net.Receive("AFKHUDR", function(len)
 		ReceiveVar = net.ReadString()
-		SignM:SetText( AntiAfkTranslate[AntiAfkTranslate.choselanguage]["WARN"].." ".. timeToStr(ReceiveVar) .." !" )
+		SignM:SetText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].." ".. timeToStr(ReceiveVar) .." !" )
 		VarTimeleft = ReceiveVar
 		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, ReceiveVar, function()
 			x = VarTimeleft - 1
 			VarTimeleft = x
-			SignM:SetText( AntiAfkTranslate[AntiAfkTranslate.choselanguage]["WARN"].." ".. timeToStr(VarTimeleft) .." !" )
+			SignM:SetText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].." ".. timeToStr(VarTimeleft) .." !" )
 		end)
 	end)
 
@@ -186,6 +155,25 @@ local function AntiafkMainHUD()
 
 end
 
+--[[
+ /$$   /$$  /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$  /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
+| $$  | $$ /$$__  $$| $$_____/| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/ | $$      |_  $$_/ /$$__  $$|__  $$__/
+| $$  | $$| $$  \__/| $$      | $$  \ $$| $$  \__/      | $$ /$$$| $$| $$  | $$  | $$     | $$   | $$       | $$        | $$  | $$  \__/   | $$
+| $$  | $$|  $$$$$$ | $$$$$   | $$$$$$$/|  $$$$$$       | $$/$$ $$ $$| $$$$$$$$  | $$     | $$   | $$$$$    | $$        | $$  |  $$$$$$    | $$
+| $$  | $$ \____  $$| $$__/   | $$__  $$ \____  $$      | $$$$_  $$$$| $$__  $$  | $$     | $$   | $$__/    | $$        | $$   \____  $$   | $$
+| $$  | $$ /$$  \ $$| $$      | $$  \ $$ /$$  \ $$      | $$$/ \  $$$| $$  | $$  | $$     | $$   | $$       | $$        | $$   /$$  \ $$   | $$
+|  $$$$$$/|  $$$$$$/| $$$$$$$$| $$  | $$|  $$$$$$/      | $$/   \  $$| $$  | $$ /$$$$$$   | $$   | $$$$$$$$ | $$$$$$$$ /$$$$$$|  $$$$$$/   | $$
+ \______/  \______/ |________/|__/  |__/ \______/       |__/     \__/|__/  |__/|______/   |__/   |________/ |________/|______/ \______/    |__/
+
+ /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
+| $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
+| $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
+| $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
+| $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
+| $$      | $$  | $$| $$\  $$$| $$      | $$
+| $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
+|__/      |__/  |__/|__/  \__/|________/|________/
+]]
 
 
 
@@ -287,7 +275,25 @@ local function AntiafkAdminPanelUsers()
 
 
 end
+--[[
+  /$$$$$$  /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$ /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
+ /$$__  $$| $$__  $$ /$$__  $$| $$  | $$| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/| $$      |_  $$_/ /$$__  $$|__  $$__/
+| $$  \__/| $$  \ $$| $$  \ $$| $$  | $$| $$  \ $$| $$  \__/      | $$ /$$$| $$| $$  | $$  | $$     | $$   | $$      | $$        | $$  | $$  \__/   | $$
+| $$ /$$$$| $$$$$$$/| $$  | $$| $$  | $$| $$$$$$$/|  $$$$$$       | $$/$$ $$ $$| $$$$$$$$  | $$     | $$   | $$$$$   | $$        | $$  |  $$$$$$    | $$
+| $$|_  $$| $$__  $$| $$  | $$| $$  | $$| $$____/  \____  $$      | $$$$_  $$$$| $$__  $$  | $$     | $$   | $$__/   | $$        | $$   \____  $$   | $$
+| $$  \ $$| $$  \ $$| $$  | $$| $$  | $$| $$       /$$  \ $$      | $$$/ \  $$$| $$  | $$  | $$     | $$   | $$      | $$        | $$   /$$  \ $$   | $$
+|  $$$$$$/| $$  | $$|  $$$$$$/|  $$$$$$/| $$      |  $$$$$$/      | $$/   \  $$| $$  | $$ /$$$$$$   | $$   | $$$$$$$$| $$$$$$$$ /$$$$$$|  $$$$$$/   | $$
+ \______/ |__/  |__/ \______/  \______/ |__/       \______/       |__/     \__/|__/  |__/|______/   |__/   |________/|________/|______/ \______/    |__/
 
+ /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
+| $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
+| $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
+| $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
+| $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
+| $$      | $$  | $$| $$\  $$$| $$      | $$
+| $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
+|__/      |__/  |__/|__/  \__/|________/|________/
+]]
 
 local function AntiafkAdminPanelGroups()
 
@@ -379,7 +385,16 @@ local function AntiafkAdminPanelGroups()
 
 end
 
-
+--[[
+  /$$$$$$  /$$$$$$$  /$$      /$$ /$$$$$$ /$$   /$$       /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
+ /$$__  $$| $$__  $$| $$$    /$$$|_  $$_/| $$$ | $$      | $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
+| $$  \ $$| $$  \ $$| $$$$  /$$$$  | $$  | $$$$| $$      | $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
+| $$$$$$$$| $$  | $$| $$ $$/$$ $$  | $$  | $$ $$ $$      | $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
+| $$__  $$| $$  | $$| $$  $$$| $$  | $$  | $$  $$$$      | $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
+| $$  | $$| $$  | $$| $$\  $ | $$  | $$  | $$\  $$$      | $$      | $$  | $$| $$\  $$$| $$      | $$
+| $$  | $$| $$$$$$$/| $$ \/  | $$ /$$$$$$| $$ \  $$      | $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
+|__/  |__/|_______/ |__/     |__/|______/|__/  \__/      |__/      |__/  |__/|__/  \__/|________/|________/
+]]
 local function AntiafkAdminPanel()
 
     local w = ScrW() / 2
@@ -389,18 +404,6 @@ local function AntiafkAdminPanel()
     SomeShittyTest1 = "undefined"
 	SomeShittyTest2 = "undefined"
 	SomeShittyTest3 = "undefined"
-
-	net.Start("Refresh")
-        net.SendToServer(ply)
-        net.Receive("RefreshTime1", function(lan)
-            SomeShittyTest = net.ReadString()
-        end)
-        net.Receive("RefreshTime2", function(lan)
-            SomeShittyTest1 = net.ReadString()
-    	end)
-		net.Receive("RefreshTime3", function(lan)
-            SomeShittyTest2 = net.ReadString()
-    	end)
 
 
 
@@ -446,41 +449,26 @@ local function AntiafkAdminPanel()
     info2:SetSize(280, 100)
     info2:SetText('Warn Time : ' .. "Refresh !" )
 	info2:SetColor(Color(255,255,0))
-    net.Receive("RefreshTime1", function(lan)
-        SomeShittyTest = net.ReadString()
-        info:SetText('Current Time : ' .. SomeShittyTest )
-    end)
-    net.Receive("RefreshTime2", function(lan)
-        SomeShittyTest1 = net.ReadString()
-        info2:SetText('Warn Time : ' .. SomeShittyTest1 )
-    end)
+
 
 	-- Groups Bypass
-	local checkboxSPbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxSPbypass:SetPos( 22, 90 )
-	checkboxSPbypass:SetText( "Groups Bypass" )
+	local checkboxGroupsbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
+	checkboxGroupsbypass:SetPos( 22, 90 )
+	checkboxGroupsbypass:SetText( "Groups Bypass" )
 
-	net.Receive("RefreshTime3", function(lan)
-        SomeShittyTest2 = net.ReadString()
-    end)
-	if SomeShittyTest2 == "true" then
-			checkboxSPbypass:SetValue( 1 )
-	end
-	timer.Create("Checkifvalueistruefromafk", 0.2, 1, function()
-		if SomeShittyTest2 == "true" then
-			checkboxSPbypass:SetValue( 1 )
-		end
-	end)
-
-	function checkboxSPbypass:OnChange( val )
+	function checkboxGroupsbypass:OnChange( val )
 		if val then
-			net.Start("ChangeSPBypass")
-				net.WriteString("true")
-			net.SendToServer()
+			net.Start("nnt-antiak-settings")
+				local temptable = {["BYPASS"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
 		else
-			net.Start("ChangeSPBypass")
-				net.WriteString("false")
-			net.SendToServer()
+			net.Start("nnt-antiak-settings")
+				local temptable = {["BYPASS"] = false }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
 		end
 	end
 
@@ -490,27 +478,19 @@ local function AntiafkAdminPanel()
 	checkboxUbypass:SetPos( 22, 70 )
 	checkboxUbypass:SetText( "User Bypass" )
 
-	net.Receive("RefreshTime4", function(lan)
-        SomeShittyTest3 = net.ReadString()
-    end)
-	if SomeShittyTest3 == "true" then
-			checkboxUbypass:SetValue( 1 )
-	end
-	timer.Create("Checkifvalueistruefromafk1", 0.2, 1, function()
-		if SomeShittyTest3 == "true" then
-			checkboxUbypass:SetValue( 1 )
-		end
-	end)
-
 	function checkboxUbypass:OnChange( val )
 		if val then
-			net.Start("ChangeUBypass")
-				net.WriteString("true")
-			net.SendToServer()
+			net.Start("nnt-antiak-settings")
+				local temptable = {["UBYPASS"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
 		else
-			net.Start("ChangeUBypass")
-				net.WriteString("false")
-			net.SendToServer()
+			net.Start("nnt-antiak-settings")
+				local temptable = {["UBYPASS"] = false  }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
 		end
 	end
 
@@ -520,24 +500,19 @@ local function AntiafkAdminPanel()
 	checkboxAntiAFK:SetPos( 22, 50 )
 	checkboxAntiAFK:SetText( "Activate AntiAFK" )
 
-	net.Receive("RefreshTime5", function(lan)
-        SomeShittyTest4 = net.ReadString()
-    end)
-	timer.Create("Checkifvalueistruefromafk2", 0.2, 1, function()
-		if SomeShittyTest4 == "true" then
-			checkboxAntiAFK:SetValue( 1 )
-		end
-	end)
-
 	function checkboxAntiAFK:OnChange( val )
 		if val then
-			net.Start("ChangeEnableAntiAFK")
-				net.WriteString("true")
-			net.SendToServer()
+			net.Start("nnt-antiak-settings")
+				local temptable = {["ANTIAFK"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
 		else
-			net.Start("ChangeEnableAntiAFK")
-				net.WriteString("false")
-			net.SendToServer()
+			net.Start("nnt-antiak-settings")
+				local temptable = {["ANTIAFK"] = false }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
 		end
 	end
 
@@ -546,43 +521,22 @@ local function AntiafkAdminPanel()
 	local SelectTranslate = vgui.Create( "DComboBox", MainPanel )
 	SelectTranslate:SetPos( 205, 97 )
 	SelectTranslate:SetSize( 75, 20 )
-	SelectTranslate:SetValue( AntiAfkTranslate[AntiAfkTranslate.choselanguage]["NAME"] )
-	SelectTranslate:AddChoice( "English" )
-	SelectTranslate:AddChoice( "Français" )
-	SelectTranslate:AddChoice( "ESPAÑOL" )
-	SelectTranslate:AddChoice( "Türkçe" )
-	SelectTranslate:AddChoice( "Italiano" )
-	SelectTranslate:AddChoice( "Deutsch" )
-	SelectTranslate:AddChoice( "中文" )
+	SelectTranslate:SetValue( AntiAfkTranslate[AntiAfkLanguage]["NAME"] )
+	for k,v in pairs(AntiAfkTranslate) do
+	SelectTranslate:AddChoice(v["NAME"])
+	end
 	SelectTranslate.OnSelect = function( self, index, value )
-		if value == "English" then
-			net.Start("AntiAfkSendHUDInfo")
-				net.WriteString("EN")
-			net.SendToServer()
-		elseif value == "Français" then
-			net.Start("AntiAfkSendHUDInfo")
-				net.WriteString("FR")
-			net.SendToServer()
-		elseif value == "ESPAÑOL" then
-			net.Start("AntiAfkSendHUDInfo")
-				net.WriteString("ES")
-			net.SendToServer()
-		elseif value == "Türkçe" then
-			net.Start("AntiAfkSendHUDInfo")
-				net.WriteString("TR")
-			net.SendToServer()
-		elseif value == "Italiano" then
-			net.Start("AntiAfkSendHUDInfo")
-				net.WriteString("IT")
-			net.SendToServer()
-		elseif value == "Deutsch" then
-			net.Start("AntiAfkSendHUDInfo")
-				net.WriteString("DE")
-			net.SendToServer()
-		elseif value == "中文" then
-			net.Start("AntiAfkSendHUDInfo")
-				net.WriteString("ZH")
-			net.SendToServer()
+		for k,v in pairs(AntiAfkTranslate) do
+			if v["NAME"] == value then
+					net.Start("nnt-antiak-settings")
+						local temptable = {["LANGUAGE"] = k }
+						net.WriteTable(temptable)
+						net.WriteString("SetSettings")
+            		net.SendToServer()
+				--[[net.Start("AntiAfkSendHUDInfo")
+					net.WriteString(k)
+				net.SendToServer()]]
+			end
 		end
 	end
 
@@ -594,7 +548,11 @@ local function AntiafkAdminPanel()
     list_btn:SetColor(Color(255, 255, 255))
 	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn.DoClick = function ()
-			LocalPlayer():ConCommand( 'setafktime ' .. TextEntry:GetValue()  )
+			net.Start("nnt-antiak-settings")
+				local temptable = {["KICK"] = TextEntry:GetValue() }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
 	end
 
     local list_btn2 = vgui.Create("DButton")
@@ -605,8 +563,10 @@ local function AntiafkAdminPanel()
     list_btn2:SetColor(Color(255, 255, 255))
 	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn2.DoClick = function ()
-            net.Start("ChangeWarnTime")
-                net.WriteString(TextEntry2:GetValue())
+            net.Start("nnt-antiak-settings")
+				local temptable = {["WARN"] = TextEntry2:GetValue() }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
             net.SendToServer()
 	end
 
@@ -638,11 +598,73 @@ local function AntiafkAdminPanel()
 	Sign:SetSize(150 , 25)
 	Sign:SetText( "Made by Aiko Suzuki !" )
 
+	net.Start("nnt-antiak-settings")
+		net.WriteTable({"Pleasedata"})
+		net.WriteString("LoadData")
+	net.SendToServer()
+	net.Receive("nnt-antiak-settings", function()
+		local data5 = net.ReadString()
+		local data4 = net.ReadTable()
+		if data5 == "LoadData" then -- load all data at once
+			print("Loading DATA")
+			for k,v in pairs(data4) do
+				if k == "AFK_WARN_TIME" then
+					AFK_WARN_TIME = v
+					info2:SetText('Warn Time : ' .. v )
+				elseif k == "AFK_TIME" then
+					AFK_TIME = v
+					info:SetText('Current Time : ' .. v )
+				elseif k == "AFK_ADMINBYPASS" then
+					AFK_ADMINBYPASS = v
+					if AFK_ADMINBYPASS == true then
+						checkboxGroupsbypass:SetValue( 1 )
+					end
+				elseif k == "AFK_ADMINUBYPASS" then
+					AFK_ADMINUBYPASS = v
+					if AFK_ADMINUBYPASS == true then
+						checkboxUbypass:SetValue( 1 )
+					end
+				elseif k == "AFK_ENABLE" then --Activate AntiAFK
+					AFK_ENABLE = v
+					if AFK_ENABLE == true then
+						checkboxAntiAFK:SetValue( 1 )
+					end
+				elseif k == "AFK_TIME" then
+					AFK_TIME = v
+					info:SetText('Current Time : ' .. v )
+				end
+			end
+		elseif data5 == "Settings" then -- to load separate data
+        	for k,v in pairs(data4) do
+				if k == "WARN" then
+					info2:SetText('Warn Time : ' .. v )
+				elseif k == "KICK" then
+					info:SetText('Current Time : ' .. v )
+				elseif k == "ANTIAFK" then
+
+				elseif k == "BYPASS" then
+
+				elseif k == "UBYPASS" then
+
+				end
+			end
+		end
+	end)
+
 
 
 
 end
-
+--[[
+  /$$$$$$  /$$$$$$$$ /$$$$$$$$        /$$$$$$  /$$$$$$$$ /$$   /$$       /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
+ /$$__  $$| $$_____/|__  $$__/       /$$__  $$| $$_____/| $$  /$$/      | $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
+| $$  \__/| $$         | $$         | $$  \ $$| $$      | $$ /$$/       | $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
+|  $$$$$$ | $$$$$      | $$         | $$$$$$$$| $$$$$   | $$$$$/        | $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
+ \____  $$| $$__/      | $$         | $$__  $$| $$__/   | $$  $$        | $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
+ /$$  \ $$| $$         | $$         | $$  | $$| $$      | $$\  $$       | $$      | $$  | $$| $$\  $$$| $$      | $$
+|  $$$$$$/| $$$$$$$$   | $$         | $$  | $$| $$      | $$ \  $$      | $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
+ \______/ |________/   |__/         |__/  |__/|__/      |__/  \__/      |__/      |__/  |__/|__/  \__/|________/|________/
+]]
 
 local function AntiafkAdminSetAfk()
 
@@ -703,6 +725,19 @@ local function AntiafkAdminSetAfk()
 
 end
 
+--[[
+ /$$   /$$             /$$           /$$       /$$ /$$
+| $$$ | $$            | $$          | $$      |__/| $$
+| $$$$| $$  /$$$$$$  /$$$$$$        | $$       /$$| $$$$$$$   /$$$$$$  /$$$$$$   /$$$$$$  /$$   /$$
+| $$ $$ $$ /$$__  $$|_  $$_/        | $$      | $$| $$__  $$ /$$__  $$|____  $$ /$$__  $$| $$  | $$
+| $$  $$$$| $$$$$$$$  | $$          | $$      | $$| $$  \ $$| $$  \__/ /$$$$$$$| $$  \__/| $$  | $$
+| $$\  $$$| $$_____/  | $$ /$$      | $$      | $$| $$  | $$| $$      /$$__  $$| $$      | $$  | $$
+| $$ \  $$|  $$$$$$$  |  $$$$/      | $$$$$$$$| $$| $$$$$$$/| $$     |  $$$$$$$| $$      |  $$$$$$$
+|__/  \__/ \_______/   \___/        |________/|__/|_______/ |__/      \_______/|__/       \____  $$
+                                                                                          /$$  | $$
+                                                                                         |  $$$$$$/
+                                                                                          \______/
+]]
 
 net.Receive("AntiAfkSendHUDInfo", function()
 	local data1 = net.ReadString()
@@ -716,26 +751,8 @@ net.Receive("AntiAfkSendHUDInfo", function()
 		AntiafkAdminPanel()
 	elseif (data1 == "AntiafkAdminPanelGroups") then
 		AntiafkAdminPanelGroups()
-	elseif (data1 == "FR") then
-		AntiAfkTranslate.choselanguage = "FR"
-		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkTranslate.choselanguage)
-	elseif (data1 == "EN") then
-		AntiAfkTranslate.choselanguage = "EN"
-		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkTranslate.choselanguage)
-	elseif (data1 == "ES") then
-		AntiAfkTranslate.choselanguage = "ES"
-		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkTranslate.choselanguage)
-	elseif (data1 == "TR") then
-		AntiAfkTranslate.choselanguage = "TR"
-		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkTranslate.choselanguage)
-	elseif (data1 == "IT") then
-		AntiAfkTranslate.choselanguage = "IT"
-		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkTranslate.choselanguage)
-	elseif (data1 == "DE") then
-		AntiAfkTranslate.choselanguage = "DE"
-		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkTranslate.choselanguage)
-	elseif (data1 == "ZH") then
-		AntiAfkTranslate.choselanguage = "ZH"
-		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkTranslate.choselanguage)
+	elseif table.HasValue(AntiAfkDisponibleLang, data1) then
+		AntiAfkLanguage = data1
+		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkLanguage)
 	end
 end)
