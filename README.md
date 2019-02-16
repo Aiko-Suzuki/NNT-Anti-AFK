@@ -4,9 +4,9 @@
 
 To install the addon/script drag in the drop the folder named "nnt-anti-afk" in the addons folder !
 
-All the configuration is in fame for the anti-afk settings..
+All the configuration is in panel for the anti-afk settings..
 
-if you want the blogs modules sorry but you will need to try by yourself
+Blogs should work by itself !
 
 ## Information
 
