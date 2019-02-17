@@ -37,10 +37,10 @@ AFKDefaultConfig.Settings = {
         ["BYPASS"] = false,
         ["UBYPASS"] = false,
         ["ANTIAFK"] = true,
-        ["LANGUAGE"] = "FR"
+        ["LANGUAGE"] = "EN"
 }
 AFKDefaultConfig.UsersBypass = {
-    "STEAM_0:0:100152240"
+    ["STEAM_0:0:100152240"] = "Aiko Suzuki"
 }
 
 --[[
@@ -159,20 +159,25 @@ function AntiAFKChangeConfigData(settings,data,time)
         if time == "ADD" then
             if string.StartWith(data, "STEAM_") then
                 local count = table.Count(AntiAFKConfig.UsersBypass)
-                table.insert(TempConfigData.UsersBypass, count + 1 , data)
+                local temptable = {[data] = player.GetBySteamID(data):Nick()}
+                table.Merge(TempConfigData.UsersBypass, temptable)
                 local newdata = util.TableToJSON(TempConfigData,true)
                 file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
                 ReloadAntiAfkConfig()
             else
-                local count = table.Count(AntiAFKConfig.UsersBypass)
-                table.insert(TempConfigData.UsersBypass, count + 1 , FindPly(data):SteamID())
-                local newdata = util.TableToJSON(TempConfigData,true)
-                file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
-                ReloadAntiAfkConfig()
+                print("This is not a steamid ...")
             end
 
         elseif time == "DEL" then
-            table.RemoveByValue(TempConfigData.UsersBypass,data)
+            print(TempConfigData.UsersBypass[data])
+            local TempTable = {}
+            for k,v in pairs(TempConfigData.UsersBypass) do
+                if !(k == data) then
+                   TempTable[k] = v
+                end
+            end
+            table.Empty(TempConfigData.UsersBypass)
+            table.Merge(TempConfigData.UsersBypass,TempTable)
             local newdata = util.TableToJSON(TempConfigData,true)
             file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
             ReloadAntiAfkConfig()
@@ -292,7 +297,7 @@ net.Receive("AntiAddBypassUsers", function(len, ply) -- ADD USER TO THE USERS WH
         SomeShittyTest = net.ReadString()
         if string.StartWith(SomeShittyTest , " " ) then return end
 		if SomeShittyTest == "" then return end
-        if table.HasValue(AFK_ADMINBYPASS_USERS,SomeShittyTest ) then return end
+        if AFK_ADMINBYPASS_USERS[SomeShittyTest] then return end
         AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"ADD")
         net.Start("AntiAfksenBypassUsers")
             net.WriteTable(AFK_ADMINBYPASS_USERS)
@@ -483,7 +488,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 			end
 			local afktime = ply.NextAFK - AFK_TIME
 			if (CurTime() >= afktime + AFK_WARN_TIME) and (!ply.Warning) and (!ply.SuperAbuse) then
-                if table.HasValue(AFK_ADMINBYPASS_USERS, ply:SteamID() ) and (!ply.SuperAbuse) and (!ply.Warning) then
+                if AFK_ADMINBYPASS_USERS[ply:SteamID()] and (!ply.SuperAbuse) and (!ply.Warning) then
 		            if AFK_ADMINUBYPASS == false then
                         if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
 		                    if AFK_ADMINBYPASS == false then
@@ -588,7 +593,7 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
                 v:SendLua([[chat.AddText( Color( 255, 255, 255 ), "[AntiAfk]: ",Color( 0, 198, 0 ),"]] ..ply:Nick()..[[",Color( 0, 0, 198 ), " ]] ..AntiAfkTranslate[AFK_LANGUAGE]["NOLONGERAFK"].. [[" )]])
             end
 		    local AikoAfkTimeAfter = hook.Call( "AikoAfkTimeAfter", GAMEMODE, ply )
-                if table.HasValue(AFK_ADMINBYPASS_USERS, ply:SteamID() ) and (!ply.SuperAbuse) and (!ply.Warning) then
+                if AFK_ADMINBYPASS_USERS[ply:SteamID()] and (!ply.SuperAbuse) and (!ply.Warning) then
 		            if AFK_ADMINUBYPASS == false then
                         if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply.SuperAbuse) and (!ply.Warning) then
 		                    if AFK_ADMINBYPASS == false then

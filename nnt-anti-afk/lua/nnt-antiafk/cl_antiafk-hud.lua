@@ -36,11 +36,12 @@ end
 | $$/   \  $$| $$  | $$| $$  | $$| $$ \  $$ /$$$$$$| $$ \  $$|  $$$$$$/      | $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
 |__/     \__/|__/  |__/|__/  |__/|__/  \__/|______/|__/  \__/ \______/       |__/      |__/  |__/|__/  \__/|________/|________/
 ]]
-
-local function AntiafkMainHUD()
+function NNTAntiafkMainHUD()
 
 	local w = ScrW() / 2
     local h = ScrH() / 2
+
+	AntiAFKTimer = AntiAFKTimer or {}
 
 
     VarTimeleft = "00m 00s"
@@ -68,16 +69,29 @@ local function AntiafkMainHUD()
     } )
 
 	function timeToStr( time )
-	local tmp = time
-	local s = tmp % 60
-	tmp = math.floor( tmp / 60 )
-	local m = tmp
+		local tmp = time
+		local s = tmp % 60
+		tmp = math.floor( tmp / 60 )
+		local m = tmp
 		return string.format( "%02im %02is", m, s )
 	end
+	AntiAFKTimer.TimeLeft = "00m 00s"
+
+	net.Start("AFKHUD2")
+	net.SendToServer()
+	net.Receive("AFKHUDR", function(len)
+		ReceiveVar = net.ReadString()
+		VarTimeleft = ReceiveVar
+		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, ReceiveVar, function()
+			x = VarTimeleft - 1
+			VarTimeleft = x
+			AntiAFKTimer.TimeLeft = timeToStr(VarTimeleft)
+		end)
+	end)
 
 	local AfkPanelHUD = vgui.Create( "DFrame" )
-	AfkPanelHUD:SetPos( 0, h-200 )
-	AfkPanelHUD:SetSize( ScrW(), ScrH() / 3 )
+	AfkPanelHUD:SetPos( ScrW() - w * 1.5  , h-200 )
+	AfkPanelHUD:SetSize( ScrW()/2, ScrH() / 3 )
 	AfkPanelHUD:SetTitle( "" )
 	AfkPanelHUD:SetDraggable( true )
 	AfkPanelHUD:ShowCloseButton( false )
@@ -85,53 +99,12 @@ local function AntiafkMainHUD()
 	AfkPanelHUD:SetMouseInputEnabled()
 	AfkPanelHUD:SetDraggable(false)
 	function AfkPanelHUD:Paint(w, h)
-		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 235))
+		draw.RoundedBox( 30, 0, 0, w, h,  Color(0, 0, 0, 235))
+		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] , "AFKLarge", ScrW() - w * 1.5  , ScrH() / 16, Color( 255, 0, 0, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].. " " .. AntiAFKTimer.TimeLeft , "AFKMedium", ScrW() - w * 1.5  , ScrH() / 7, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["CANCEL"] , "AFKsmall", ScrW() - w * 1.5  , ScrH() / 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"]  , "AFKsmallK", ScrW() - w * 1.5  , ScrH() / 4, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
 	end
-
-	local SignL = vgui.Create( "DLabel", AfkPanelHUD )
-	SignL:SetPos( 0, 0)
-	SignL:SetContentAlignment(5)
-    SignL:SetSize( ScrW(), ScrH() / 4.5)
-    SignL:SetFont("AFKLarge")
-    SignL:SetColor(Color(255, 0, 0, 255))
-	SignL:SetText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] )
-
-    local SignM = vgui.Create( "DLabel", AfkPanelHUD )
-	SignM:SetPos( 0, 0)
-	SignM:SetContentAlignment(5)
-    SignM:SetSize( ScrW(), ScrH() / 3)
-    SignM:SetFont("AFKMedium")
-    SignM:SetColor(Color(255, 255, 255, 255))
-	SignM:SetText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].." ".. VarTimeleft .." !" )
-
-	local SignS = vgui.Create( "DLabel", AfkPanelHUD )
-	SignS:SetPos( 0, 0)
-	SignS:SetContentAlignment(5)
-    SignS:SetSize( ScrW(), ScrH() / 2.4)
-    SignS:SetFont("AFKsmall")
-    SignS:SetColor(Color(255, 255, 255, 255))
-	SignS:SetText( AntiAfkTranslate[AntiAfkLanguage]["CANCEL"] )
-
-    local SignK = vgui.Create( "DLabel", AfkPanelHUD )
-	SignK:SetPos( 0, 0)
-	SignK:SetContentAlignment(5)
-    SignK:SetSize( ScrW(), ScrH() / 2)
-    SignK:SetFont("AFKsmallK")
-    SignK:SetColor(Color(255, 255, 255, 255))
-	SignK:SetText( AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"] )
-
-	net.Start("AFKHUD2")
-	net.SendToServer(LocalPlayer())
-	net.Receive("AFKHUDR", function(len)
-		ReceiveVar = net.ReadString()
-		SignM:SetText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].." ".. timeToStr(ReceiveVar) .." !" )
-		VarTimeleft = ReceiveVar
-		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, ReceiveVar, function()
-			x = VarTimeleft - 1
-			VarTimeleft = x
-			SignM:SetText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].." ".. timeToStr(VarTimeleft) .." !" )
-		end)
-	end)
 
 
 	timer.Create( "AFKS:"..LocalPlayer():SteamID(), 30, 0, function()
@@ -176,8 +149,7 @@ end
 ]]
 
 
-
-local function AntiafkAdminPanelUsers()
+function NNTAntiafkAdminPanelUsers()
 
 
     local w = ScrW() / 2
@@ -186,15 +158,22 @@ local function AntiafkAdminPanelUsers()
 	local AdminPanelUsers = vgui.Create( "DFrame" )
 	AdminPanelUsers:SetPos( w-200, h-200 )
 	AdminPanelUsers:SetSize( 400, 430 )
-	AdminPanelUsers:SetTitle( "Anti AFK bypass Groupss" )
+	AdminPanelUsers:SetTitle( "" )
 	AdminPanelUsers:SetDraggable( true )
-	AdminPanelUsers:ShowCloseButton( true )
+	AdminPanelUsers:ShowCloseButton( false  )
 	AdminPanelUsers:MakePopup()
 	function AdminPanelUsers:Paint(w, h)
 		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 175))
 	end
 
-
+	local ReturnBut  = vgui.Create( "DImageButton", AdminPanelUsers )
+	ReturnBut:SetPos( 5, 0 )
+	ReturnBut:SetSize( 32, 32 )
+	ReturnBut:SetImage( "icon16/arrow_left.png" )
+	ReturnBut.DoClick = function()
+		AdminPanelUsers:Close()
+		NNTAntiafkAdminPanel()
+	end
 
 	local AdminPanelUsers_view = vgui.Create("DListView")
 	AdminPanelUsers_view:SetParent(AdminPanelUsers)
@@ -208,6 +187,11 @@ local function AntiafkAdminPanelUsers()
 	AdminPanelUsers_view:AddColumn("SteamID")
 	AdminPanelUsers_view:AddColumn("Name")
 
+	local UserList = vgui.Create( "DComboBox" , AdminPanelUsers )
+	UserList:SetPos( 150, 340 )
+	UserList:SetSize( 100, 20 )
+	UserList:SetValue( "Select Player !" )
+
 		net.Start("AntiAfkloaBypassUsers")
 		net.SendToServer()
 		net.Receive("AntiAfksenBypassUsers", function(len)
@@ -215,23 +199,37 @@ local function AntiafkAdminPanelUsers()
 			antiuserstring = net.ReadTable()
 			for k,v in pairs(antiuserstring) do
 				if !IsValid(player.GetBySteamID(v)) then
-					local plyname = "Not Connected !"
-					AdminPanelUsers_view:AddLine(v,plyname)
+					local plyname = v
+					AdminPanelUsers_view:AddLine(k,plyname)
 				else
-					local plyname = player.GetBySteamID(v):Nick()
-					AdminPanelUsers_view:AddLine(v,plyname)
+					local plyname = v
+					AdminPanelUsers_view:AddLine(k,plyname)
+				end
+			end
+			UserList:Clear()
+			for k, v in pairs( player.GetAll() ) do
+				if !antiuserstring[v:SteamID()] then
+					UserList:AddChoice( v:Nick() )
 				end
 			end
 		end)
 
 
-    local UserEntry = vgui.Create( "DTextEntry")
-    UserEntry:SetParent( AdminPanelUsers )
-    UserEntry:SetPos( 150, 340 )
-    UserEntry:SetSize( 100, 30 )
-    UserEntry.OnEnter = function( self )
-	    chat.AddText( self:GetValue() )
-    end
+
+	UserList.OnSelect = function( a, b, value )
+		for k,v in pairs(player.GetAll()) do
+			if v:Nick() == value then
+				SelectedPlayeris = v
+				print(SelectedPlayeris:SteamID())
+			end
+		end
+	end
+
+	for k, v in pairs( player.GetAll() ) do
+		if !antiuserstring[v:SteamID()] then
+			UserList:AddChoice( v:Nick() )
+		end
+	end
 
 	local addgroups = vgui.Create("DButton")
 	addgroups:SetParent( AdminPanelUsers )
@@ -241,17 +239,17 @@ local function AntiafkAdminPanelUsers()
     addgroups:SetColor(Color(255, 255, 255))
 	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	addgroups.DoClick = function ()
-		if string.StartWith(UserEntry:GetValue() , " " ) then
+		if string.StartWith(SelectedPlayeris:SteamID() , " " ) then
 			LocalPlayer():ChatPrint('You cannot add a user starting with a space !')
 		return end
-		if UserEntry:GetValue() == "" then
+		if SelectedPlayeris:SteamID() == "" then
 			LocalPlayer():ChatPrint('You cannot add a empty user !')
 		return end
-		if table.HasValue(antiuserstring, UserEntry:GetValue()) then
-			LocalPlayer():ChatPrint('User ' .. UserEntry:GetValue() ..' is already there !')
+		if antiuserstring[SelectedPlayeris:SteamID()] then
+			LocalPlayer():ChatPrint('User ' .. SelectedPlayeris:Nick() ..' is already there !')
 		return end
 		net.Start("AntiAddBypassUsers")
-			net.WriteString(UserEntry:GetValue())
+			net.WriteString(SelectedPlayeris:SteamID())
 		net.SendToServer()
 	end
 
@@ -267,6 +265,7 @@ local function AntiafkAdminPanelUsers()
 			net.WriteString(tauser)
 		net.SendToServer()
 	end
+
 
 	local Sign = vgui.Create( "DLabel", AdminPanelUsers )
 	Sign:SetPos( 25, 410 )
@@ -295,7 +294,7 @@ end
 |__/      |__/  |__/|__/  \__/|________/|________/
 ]]
 
-local function AntiafkAdminPanelGroups()
+function NNTAntiafkAdminPanelGroups()
 
 
     local w = ScrW() / 2
@@ -304,12 +303,21 @@ local function AntiafkAdminPanelGroups()
 	local AdminPanelGroups = vgui.Create( "DFrame" )
 	AdminPanelGroups:SetPos( w-200, h-200 )
 	AdminPanelGroups:SetSize( 400, 430 )
-	AdminPanelGroups:SetTitle( "Anti AFK bypass Groupss" )
+	AdminPanelGroups:SetTitle( "" )
 	AdminPanelGroups:SetDraggable( true )
-	AdminPanelGroups:ShowCloseButton( true )
+	AdminPanelGroups:ShowCloseButton( false )
 	AdminPanelGroups:MakePopup()
 	function AdminPanelGroups:Paint(w, h)
 		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 175))
+	end
+
+	local ReturnBut  = vgui.Create( "DImageButton", AdminPanelGroups )
+	ReturnBut:SetPos( 5, 0 )
+	ReturnBut:SetSize( 32, 32 )
+	ReturnBut:SetImage( "icon16/arrow_left.png" )
+	ReturnBut.DoClick = function()
+		AdminPanelGroups:Close()
+		NNTAntiafkAdminPanel()
 	end
 
 
@@ -323,7 +331,14 @@ local function AntiafkAdminPanelGroups()
 			tagroups = row:GetValue(1)
 	end
 	AdminPanelGroups_view:AddColumn("Groups")
-		net.Start("AntiAfkloaBypassGroups")
+
+	local GroupList = vgui.Create( "DComboBox" , AdminPanelGroups )
+	GroupList:SetPos( 150, 340 )
+	GroupList:SetSize( 100, 20 )
+	GroupList:SetValue( "Select Group !" )
+
+
+	net.Start("AntiAfkloaBypassGroups")
 		net.SendToServer()
 		net.Receive("AntiAfksenBypassGroups", function(len)
 			AdminPanelGroups_view:Clear()
@@ -331,16 +346,25 @@ local function AntiafkAdminPanelGroups()
 			for k,v in pairs(antiusergroupsstring) do
 				AdminPanelGroups_view:AddLine(v)
 			end
+			GroupList:Clear()
+			for k, v in pairs( ulx.group_names ) do
+				if !(table.HasValue(antiusergroupsstring, v)) then
+					GroupList:AddChoice( v )
+				end
+			end
 		end)
 
 
-    local GroupEntry = vgui.Create( "DTextEntry")
-    GroupEntry:SetParent( AdminPanelGroups )
-    GroupEntry:SetPos( 150, 340 )
-    GroupEntry:SetSize( 100, 30 )
-    GroupEntry.OnEnter = function( self )
-	    chat.AddText( self:GetValue() )
-    end
+	GroupList.OnSelect = function( a, b, value )
+		SelectedGroups = value
+
+	end
+
+	for k, v in pairs( ulx.group_names ) do
+		if !(table.HasValue(antiusergroupsstring, v)) then
+			GroupList:AddChoice( v )
+		end
+	end
 
 	local addgroups = vgui.Create("DButton")
 	addgroups:SetParent( AdminPanelGroups )
@@ -350,17 +374,17 @@ local function AntiafkAdminPanelGroups()
     addgroups:SetColor(Color(255, 255, 255))
 	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	addgroups.DoClick = function ()
-		if string.StartWith(GroupEntry:GetValue() , " " ) then
+		if string.StartWith(SelectedGroups , " " ) then
 			LocalPlayer():ChatPrint('You cannot add group starting with a space !')
 		return end
-		if GroupEntry:GetValue() == "" then
+		if SelectedGroups == "" then
 			LocalPlayer():ChatPrint('You cannot add a empty group !')
 		return end
-		if table.HasValue(antiusergroupsstring, GroupEntry:GetValue()) then
-			LocalPlayer():ChatPrint('User group ' .. GroupEntry:GetValue() ..' is already there !')
+		if table.HasValue(antiusergroupsstring, SelectedGroups) then
+			LocalPlayer():ChatPrint('User group ' .. SelectedGroups ..' is already there !')
 		return end
 		net.Start("AntiAddBypassGroups")
-			net.WriteString(GroupEntry:GetValue())
+			net.WriteString(SelectedGroups)
 		net.SendToServer()
 	end
 
@@ -376,6 +400,7 @@ local function AntiafkAdminPanelGroups()
 			net.WriteString(tagroups)
 		net.SendToServer()
 	end
+
 
 	local Sign = vgui.Create( "DLabel", AdminPanelGroups )
 	Sign:SetPos( 25, 410 )
@@ -395,7 +420,7 @@ end
 | $$  | $$| $$$$$$$/| $$ \/  | $$ /$$$$$$| $$ \  $$      | $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
 |__/  |__/|_______/ |__/     |__/|______/|__/  \__/      |__/      |__/  |__/|__/  \__/|________/|________/
 ]]
-local function AntiafkAdminPanel()
+function NNTAntiafkAdminPanel()
 
     local w = ScrW() / 2
     local h = ScrH() / 2
@@ -412,11 +437,18 @@ local function AntiafkAdminPanel()
 	MainPanel:SetSize( 300, 200 )
 	MainPanel:SetTitle( "ANTI AFK ADMIN PANEL" )
 	MainPanel:SetDraggable( true )
-	MainPanel:ShowCloseButton( true )
+	MainPanel:ShowCloseButton( false )
 	MainPanel:MakePopup()
 
+	local ExitBut = vgui.Create( "DImageButton", MainPanel )
+	ExitBut:SetPos( 266, 10 )
+	ExitBut:SetSize( 24, 24 )
+	ExitBut:SetImage( "icon16/cross.png" )
+	ExitBut.DoClick = function()
+		MainPanel:Close()
+	end
 	function MainPanel:Paint(w, h)
-		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 225))
+		draw.RoundedBox( 20, 0, 0, w, h,  Color(0, 0, 0, 225))
 	end
 
 
@@ -579,7 +611,8 @@ local function AntiafkAdminPanel()
     Groups_btn:SetColor(Color(255, 255, 255))
 	Groups_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Groups_btn.DoClick = function ()
-		AntiafkAdminPanelGroups()
+		NNTAntiafkAdminPanelGroups()
+		MainPanel:Close()
 	end
 
 	local Users_btn = vgui.Create("DButton")
@@ -590,7 +623,8 @@ local function AntiafkAdminPanel()
     Users_btn:SetColor(Color(255, 255, 255))
 	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Users_btn.DoClick = function ()
-		AntiafkAdminPanelUsers()
+		NNTAntiafkAdminPanelUsers()
+		MainPanel:Close()
 	end
 
 	local Sign = vgui.Create( "DLabel", MainPanel )
@@ -666,7 +700,7 @@ end
  \______/ |________/   |__/         |__/  |__/|__/      |__/  \__/      |__/      |__/  |__/|__/  \__/|________/|________/
 ]]
 
-local function AntiafkAdminSetAfk()
+function NNTAntiafkAdminSetAfk()
 
 
     local w = ScrW() / 2
@@ -742,17 +776,28 @@ end
 net.Receive("AntiAfkSendHUDInfo", function()
 	local data1 = net.ReadString()
 	if (data1 == "AntiafkAdminSetAfk") then
-		AntiafkAdminSetAfk()
+		NNTAntiafkAdminSetAfk()
 	elseif (data1 == "AntiafkMainHUD") then
-		AntiafkMainHUD()
+		NNTAntiafkMainHUD()
 	elseif (data1 == "AntiafkMainHUDSP") then
-		AntiafkMainHUDSP()
+		NNTAntiafkMainHUDSP()
 	elseif (data1 == "AntiafkAdminPanel") then
-		AntiafkAdminPanel()
+		NNTAntiafkAdminPanel()
 	elseif (data1 == "AntiafkAdminPanelGroups") then
-		AntiafkAdminPanelGroups()
+		NNTAntiafkAdminPanelGroups()
 	elseif table.HasValue(AntiAfkDisponibleLang, data1) then
 		AntiAfkLanguage = data1
 		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkLanguage)
 	end
 end)
+
+--[[
+ /$$   /$$ /$$   /$$ /$$$$$$$        /$$$$$$$   /$$$$$$  /$$$$$$ /$$   /$$ /$$$$$$$$
+| $$  | $$| $$  | $$| $$__  $$      | $$__  $$ /$$__  $$|_  $$_/| $$$ | $$|__  $$__/
+| $$  | $$| $$  | $$| $$  \ $$      | $$  \ $$| $$  \ $$  | $$  | $$$$| $$   | $$
+| $$$$$$$$| $$  | $$| $$  | $$      | $$$$$$$/| $$$$$$$$  | $$  | $$ $$ $$   | $$
+| $$__  $$| $$  | $$| $$  | $$      | $$____/ | $$__  $$  | $$  | $$  $$$$   | $$
+| $$  | $$| $$  | $$| $$  | $$      | $$      | $$  | $$  | $$  | $$\  $$$   | $$
+| $$  | $$|  $$$$$$/| $$$$$$$/      | $$      | $$  | $$ /$$$$$$| $$ \  $$   | $$
+|__/  |__/ \______/ |_______/       |__/      |__/  |__/|______/|__/  \__/   |__/
+]]
