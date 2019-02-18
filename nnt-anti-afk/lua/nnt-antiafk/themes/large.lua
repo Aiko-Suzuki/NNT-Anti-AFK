@@ -1,4 +1,4 @@
-NNTAntiafkThemes.Large = "Large_NNTAntiafkMainHUD()"
+NNTAntiafkThemes.Large = "Large_NNTAntiafkMainHUD"
 function Large_NNTAntiafkMainHUD()
 
 	local w = ScrW() / 2
@@ -62,6 +62,7 @@ function Large_NNTAntiafkMainHUD()
 	AfkPanelHUD:SetMouseInputEnabled()
 	AfkPanelHUD:SetDraggable(false)
 	function AfkPanelHUD:Paint(w, h)
+		Derma_DrawBackgroundBlur(AfkPanelHUD,1)
 		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 235))
 		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] , "AFKLarge", ScrW()/2  , ScrH() / 16, Color( 255, 0, 0, 255 ), TEXT_ALIGN_CENTER )
 		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].. " " .. AntiAFKTimer.TimeLeft , "AFKMedium", ScrW()/2  , ScrH() / 7, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
