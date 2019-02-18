@@ -10,8 +10,8 @@ AntiAfkTranslate.FR = {
 
 	-- Admin Menu
 	["GENSETTINGS"] = "Paramétres Général !",
-	["GROUPSUSERSW"] = "Whitelist !",
-	["TIMESSETTINGS"] = "Paramétres Temps !",
+	["GROUPSUSERSW"] = "Liste Blanche !",
+	["TIMESSETTINGS"] = "Paramétres de Temps !",
 	["THEME"] = "Themes !",
 	["LANGUAGESET"] = "Languages !",
 

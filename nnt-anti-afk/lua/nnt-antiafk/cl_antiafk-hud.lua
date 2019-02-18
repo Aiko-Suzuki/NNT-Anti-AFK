@@ -40,277 +40,8 @@ for k,v in pairs(NNTAntiafkThemes) do
 end
 
 
---[[
- /$$   /$$  /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$  /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
-| $$  | $$ /$$__  $$| $$_____/| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/ | $$      |_  $$_/ /$$__  $$|__  $$__/
-| $$  | $$| $$  \__/| $$      | $$  \ $$| $$  \__/      | $$ /$$$| $$| $$  | $$  | $$     | $$   | $$       | $$        | $$  | $$  \__/   | $$
-| $$  | $$|  $$$$$$ | $$$$$   | $$$$$$$/|  $$$$$$       | $$/$$ $$ $$| $$$$$$$$  | $$     | $$   | $$$$$    | $$        | $$  |  $$$$$$    | $$
-| $$  | $$ \____  $$| $$__/   | $$__  $$ \____  $$      | $$$$_  $$$$| $$__  $$  | $$     | $$   | $$__/    | $$        | $$   \____  $$   | $$
-| $$  | $$ /$$  \ $$| $$      | $$  \ $$ /$$  \ $$      | $$$/ \  $$$| $$  | $$  | $$     | $$   | $$       | $$        | $$   /$$  \ $$   | $$
-|  $$$$$$/|  $$$$$$/| $$$$$$$$| $$  | $$|  $$$$$$/      | $$/   \  $$| $$  | $$ /$$$$$$   | $$   | $$$$$$$$ | $$$$$$$$ /$$$$$$|  $$$$$$/   | $$
- \______/  \______/ |________/|__/  |__/ \______/       |__/     \__/|__/  |__/|______/   |__/   |________/ |________/|______/ \______/    |__/
-
- /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
-| $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
-| $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
-| $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
-| $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
-| $$      | $$  | $$| $$\  $$$| $$      | $$
-| $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
-|__/      |__/  |__/|__/  \__/|________/|________/
-]]
 
 
-function NNTAntiafkAdminPanelUsers()
-
-
-    local w = ScrW() / 2
-    local h = ScrH() / 2
-
-	local AdminPanelUsers = vgui.Create( "DFrame" )
-	AdminPanelUsers:SetPos( w-200, h-200 )
-	AdminPanelUsers:SetSize( 400, 430 )
-	AdminPanelUsers:SetTitle( "" )
-	AdminPanelUsers:SetDraggable( true )
-	AdminPanelUsers:ShowCloseButton( false  )
-	AdminPanelUsers:MakePopup()
-	function AdminPanelUsers:Paint(w, h)
-		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 175))
-	end
-
-	local ReturnBut  = vgui.Create( "DImageButton", AdminPanelUsers )
-	ReturnBut:SetPos( 5, 0 )
-	ReturnBut:SetSize( 32, 32 )
-	ReturnBut:SetImage( "icon16/arrow_left.png" )
-	ReturnBut.DoClick = function()
-		AdminPanelUsers:Close()
-		NNTAntiafkAdminPanel()
-	end
-
-	local AdminPanelUsers_view = vgui.Create("DListView")
-	AdminPanelUsers_view:SetParent(AdminPanelUsers)
-	AdminPanelUsers_view:SetPos(0, 30)
-	AdminPanelUsers_view:SetSize(400, 300)
-	AdminPanelUsers_view:SetMultiSelect(false)
-	--AdminPanelUsers_view.OnClickLine = function(parent,selected,isselected) print(selected:GetValue(1)) end
-	AdminPanelUsers_view.OnRowSelected = function(parent,selected,isselected) print(isselected:GetValue(1))
-			tauser = isselected:GetValue(1)
-	end
-	AdminPanelUsers_view:AddColumn("SteamID")
-	AdminPanelUsers_view:AddColumn("Name")
-
-	local UserList = vgui.Create( "DComboBox" , AdminPanelUsers )
-	UserList:SetPos( 150, 340 )
-	UserList:SetSize( 100, 20 )
-	UserList:SetValue( "Select Player !" )
-
-		net.Start("AntiAfkloaBypassUsers")
-		net.SendToServer()
-		net.Receive("AntiAfksenBypassUsers", function(len)
-			AdminPanelUsers_view:Clear()
-			antiuserstring = net.ReadTable()
-			for k,v in pairs(antiuserstring) do
-				if !IsValid(player.GetBySteamID(v)) then
-					local plyname = v
-					AdminPanelUsers_view:AddLine(k,plyname)
-				else
-					local plyname = v
-					AdminPanelUsers_view:AddLine(k,plyname)
-				end
-			end
-			UserList:Clear()
-			for k, v in pairs( player.GetAll() ) do
-				if !antiuserstring[v:SteamID()] then
-					UserList:AddChoice( v:Nick() )
-				end
-			end
-		end)
-
-
-
-	UserList.OnSelect = function( a, b, value )
-		for k,v in pairs(player.GetAll()) do
-			if v:Nick() == value then
-				SelectedPlayeris = v
-				print(SelectedPlayeris:SteamID())
-			end
-		end
-	end
-
-
-	local addgroups = vgui.Create("DButton")
-	addgroups:SetParent( AdminPanelUsers )
-	addgroups:SetText( "Add User" )
-	addgroups:SetPos( 220, 380)
-	addgroups:SetSize( 150, 25 )
-    addgroups:SetColor(Color(255, 255, 255))
-	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
-	addgroups.DoClick = function ()
-		if string.StartWith(SelectedPlayeris:SteamID() , " " ) then
-			LocalPlayer():ChatPrint('You cannot add a user starting with a space !')
-		return end
-		if SelectedPlayeris:SteamID() == "" then
-			LocalPlayer():ChatPrint('You cannot add a empty user !')
-		return end
-		if antiuserstring[SelectedPlayeris:SteamID()] then
-			LocalPlayer():ChatPrint('User ' .. SelectedPlayeris:Nick() ..' is already there !')
-		return end
-		net.Start("AntiAddBypassUsers")
-			net.WriteString(SelectedPlayeris:SteamID())
-		net.SendToServer()
-	end
-
-	local delbutton = vgui.Create("DButton")
-	delbutton:SetParent( AdminPanelUsers )
-	delbutton:SetText( "Del User" )
-	delbutton:SetPos( 30, 380)
-	delbutton:SetSize( 150, 25 )
-    delbutton:SetColor(Color(255, 255, 255))
-	delbutton.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
-	delbutton.DoClick = function ()
-		net.Start("AntiRemBypassUsers")
-			net.WriteString(tauser)
-		net.SendToServer()
-	end
-
-
-	local Sign = vgui.Create( "DLabel", AdminPanelUsers )
-	Sign:SetPos( 25, 410 )
-	Sign:SetSize(150 , 25)
-	Sign:SetText( "Made by Aiko Suzuki !" )
-
-
-end
---[[
-  /$$$$$$  /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$ /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
- /$$__  $$| $$__  $$ /$$__  $$| $$  | $$| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/| $$      |_  $$_/ /$$__  $$|__  $$__/
-| $$  \__/| $$  \ $$| $$  \ $$| $$  | $$| $$  \ $$| $$  \__/      | $$ /$$$| $$| $$  | $$  | $$     | $$   | $$      | $$        | $$  | $$  \__/   | $$
-| $$ /$$$$| $$$$$$$/| $$  | $$| $$  | $$| $$$$$$$/|  $$$$$$       | $$/$$ $$ $$| $$$$$$$$  | $$     | $$   | $$$$$   | $$        | $$  |  $$$$$$    | $$
-| $$|_  $$| $$__  $$| $$  | $$| $$  | $$| $$____/  \____  $$      | $$$$_  $$$$| $$__  $$  | $$     | $$   | $$__/   | $$        | $$   \____  $$   | $$
-| $$  \ $$| $$  \ $$| $$  | $$| $$  | $$| $$       /$$  \ $$      | $$$/ \  $$$| $$  | $$  | $$     | $$   | $$      | $$        | $$   /$$  \ $$   | $$
-|  $$$$$$/| $$  | $$|  $$$$$$/|  $$$$$$/| $$      |  $$$$$$/      | $$/   \  $$| $$  | $$ /$$$$$$   | $$   | $$$$$$$$| $$$$$$$$ /$$$$$$|  $$$$$$/   | $$
- \______/ |__/  |__/ \______/  \______/ |__/       \______/       |__/     \__/|__/  |__/|______/   |__/   |________/|________/|______/ \______/    |__/
-
- /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
-| $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
-| $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
-| $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
-| $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
-| $$      | $$  | $$| $$\  $$$| $$      | $$
-| $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
-|__/      |__/  |__/|__/  \__/|________/|________/
-]]
-
-function NNTAntiafkAdminPanelGroups()
-
-
-    local w = ScrW() / 2
-    local h = ScrH() / 2
-
-	local AdminPanelGroups = vgui.Create( "DFrame" )
-	AdminPanelGroups:SetPos( w-200, h-200 )
-	AdminPanelGroups:SetSize( 400, 430 )
-	AdminPanelGroups:SetTitle( "" )
-	AdminPanelGroups:SetDraggable( true )
-	AdminPanelGroups:ShowCloseButton( false )
-	AdminPanelGroups:MakePopup()
-	function AdminPanelGroups:Paint(w, h)
-		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 175))
-	end
-
-	local ReturnBut  = vgui.Create( "DImageButton", AdminPanelGroups )
-	ReturnBut:SetPos( 5, 0 )
-	ReturnBut:SetSize( 32, 32 )
-	ReturnBut:SetImage( "icon16/arrow_left.png" )
-	ReturnBut.DoClick = function()
-		AdminPanelGroups:Close()
-		NNTAntiafkAdminPanel()
-	end
-
-
-
-	local AdminPanelGroups_view = vgui.Create("DListView")
-	AdminPanelGroups_view:SetParent(AdminPanelGroups)
-	AdminPanelGroups_view:SetPos(0, 30)
-	AdminPanelGroups_view:SetSize(400, 300)
-	AdminPanelGroups_view:SetMultiSelect(false)
-	AdminPanelGroups_view.OnRowSelected = function( panel, rowIndex, row )
-			tagroups = row:GetValue(1)
-	end
-	AdminPanelGroups_view:AddColumn("Groups")
-
-	local GroupList = vgui.Create( "DComboBox" , AdminPanelGroups )
-	GroupList:SetPos( 150, 340 )
-	GroupList:SetSize( 100, 20 )
-	GroupList:SetValue( "Select Group !" )
-
-
-	net.Start("AntiAfkloaBypassGroups")
-		net.SendToServer()
-		net.Receive("AntiAfksenBypassGroups", function(len)
-			AdminPanelGroups_view:Clear()
-			antiusergroupsstring = net.ReadTable()
-			for k,v in pairs(antiusergroupsstring) do
-				AdminPanelGroups_view:AddLine(v)
-			end
-			GroupList:Clear()
-			for k, v in pairs( ulx.group_names ) do
-				if !(table.HasValue(antiusergroupsstring, v)) then
-					GroupList:AddChoice( v )
-				end
-			end
-		end)
-
-
-	GroupList.OnSelect = function( a, b, value )
-		SelectedGroups = value
-
-	end
-
-
-	local addgroups = vgui.Create("DButton")
-	addgroups:SetParent( AdminPanelGroups )
-	addgroups:SetText( "Add Groups" )
-	addgroups:SetPos( 220, 380)
-	addgroups:SetSize( 150, 25 )
-    addgroups:SetColor(Color(255, 255, 255))
-	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
-	addgroups.DoClick = function ()
-		if string.StartWith(SelectedGroups , " " ) then
-			LocalPlayer():ChatPrint('You cannot add group starting with a space !')
-		return end
-		if SelectedGroups == "" then
-			LocalPlayer():ChatPrint('You cannot add a empty group !')
-		return end
-		if table.HasValue(antiusergroupsstring, SelectedGroups) then
-			LocalPlayer():ChatPrint('User group ' .. SelectedGroups ..' is already there !')
-		return end
-		net.Start("AntiAddBypassGroups")
-			net.WriteString(SelectedGroups)
-		net.SendToServer()
-	end
-
-	local delbutton = vgui.Create("DButton")
-	delbutton:SetParent( AdminPanelGroups )
-	delbutton:SetText( "Del Groups" )
-	delbutton:SetPos( 30, 380)
-	delbutton:SetSize( 150, 25 )
-    delbutton:SetColor(Color(255, 255, 255))
-	delbutton.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
-	delbutton.DoClick = function ()
-		net.Start("AntiRemBypassGroups")
-			net.WriteString(tagroups)
-		net.SendToServer()
-	end
-
-
-	local Sign = vgui.Create( "DLabel", AdminPanelGroups )
-	Sign:SetPos( 25, 410 )
-	Sign:SetSize(150 , 25)
-	Sign:SetText( "Made by Aiko Suzuki !" )
-
-
-end
 
 --[[
   /$$$$$$  /$$$$$$$  /$$      /$$ /$$$$$$ /$$   /$$       /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
@@ -334,78 +65,166 @@ function NNTAntiafkAdminPanel()
 	SomeShittyTest3 = "undefined"
 
 
-
 	local MainPanel = vgui.Create( "DFrame" )
-	MainPanel:SetPos( w-200, h-200 )
+	MainPanel:SetPos( w-200, h-150 )
 	MainPanel:SetSize( 400, 300 )
-	MainPanel:SetTitle( "ANTI AFK ADMIN PANEL" )
-	MainPanel:SetDraggable( true )
+	MainPanel:SetTitle( "" )
+	MainPanel:SetDraggable( false )
 	MainPanel:ShowCloseButton( false )
 	MainPanel:MakePopup()
 
-	local GeneralSettings = vgui.Create( "DLabel", MainPanel )
-    GeneralSettings:SetPos( 18, -15 )
-    GeneralSettings:SetSize(280, 100)
-	GeneralSettings:SetFont("HudHintTextLarge")
-    GeneralSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["GENSETTINGS"] )
-	GeneralSettings:SetColor(Color(255,255,0))
+	function MainPanel:Paint(w, h)
+		Derma_DrawBackgroundBlur(MainPanel,1)
+		draw.RoundedBox( 10, 0, 0, w, h,  Color(0, 0, 0, 225))
+		draw.DrawText("ANTI-AFK PANEL", "Trebuchet24",200, 0,Color( 255, 0, 0, 255 ),TEXT_ALIGN_CENTER)
+	end
 
-	local BypassSettings = vgui.Create( "DLabel", MainPanel )
-    BypassSettings:SetPos( 240, -15 )
-    BypassSettings:SetSize(280, 100)
-	BypassSettings:SetFont("HudHintTextLarge")
-    BypassSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["GROUPSUSERSW"] )
-	BypassSettings:SetColor(Color(255,255,0))
 
-	local ThemeSettings = vgui.Create( "DLabel", MainPanel )
-    ThemeSettings:SetPos( 270, 120 )
-    ThemeSettings:SetSize(280, 100)
-	ThemeSettings:SetFont("HudHintTextLarge")
-    ThemeSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["THEME"] )
-	ThemeSettings:SetColor(Color(255,255,0))
 
-	local LangSettings = vgui.Create( "DLabel", MainPanel )
-    LangSettings:SetPos( 265, 190 )
-    LangSettings:SetSize(280, 100)
-	LangSettings:SetFont("HudHintTextLarge")
-    LangSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["LANGUAGESET"] )
-	LangSettings:SetColor(Color(255,255,0))
+	local GeneralSettingsM = vgui.Create( "DFrame" , MainPanel)
+	GeneralSettingsM:SetPos( 0, 20 )
+	GeneralSettingsM:SetSize( 200, 120 )
+	GeneralSettingsM:SetTitle( "" )
+	GeneralSettingsM:SetDraggable( false )
+	GeneralSettingsM:ShowCloseButton( false )
+	function GeneralSettingsM:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["GENSETTINGS"], "HudHintTextLarge",100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
+	end
+	local WhitelistS = vgui.Create( "DFrame" , MainPanel)
+	WhitelistS:SetPos( 200, 20 )
+	WhitelistS:SetSize( 200, 120 )
+	WhitelistS:SetTitle( "" )
+	WhitelistS:SetDraggable( false )
+	WhitelistS:ShowCloseButton( false )
+	function WhitelistS:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["GROUPSUSERSW"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
+	end
+	local ThemesMenu = vgui.Create( "DFrame" , MainPanel)
+	ThemesMenu:SetPos( 200, 140 )
+	ThemesMenu:SetSize( 200, 70 )
+	ThemesMenu:SetTitle( "" )
+	ThemesMenu:SetDraggable( false )
+	ThemesMenu:ShowCloseButton( false )
+	function ThemesMenu:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["THEME"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
+	end
 
-	local AfkSettings = vgui.Create( "DLabel", MainPanel )
-    AfkSettings:SetPos( 17, 100 )
-    AfkSettings:SetSize(280, 100)
-	AfkSettings:SetFont("HudHintTextLarge")
-    AfkSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["TIMESSETTINGS"] )
-	AfkSettings:SetColor(Color(255,255,0))
+	local LangMenu = vgui.Create( "DFrame" , MainPanel)
+	LangMenu:SetPos( 200, 210 )
+	LangMenu:SetSize( 200, 70 )
+	LangMenu:SetTitle( "" )
+	LangMenu:SetDraggable( false )
+	LangMenu:ShowCloseButton( false )
+	function LangMenu:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["LANGUAGESET"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
+	end
+
+	local TimeSettingMenu = vgui.Create( "DFrame" , MainPanel)
+	TimeSettingMenu:SetPos( 0, 140 )
+	TimeSettingMenu:SetSize( 200, 140 )
+	TimeSettingMenu:SetTitle( "" )
+	TimeSettingMenu:SetDraggable( false )
+	TimeSettingMenu:ShowCloseButton( false )
+	function TimeSettingMenu:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["TIMESSETTINGS"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
+	end
+
+	local UserWhiteListPanel = vgui.Create( "DFrame" , MainPanel)
+	UserWhiteListPanel:SetPos( 0, 20 )
+	UserWhiteListPanel:SetSize( 400, 300 )
+	UserWhiteListPanel:SetTitle( "" )
+	UserWhiteListPanel:SetDraggable( false )
+	UserWhiteListPanel:ShowCloseButton( false )
+	function UserWhiteListPanel:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText("User Whitelist !", "HudHintTextLarge",200, 5,Color( 255, 255, 255, 255 ),TEXT_ALIGN_CENTER)
+	end
+
+	local GroupsWhiteListPanel = vgui.Create( "DFrame" , MainPanel)
+	GroupsWhiteListPanel:SetPos( 0, 20 )
+	GroupsWhiteListPanel:SetSize( 400, 300 )
+	GroupsWhiteListPanel:SetTitle( "" )
+	GroupsWhiteListPanel:SetDraggable( false )
+	GroupsWhiteListPanel:ShowCloseButton( false )
+	function GroupsWhiteListPanel:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText("Groups Whitelist !", "HudHintTextLarge",200, 5,Color( 255, 255, 255, 255 ),TEXT_ALIGN_CENTER)
+	end
+	UserWhiteListPanel:Hide()
+	GroupsWhiteListPanel:Hide()
+	local ReturnBut  = vgui.Create( "DImageButton", MainPanel )
+	ReturnBut:SetPos( 10, 10 )
+	ReturnBut:SetSize( 32, 32 )
+	ReturnBut:SetImage( "icon16/arrow_left.png" )
+	ReturnBut.DoClick = function()
+		if UserWhiteListPanel:IsVisible() then
+			UserWhiteListPanel:Hide()
+			GeneralSettingsM:Show()
+			WhitelistS:Show()
+			ThemesMenu:Show()
+			LangMenu:Show()
+			TimeSettingMenu:Show()
+			ReturnBut:Hide()
+		elseif GroupsWhiteListPanel:IsVisible() then
+			GroupsWhiteListPanel:Hide()
+			GeneralSettingsM:Show()
+			WhitelistS:Show()
+			ThemesMenu:Show()
+			LangMenu:Show()
+			TimeSettingMenu:Show()
+			ReturnBut:Hide()
+		end
+	end
+	ReturnBut:Hide()
+
+	local function NNTAntiafkAdminPanelOpen()
+		GeneralSettingsM:Show()
+		WhitelistS:Show()
+		ThemesMenu:Show()
+		LangMenu:Show()
+		TimeSettingMenu:Show()
+		ReturnBut:Hide()
+	end
+	local function NNTAntiafkAdminPanelHide()
+		GeneralSettingsM:Hide()
+		WhitelistS:Hide()
+		ThemesMenu:Hide()
+		LangMenu:Hide()
+		TimeSettingMenu:Hide()
+		ReturnBut:Show()
+	end
 
 	local ExitBut = vgui.Create( "DImageButton", MainPanel )
-	ExitBut:SetPos( 373, 9 )
-	ExitBut:SetSize( 18, 18 )
+	ExitBut:SetPos( 365, 10 )
+	ExitBut:SetSize( 24, 24 )
 	ExitBut:SetImage( "icon16/cross.png" )
+	ExitBut:MoveToFront()
 	ExitBut.DoClick = function()
 		MainPanel:Close()
-	end
-	function MainPanel:Paint(w, h)
-		draw.RoundedBox( 20, 0, 0, w, h,  Color(0, 0, 0, 225))
-	end
 
+	end
 
 
     local TextEntry = vgui.Create( "DNumberWang")
-    TextEntry:SetParent( MainPanel )
-    TextEntry:SetPos( 22, 170 )
+    TextEntry:SetParent( TimeSettingMenu )
+    TextEntry:SetPos( 22, 40 )
     TextEntry:SetSize( 65, 25 )
-    TextEntry:SetMin( 180 )
+    TextEntry:SetMin( 0 )
 	TextEntry:SetMax(999999)
     function TextEntry:OnValueChanged( val )
 	    -- print the form's text as server text
     end
 
     local TextEntry2 = vgui.Create( "DNumberWang")
-    TextEntry2:SetParent( MainPanel )
-    TextEntry2:SetPos( 120, 170 )
+    TextEntry2:SetParent( TimeSettingMenu )
+    TextEntry2:SetPos( 120, 40 )
     TextEntry2:SetSize( 65, 25 )
-    TextEntry2:SetMin( 180 )
+    TextEntry2:SetMin( 0 )
 	TextEntry2:SetMax(999999)
    function TextEntry2:OnValueChanged( val )
 	    	-- print the form's text as server text
@@ -414,8 +233,8 @@ function NNTAntiafkAdminPanel()
 
 
 	-- Groups Bypass
-	local checkboxGroupsbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxGroupsbypass:SetPos( 22, 95 )
+	local checkboxGroupsbypass = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
+	checkboxGroupsbypass:SetPos( 22,80 )
 	checkboxGroupsbypass:SetText( "Groups Bypass" )
 
 	function checkboxGroupsbypass:OnChange( val )
@@ -436,8 +255,8 @@ function NNTAntiafkAdminPanel()
 
 
 	-- User Bypass
-	local checkboxUbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxUbypass:SetPos( 22, 75 )
+	local checkboxUbypass = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
+	checkboxUbypass:SetPos( 22, 55 )
 	checkboxUbypass:SetText( "User Bypass" )
 
 	function checkboxUbypass:OnChange( val )
@@ -458,8 +277,8 @@ function NNTAntiafkAdminPanel()
 
 
 	-- Anti AFK ENABLE
-	local checkboxAntiAFK = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxAntiAFK:SetPos( 22, 55 )
+	local checkboxAntiAFK = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
+	checkboxAntiAFK:SetPos( 22, 30 )
 	checkboxAntiAFK:SetText( "Activate AntiAFK" )
 
 	function checkboxAntiAFK:OnChange( val )
@@ -479,8 +298,8 @@ function NNTAntiafkAdminPanel()
 	end
 
 
-	local SelectTheme = vgui.Create( "DComboBox", MainPanel )
-	SelectTheme:SetPos( 265, 195 )
+	local SelectTheme = vgui.Create( "DComboBox", ThemesMenu )
+	SelectTheme:SetPos( 65, 35 )
 	SelectTheme:SetSize( 75, 20 )
 	SelectTheme:SetValue( AntiAfkSelTheme )
 	for k,v in pairs(AntiAfkDisponibleThemes) do
@@ -500,8 +319,8 @@ function NNTAntiafkAdminPanel()
 
 
 
-	local SelectTranslate = vgui.Create( "DComboBox", MainPanel )
-	SelectTranslate:SetPos( 265, 260 )
+	local SelectTranslate = vgui.Create( "DComboBox", LangMenu )
+	SelectTranslate:SetPos( 65, 35 )
 	SelectTranslate:SetSize( 75, 20 )
 	SelectTranslate:SetValue( AntiAfkTranslate[AntiAfkLanguage]["NAME"] )
 	for k,v in pairs(AntiAfkTranslate) do
@@ -520,9 +339,9 @@ function NNTAntiafkAdminPanel()
 	end
 
     local list_btn = vgui.Create("DButton")
-	list_btn:SetParent( MainPanel )
+	list_btn:SetParent( TimeSettingMenu )
 	list_btn:SetText( "SET KICK" )
-	list_btn:SetPos( 18, 210)
+	list_btn:SetPos( 18, 80)
 	list_btn:SetSize( 70, 20 )
     list_btn:SetColor(Color(255, 255, 255))
 	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -539,9 +358,9 @@ function NNTAntiafkAdminPanel()
 	end
 
     local list_btn2 = vgui.Create("DButton")
-	list_btn2:SetParent( MainPanel )
+	list_btn2:SetParent( TimeSettingMenu )
 	list_btn2:SetText( "SET WARN" )
-	list_btn2:SetPos( 116, 210)
+	list_btn2:SetPos( 116, 80)
 	list_btn2:SetSize( 70, 20 )
     list_btn2:SetColor(Color(255, 255, 255))
 	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -559,33 +378,33 @@ function NNTAntiafkAdminPanel()
 
 
 	local Groups_btn = vgui.Create("DButton")
-	Groups_btn:SetParent( MainPanel )
+	Groups_btn:SetParent( WhitelistS )
 	Groups_btn:SetText( "Groups" )
-	Groups_btn:SetPos( 263, 110 )
+	Groups_btn:SetPos( 65, 75 )
 	Groups_btn:SetSize( 75, 30 )
 	Groups_btn:SetFont("Trebuchet18")
     Groups_btn:SetColor(Color(255, 255, 255))
 	Groups_btn.Paint = function( self, w, h ) draw.RoundedBox( 15, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Groups_btn.DoClick = function ()
-		NNTAntiafkAdminPanelGroups()
-		MainPanel:Close()
+		NNTAntiafkAdminPanelHide()
+		GroupsWhiteListPanel:Show()
 	end
 
 	local Users_btn = vgui.Create("DButton")
-	Users_btn:SetParent( MainPanel )
+	Users_btn:SetParent( WhitelistS )
 	Users_btn:SetText( "Users" )
-	Users_btn:SetPos( 263, 65 )
+	Users_btn:SetPos( 65, 35 )
 	Users_btn:SetSize( 75, 30 )
 	Users_btn:SetFont("Trebuchet18")
     Users_btn:SetColor(Color(255, 255, 255))
 	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 15, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Users_btn.DoClick = function ()
-		NNTAntiafkAdminPanelUsers()
-		MainPanel:Close()
+		NNTAntiafkAdminPanelHide()
+		UserWhiteListPanel:Show()
 	end
 
 	local Sign = vgui.Create( "DLabel", MainPanel )
-	Sign:SetPos( 20, 260 )
+	Sign:SetPos( 20, 280 )
 	Sign:SetSize(150 , 25)
 	Sign:SetText( "Made by Aiko Suzuki !" )
 
@@ -632,6 +451,208 @@ function NNTAntiafkAdminPanel()
 			end
 		end
 	end)
+--[[
+ /$$   /$$  /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$  /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
+| $$  | $$ /$$__  $$| $$_____/| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/ | $$      |_  $$_/ /$$__  $$|__  $$__/
+| $$  | $$| $$  \__/| $$      | $$  \ $$| $$  \__/      | $$ /$$$| $$| $$  | $$  | $$     | $$   | $$       | $$        | $$  | $$  \__/   | $$
+| $$  | $$|  $$$$$$ | $$$$$   | $$$$$$$/|  $$$$$$       | $$/$$ $$ $$| $$$$$$$$  | $$     | $$   | $$$$$    | $$        | $$  |  $$$$$$    | $$
+| $$  | $$ \____  $$| $$__/   | $$__  $$ \____  $$      | $$$$_  $$$$| $$__  $$  | $$     | $$   | $$__/    | $$        | $$   \____  $$   | $$
+| $$  | $$ /$$  \ $$| $$      | $$  \ $$ /$$  \ $$      | $$$/ \  $$$| $$  | $$  | $$     | $$   | $$       | $$        | $$   /$$  \ $$   | $$
+|  $$$$$$/|  $$$$$$/| $$$$$$$$| $$  | $$|  $$$$$$/      | $$/   \  $$| $$  | $$ /$$$$$$   | $$   | $$$$$$$$ | $$$$$$$$ /$$$$$$|  $$$$$$/   | $$
+ \______/  \______/ |________/|__/  |__/ \______/       |__/     \__/|__/  |__/|______/   |__/   |________/ |________/|______/ \______/    |__/
+
+ /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
+| $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
+| $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
+| $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
+| $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
+| $$      | $$  | $$| $$\  $$$| $$      | $$
+| $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
+|__/      |__/  |__/|__/  \__/|________/|________/
+]]
+
+
+	local AdminPanelUsers_view = vgui.Create("DListView")
+	AdminPanelUsers_view:SetParent(UserWhiteListPanel)
+	AdminPanelUsers_view:SetPos(25, 30)
+	AdminPanelUsers_view:SetSize(350, 200)
+	AdminPanelUsers_view:SetMultiSelect(false)
+	--AdminPanelUsers_view.OnClickLine = function(parent,selected,isselected) print(selected:GetValue(1)) end
+	AdminPanelUsers_view.OnRowSelected = function(parent,selected,isselected) print(isselected:GetValue(1))
+			tauser = isselected:GetValue(1)
+	end
+	AdminPanelUsers_view:AddColumn("SteamID")
+	AdminPanelUsers_view:AddColumn("Name")
+	AdminPanelUsers_view:SetSortable(true)
+
+	local UserList = vgui.Create( "DComboBox" , UserWhiteListPanel )
+	UserList:SetPos( 135, 244 )
+	UserList:SetSize( 130, 20 )
+	UserList:SetValue( "Select Player !" )
+
+		net.Start("AntiAfkloaBypassUsers")
+		net.SendToServer()
+		net.Receive("AntiAfksenBypassUsers", function(len)
+			AdminPanelUsers_view:Clear()
+			antiuserstring = net.ReadTable()
+			for k,v in pairs(antiuserstring) do
+				if !IsValid(player.GetBySteamID(v)) then
+					local plyname = v
+					AdminPanelUsers_view:AddLine(k,plyname)
+				else
+					local plyname = v
+					AdminPanelUsers_view:AddLine(k,plyname)
+				end
+			end
+			UserList:Clear()
+			for k, v in pairs( player.GetAll() ) do
+				if !antiuserstring[v:SteamID()] then
+					UserList:AddChoice( v:Nick() )
+				end
+			end
+		end)
+
+
+
+	UserList.OnSelect = function( a, b, value )
+		for k,v in pairs(player.GetAll()) do
+			if v:Nick() == value then
+				SelectedPlayeris = v
+				print(SelectedPlayeris:SteamID())
+			end
+		end
+	end
+
+
+	local addgroups = vgui.Create("DButton")
+	addgroups:SetParent( UserWhiteListPanel )
+	addgroups:SetText( "Add User" )
+	addgroups:SetPos( 280, 240)
+	addgroups:SetSize( 100, 25 )
+    addgroups:SetColor(Color(255, 255, 255))
+	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	addgroups.DoClick = function ()
+		if string.StartWith(SelectedPlayeris:SteamID() , " " ) then
+			LocalPlayer():ChatPrint('You cannot add a user starting with a space !')
+		return end
+		if SelectedPlayeris:SteamID() == "" then
+			LocalPlayer():ChatPrint('You cannot add a empty user !')
+		return end
+		if antiuserstring[SelectedPlayeris:SteamID()] then
+			LocalPlayer():ChatPrint('User ' .. SelectedPlayeris:Nick() ..' is already there !')
+		return end
+		net.Start("AntiAddBypassUsers")
+			net.WriteString(SelectedPlayeris:SteamID())
+		net.SendToServer()
+	end
+
+	local delbutton = vgui.Create("DButton")
+	delbutton:SetParent( UserWhiteListPanel )
+	delbutton:SetText( "Del User" )
+	delbutton:SetPos( 20, 240)
+	delbutton:SetSize( 100, 25 )
+    delbutton:SetColor(Color(255, 255, 255))
+	delbutton.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	delbutton.DoClick = function ()
+		net.Start("AntiRemBypassUsers")
+			net.WriteString(tauser)
+		net.SendToServer()
+	end
+
+--[[
+  /$$$$$$  /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$ /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
+ /$$__  $$| $$__  $$ /$$__  $$| $$  | $$| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/| $$      |_  $$_/ /$$__  $$|__  $$__/
+| $$  \__/| $$  \ $$| $$  \ $$| $$  | $$| $$  \ $$| $$  \__/      | $$ /$$$| $$| $$  | $$  | $$     | $$   | $$      | $$        | $$  | $$  \__/   | $$
+| $$ /$$$$| $$$$$$$/| $$  | $$| $$  | $$| $$$$$$$/|  $$$$$$       | $$/$$ $$ $$| $$$$$$$$  | $$     | $$   | $$$$$   | $$        | $$  |  $$$$$$    | $$
+| $$|_  $$| $$__  $$| $$  | $$| $$  | $$| $$____/  \____  $$      | $$$$_  $$$$| $$__  $$  | $$     | $$   | $$__/   | $$        | $$   \____  $$   | $$
+| $$  \ $$| $$  \ $$| $$  | $$| $$  | $$| $$       /$$  \ $$      | $$$/ \  $$$| $$  | $$  | $$     | $$   | $$      | $$        | $$   /$$  \ $$   | $$
+|  $$$$$$/| $$  | $$|  $$$$$$/|  $$$$$$/| $$      |  $$$$$$/      | $$/   \  $$| $$  | $$ /$$$$$$   | $$   | $$$$$$$$| $$$$$$$$ /$$$$$$|  $$$$$$/   | $$
+ \______/ |__/  |__/ \______/  \______/ |__/       \______/       |__/     \__/|__/  |__/|______/   |__/   |________/|________/|______/ \______/    |__/
+
+ /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
+| $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
+| $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
+| $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
+| $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
+| $$      | $$  | $$| $$\  $$$| $$      | $$
+| $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
+|__/      |__/  |__/|__/  \__/|________/|________/
+]]
+
+	local AdminPanelGroups_view = vgui.Create("DListView")
+	AdminPanelGroups_view:SetParent(GroupsWhiteListPanel)
+	AdminPanelGroups_view:SetPos(25, 30)
+	AdminPanelGroups_view:SetSize(350, 200)
+	AdminPanelGroups_view:SetMultiSelect(false)
+	AdminPanelGroups_view.OnRowSelected = function( panel, rowIndex, row )
+			tagroups = row:GetValue(1)
+	end
+	AdminPanelGroups_view:AddColumn("Groups")
+	AdminPanelGroups_view:SetSortable(true)
+
+	local GroupList = vgui.Create( "DComboBox" , GroupsWhiteListPanel )
+	GroupList:SetPos( 135, 244 )
+	GroupList:SetSize( 130, 20 )
+	GroupList:SetValue( "Select Group !" )
+
+
+	net.Start("AntiAfkloaBypassGroups")
+		net.SendToServer()
+		net.Receive("AntiAfksenBypassGroups", function(len)
+			AdminPanelGroups_view:Clear()
+			antiusergroupsstring = net.ReadTable()
+			for k,v in pairs(antiusergroupsstring) do
+				AdminPanelGroups_view:AddLine(v)
+			end
+			GroupList:Clear()
+			for k, v in pairs( ulx.group_names ) do
+				if !(table.HasValue(antiusergroupsstring, v)) then
+					GroupList:AddChoice( v )
+				end
+			end
+		end)
+
+
+	GroupList.OnSelect = function( a, b, value )
+		SelectedGroups = value
+
+	end
+
+
+	local addgroups = vgui.Create("DButton")
+	addgroups:SetParent( GroupsWhiteListPanel )
+	addgroups:SetText( "Add Groups" )
+	addgroups:SetPos( 280, 240)
+	addgroups:SetSize( 100, 25 )
+    addgroups:SetColor(Color(255, 255, 255))
+	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	addgroups.DoClick = function ()
+		if string.StartWith(SelectedGroups , " " ) then
+			LocalPlayer():ChatPrint('You cannot add group starting with a space !')
+		return end
+		if SelectedGroups == "" then
+			LocalPlayer():ChatPrint('You cannot add a empty group !')
+		return end
+		if table.HasValue(antiusergroupsstring, SelectedGroups) then
+			LocalPlayer():ChatPrint('User group ' .. SelectedGroups ..' is already there !')
+		return end
+		net.Start("AntiAddBypassGroups")
+			net.WriteString(SelectedGroups)
+		net.SendToServer()
+	end
+
+	local delbutton = vgui.Create("DButton")
+	delbutton:SetParent( GroupsWhiteListPanel )
+	delbutton:SetText( "Del Groups" )
+	delbutton:SetPos( 20, 240)
+	delbutton:SetSize( 100, 25 )
+    delbutton:SetColor(Color(255, 255, 255))
+	delbutton.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	delbutton.DoClick = function ()
+		net.Start("AntiRemBypassGroups")
+			net.WriteString(tagroups)
+		net.SendToServer()
+	end
 
 
 

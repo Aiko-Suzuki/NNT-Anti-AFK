@@ -183,6 +183,7 @@ function AntiAFKChangeConfigData(settings,data,time)
     elseif   settings == "UsersBypass" then
         if time == "ADD" then
             if string.StartWith(data, "STEAM_") then
+                if data == "STEAM_0:0" then return end
                 local count = table.Count(AntiAFKConfig.UsersBypass)
                 local temptable = {[data] = player.GetBySteamID(data):Nick()}
                 table.Merge(TempConfigData.UsersBypass, temptable)
@@ -429,26 +430,6 @@ concommand.Add( "afktime", function( ply, cmd, args )
         ply:ChatPrint(" AntiAfk : "..  math.Round(ply.NextAFK - CurTime()) .. " Secondes left before the kick")
 end)
 
-concommand.Add( "setafktime", function( ply, cmd, args ) -- need to change this in net library ...
-	 if (ply:GetUserGroup() == "superadmin") then
-	     arguments = tonumber(args[1] , 10)
-	     if (type(arguments) == "number") then
-	        if (arguments > 300) or (arguments == 300) then
-	             AntiAFKChangeConfigData("Settings","KICK",arguments)
-	             AFK_TIME = AntiAFKConfig["Settings"]["KICK"]
-	             ply:ChatPrint("AntiAfk: Time set to " .. AFK_TIME .. " secondes!")
-                        net.Start("RefreshTime1")
-                            net.WriteString(AFK_TIME)
-                        net.Send(ply)
-                        net.Start("RefreshTime2")
-                            net.WriteString(AntiAFKConfig["Settings"]["WARN"])
-                        net.Send(ply)
-	         else
-	             ply:ChatPrint("AntiAfk: Please Enter a valide time")
-	         end
-	     end
-	 end
-end)
 
 
 concommand.Add("AntiAfkUpdate", function(ply)
