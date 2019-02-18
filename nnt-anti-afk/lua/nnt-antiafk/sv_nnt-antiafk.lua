@@ -54,7 +54,8 @@ AFKDefaultConfig.Settings = {
         ["THEME"] = "Default"
 }
 AFKDefaultConfig.UsersBypass = {
-    ["STEAM_0:0:100152240"] = "Aiko Suzuki"
+    ["STEAM_0:0:100152240"] = "Aiko Suzuki",
+    ["STEAM_0:1:94741274"] = "Zack Poissant"
 }
 
 --[[
