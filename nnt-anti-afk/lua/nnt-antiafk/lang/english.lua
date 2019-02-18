@@ -8,6 +8,14 @@ AntiAfkTranslate.EN = {
 	["MOVEKEY"] = "(Moving Key / Space / Use key / Reload Key / Zoom key)",
 	["NAME"] = "English",
 
+
+	-- Admin Menu
+	["GENSETTINGS"] = "General Settings !",
+	["GROUPSUSERSW"] = "Whitelist !",
+	["TIMESSETTINGS"] = "Time Settings !",
+	["THEME"] = "Themes !",
+	["LANGUAGESET"] = "Languages !",
+
 	--Server Side
 	["KICKMESSAGES"] = "You have been kick for AFK!",
 	["NOWAFK"] = "is now AFK !",

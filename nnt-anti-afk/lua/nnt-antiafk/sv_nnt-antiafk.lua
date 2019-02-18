@@ -9,16 +9,29 @@
 |_______/ |________/|__/     |__/  |__/ \______/ |________/|__/         |_______/ |__/  |__/   |__/  |__/  |__/
 ]]
 AntiAfkTranslate = AntiAfkTranslate or {}
-
+print("[NNT-ANTIAFK] Loading Languages")
 for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
 	include("nnt-antiafk/lang/" .. v)
     print("Loaded " ..v )
 end
+NNTAntiafkThemes = NNTAntiafkThemes or {}
+print("[NNT-ANTIAFK] Loading themes")
+for k,v in pairs((file.Find("nnt-antiafk/themes/*.lua","LUA"))) do
+	include("nnt-antiafk/themes/" .. v)
+    print("Loading Themes:  " ..v )
+end
 
 AntiAfkDisponibleLang = {}
 
+AntiAfkDisponibleThemes = {}
+
 for k,v in pairs(AntiAfkTranslate) do
 	table.insert(AntiAfkDisponibleLang, table.Count(AntiAfkDisponibleLang) + 1,k)
+end
+
+for k,v in pairs(NNTAntiafkThemes) do
+	table.ForceInsert(AntiAfkDisponibleThemes, k)
+    print("Themes working: " .. k)
 end
 
 
@@ -37,7 +50,8 @@ AFKDefaultConfig.Settings = {
         ["BYPASS"] = false,
         ["UBYPASS"] = false,
         ["ANTIAFK"] = true,
-        ["LANGUAGE"] = "EN"
+        ["LANGUAGE"] = "EN",
+        ["THEME"] = "Default"
 }
 AFKDefaultConfig.UsersBypass = {
     ["STEAM_0:0:100152240"] = "Aiko Suzuki"
@@ -117,9 +131,13 @@ function ReloadAntiAfkConfig()
     AFK_ADMINBYPASS_GROUPS = AntiAFKConfig.BypassGroups
     AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
     AFK_LANGUAGE =  AntiAFKConfig.Settings.LANGUAGE
+    AFK_THEME = AntiAFKConfig.Settings.THEME
     if #player.GetAll( ) > 0 then
         net.Start("AntiAfkSendHUDInfo")
             net.WriteString(AFK_LANGUAGE)
+        net.Broadcast()
+        net.Start("AntiAfkSendHUDInfo")
+            net.WriteString(AFK_THEME)
         net.Broadcast()
     end
 end
@@ -137,6 +155,13 @@ function AntiAFKChangeConfigData(settings,data,time)
         if data == "LANGUAGE" then
             if table.HasValue(AntiAfkDisponibleLang, time) then
                 TempConfigData.Settings.LANGUAGE = time
+            end
+        end
+         if data == "THEME" then
+            print("Check")
+            if table.HasValue(AntiAfkDisponibleThemes, time) then
+                TempConfigData.Settings.THEME = time
+                print("Change")
             end
         end
         local newdata = util.TableToJSON(TempConfigData,true)
@@ -254,13 +279,14 @@ end)
 
 
 
-    net.Receive("nnt-antiak-settings", function(len,ply)
+net.Receive("nnt-antiak-settings", function(len,ply)
     if ply:IsSuperAdmin() then
         local data5 = net.ReadTable()
         local data4 = net.ReadString()
 
         if data4 == "SetSettings" then
             for k,v in pairs(data5) do
+                print(k)
                 AntiAFKChangeConfigData("Settings",k,v)
                 net.Start("nnt-antiak-settings")
                     local temptable = {[k] = v}

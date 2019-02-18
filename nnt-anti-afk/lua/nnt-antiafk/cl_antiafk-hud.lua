@@ -9,124 +9,36 @@
    |__/   |__/  |__/|__/  |__/|__/  \__/ \______/ |________/|__/  |__/   |__/   |______/ \______/ |__/  \__/
 ]]
 
-AntiAfkTranslate = AntiAfkTranslate or {}
-
-AntiAfkDisponibleLang = {}
 
 AntiAfkLanguage = "EN"
+AntiAfkSelTheme = "Large"
 
+
+AntiAfkTranslate = AntiAfkTranslate or {}
+AntiAfkDisponibleLang = {}
 for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
 	include("nnt-antiafk/lang/" .. v)
-    print("Loaded " ..v )
+    print("Loaded Language: " ..v )
 end
-
-AntiAfkDisponibleLang = {}
 
 for k,v in pairs(AntiAfkTranslate) do
 	table.insert(AntiAfkDisponibleLang, table.Count(AntiAfkDisponibleLang) + 1,k)
 end
 
---[[
- /$$      /$$  /$$$$$$  /$$$$$$$  /$$   /$$ /$$$$$$ /$$   /$$  /$$$$$$        /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
-| $$  /$ | $$ /$$__  $$| $$__  $$| $$$ | $$|_  $$_/| $$$ | $$ /$$__  $$      | $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
-| $$ /$$$| $$| $$  \ $$| $$  \ $$| $$$$| $$  | $$  | $$$$| $$| $$  \__/      | $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
-| $$/$$ $$ $$| $$$$$$$$| $$$$$$$/| $$ $$ $$  | $$  | $$ $$ $$| $$ /$$$$      | $$$$$$$/| $$$$$$$$| $$ $$ $$| $$$$$   | $$
-| $$$$_  $$$$| $$__  $$| $$__  $$| $$  $$$$  | $$  | $$  $$$$| $$|_  $$      | $$____/ | $$__  $$| $$  $$$$| $$__/   | $$
-| $$$/ \  $$$| $$  | $$| $$  \ $$| $$\  $$$  | $$  | $$\  $$$| $$  \ $$      | $$      | $$  | $$| $$\  $$$| $$      | $$
-| $$/   \  $$| $$  | $$| $$  | $$| $$ \  $$ /$$$$$$| $$ \  $$|  $$$$$$/      | $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
-|__/     \__/|__/  |__/|__/  |__/|__/  \__/|______/|__/  \__/ \______/       |__/      |__/  |__/|__/  \__/|________/|________/
-]]
-function NNTAntiafkMainHUD()
 
-	local w = ScrW() / 2
-    local h = ScrH() / 2
-
-	AntiAFKTimer = AntiAFKTimer or {}
-
-
-    VarTimeleft = "00m 00s"
-
-
-    surface.CreateFont( "AFKLarge", {
-	font = "Arial",
-	extended = false,
-	size = 60,
-    } )
-    surface.CreateFont( "AFKMedium", {
-	font = "Arial",
-	extended = false,
-	size = 30,
-    } )
-    surface.CreateFont( "AFKsmall", {
-	font = "Arial",
-	extended = false,
-	size = 21,
-    } )
-    surface.CreateFont( "AFKsmallK", {
-	font = "Arial",
-	extended = false,
-	size = 18,
-    } )
-
-	function timeToStr( time )
-		local tmp = time
-		local s = tmp % 60
-		tmp = math.floor( tmp / 60 )
-		local m = tmp
-		return string.format( "%02im %02is", m, s )
-	end
-	AntiAFKTimer.TimeLeft = "00m 00s"
-
-	net.Start("AFKHUD2")
-	net.SendToServer()
-	net.Receive("AFKHUDR", function(len)
-		ReceiveVar = net.ReadString()
-		VarTimeleft = ReceiveVar
-		timer.Create( "AFK:"..LocalPlayer():SteamID(), 1, ReceiveVar, function()
-			x = VarTimeleft - 1
-			VarTimeleft = x
-			AntiAFKTimer.TimeLeft = timeToStr(VarTimeleft)
-		end)
-	end)
-
-	local AfkPanelHUD = vgui.Create( "DFrame" )
-	AfkPanelHUD:SetPos( ScrW() - w * 1.5  , h-200 )
-	AfkPanelHUD:SetSize( ScrW()/2, ScrH() / 3 )
-	AfkPanelHUD:SetTitle( "" )
-	AfkPanelHUD:SetDraggable( true )
-	AfkPanelHUD:ShowCloseButton( false )
-	AfkPanelHUD:SetKeyBoardInputEnabled()
-	AfkPanelHUD:SetMouseInputEnabled()
-	AfkPanelHUD:SetDraggable(false)
-	function AfkPanelHUD:Paint(w, h)
-		draw.RoundedBox( 30, 0, 0, w, h,  Color(0, 0, 0, 235))
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] , "AFKLarge", ScrW() - w * 1.5  , ScrH() / 16, Color( 255, 0, 0, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].. " " .. AntiAFKTimer.TimeLeft , "AFKMedium", ScrW() - w * 1.5  , ScrH() / 7, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["CANCEL"] , "AFKsmall", ScrW() - w * 1.5  , ScrH() / 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"]  , "AFKsmallK", ScrW() - w * 1.5  , ScrH() / 4, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
-	end
-
-
-	timer.Create( "AFKS:"..LocalPlayer():SteamID(), 30, 0, function()
-		surface.PlaySound("buttons/button18.wav")
-		surface.PlaySound("buttons/button18.wav")
-		surface.PlaySound("buttons/button18.wav")
-	end)
-
-
-	net.Start("AFKHUD1")
-	net.Receive("AFKHUD1", function(len)
-		timer.Destroy("AFK:"..LocalPlayer():SteamID())
-		timer.Destroy("AFKS:"..LocalPlayer():SteamID())
-		AfkPanelHUD:Close()
-	end)
-
-	surface.PlaySound("buttons/button18.wav")
-	surface.PlaySound("buttons/button18.wav")
-	surface.PlaySound("buttons/button18.wav")
-
-
+NNTAntiafkThemes = NNTAntiafkThemes or {}
+AntiAfkDisponibleThemes = {}
+for k,v in pairs((file.Find("nnt-antiafk/themes/*.lua","LUA"))) do
+	include("nnt-antiafk/themes/" .. v)
+    print("Loading Themes:  " ..v )
 end
+
+for k,v in pairs(NNTAntiafkThemes) do
+	table.ForceInsert(AntiAfkDisponibleThemes, k)
+	--table.insert(AntiAfkDisponibleThemes, table.Count(NNTAntiafkThemes) + 1,k)
+    print("Themes working: " .. k)
+end
+
 
 --[[
  /$$   /$$  /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$  /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
@@ -434,15 +346,50 @@ function NNTAntiafkAdminPanel()
 
 	local MainPanel = vgui.Create( "DFrame" )
 	MainPanel:SetPos( w-200, h-200 )
-	MainPanel:SetSize( 300, 200 )
+	MainPanel:SetSize( 400, 300 )
 	MainPanel:SetTitle( "ANTI AFK ADMIN PANEL" )
 	MainPanel:SetDraggable( true )
 	MainPanel:ShowCloseButton( false )
 	MainPanel:MakePopup()
 
+	local GeneralSettings = vgui.Create( "DLabel", MainPanel )
+    GeneralSettings:SetPos( 18, -15 )
+    GeneralSettings:SetSize(280, 100)
+	GeneralSettings:SetFont("HudHintTextLarge")
+    GeneralSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["GENSETTINGS"] )
+	GeneralSettings:SetColor(Color(255,255,0))
+
+	local BypassSettings = vgui.Create( "DLabel", MainPanel )
+    BypassSettings:SetPos( 240, -15 )
+    BypassSettings:SetSize(280, 100)
+	BypassSettings:SetFont("HudHintTextLarge")
+    BypassSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["GROUPSUSERSW"] )
+	BypassSettings:SetColor(Color(255,255,0))
+
+	local ThemeSettings = vgui.Create( "DLabel", MainPanel )
+    ThemeSettings:SetPos( 270, 120 )
+    ThemeSettings:SetSize(280, 100)
+	ThemeSettings:SetFont("HudHintTextLarge")
+    ThemeSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["THEME"] )
+	ThemeSettings:SetColor(Color(255,255,0))
+
+	local LangSettings = vgui.Create( "DLabel", MainPanel )
+    LangSettings:SetPos( 265, 190 )
+    LangSettings:SetSize(280, 100)
+	LangSettings:SetFont("HudHintTextLarge")
+    LangSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["LANGUAGESET"] )
+	LangSettings:SetColor(Color(255,255,0))
+
+	local AfkSettings = vgui.Create( "DLabel", MainPanel )
+    AfkSettings:SetPos( 17, 100 )
+    AfkSettings:SetSize(280, 100)
+	AfkSettings:SetFont("HudHintTextLarge")
+    AfkSettings:SetText(AntiAfkTranslate[AntiAfkLanguage]["TIMESSETTINGS"] )
+	AfkSettings:SetColor(Color(255,255,0))
+
 	local ExitBut = vgui.Create( "DImageButton", MainPanel )
-	ExitBut:SetPos( 266, 10 )
-	ExitBut:SetSize( 24, 24 )
+	ExitBut:SetPos( 373, 9 )
+	ExitBut:SetSize( 18, 18 )
 	ExitBut:SetImage( "icon16/cross.png" )
 	ExitBut.DoClick = function()
 		MainPanel:Close()
@@ -452,40 +399,32 @@ function NNTAntiafkAdminPanel()
 	end
 
 
+
     local TextEntry = vgui.Create( "DNumberWang")
     TextEntry:SetParent( MainPanel )
-    TextEntry:SetPos( 22, 130 )
+    TextEntry:SetPos( 22, 170 )
     TextEntry:SetSize( 65, 25 )
     TextEntry:SetMin( 180 )
-    TextEntry.OnEnter = function( self )
-	    chat.AddText( self:GetValue() )	-- print the form's text as server text
+	TextEntry:SetMax(999999)
+    function TextEntry:OnValueChanged( val )
+	    -- print the form's text as server text
     end
 
     local TextEntry2 = vgui.Create( "DNumberWang")
     TextEntry2:SetParent( MainPanel )
-    TextEntry2:SetPos( 120, 130 )
+    TextEntry2:SetPos( 120, 170 )
     TextEntry2:SetSize( 65, 25 )
     TextEntry2:SetMin( 180 )
-    TextEntry2.OnEnter = function( self )
-	    chat.AddText( self:GetValue() )	-- print the form's text as server text
+	TextEntry2:SetMax(999999)
+   function TextEntry2:OnValueChanged( val )
+	    	-- print the form's text as server text
     end
 
-    local info = vgui.Create( "DLabel", MainPanel )
-    info:SetPos( 200, 110 )
-    info:SetSize(280, 100)
-    info:SetText('Current Time : ' .. SomeShittyTest )
-	info:SetColor(Color(255,255,0))
-
-    local info2 = vgui.Create( "DLabel", MainPanel )
-    info2:SetPos( 200, 122 )
-    info2:SetSize(280, 100)
-    info2:SetText('Warn Time : ' .. "Refresh !" )
-	info2:SetColor(Color(255,255,0))
 
 
 	-- Groups Bypass
 	local checkboxGroupsbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxGroupsbypass:SetPos( 22, 90 )
+	checkboxGroupsbypass:SetPos( 22, 95 )
 	checkboxGroupsbypass:SetText( "Groups Bypass" )
 
 	function checkboxGroupsbypass:OnChange( val )
@@ -507,7 +446,7 @@ function NNTAntiafkAdminPanel()
 
 	-- User Bypass
 	local checkboxUbypass = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxUbypass:SetPos( 22, 70 )
+	checkboxUbypass:SetPos( 22, 75 )
 	checkboxUbypass:SetText( "User Bypass" )
 
 	function checkboxUbypass:OnChange( val )
@@ -529,7 +468,7 @@ function NNTAntiafkAdminPanel()
 
 	-- Anti AFK ENABLE
 	local checkboxAntiAFK = vgui.Create( "DCheckBoxLabel", MainPanel )
-	checkboxAntiAFK:SetPos( 22, 50 )
+	checkboxAntiAFK:SetPos( 22, 55 )
 	checkboxAntiAFK:SetText( "Activate AntiAFK" )
 
 	function checkboxAntiAFK:OnChange( val )
@@ -549,9 +488,29 @@ function NNTAntiafkAdminPanel()
 	end
 
 
+	local SelectTheme = vgui.Create( "DComboBox", MainPanel )
+	SelectTheme:SetPos( 265, 195 )
+	SelectTheme:SetSize( 75, 20 )
+	SelectTheme:SetValue( AntiAfkSelTheme )
+	for k,v in pairs(AntiAfkDisponibleThemes) do
+		SelectTheme:AddChoice(v)
+	end
+	SelectTheme.OnSelect = function( self, index, value )
+		for k,v in pairs(AntiAfkDisponibleThemes) do
+			if v == value then
+					net.Start("nnt-antiak-settings")
+						local temptable = {["THEME"] = v }
+						net.WriteTable(temptable)
+						net.WriteString("SetSettings")
+            		net.SendToServer()
+			end
+		end
+	end
+
+
 
 	local SelectTranslate = vgui.Create( "DComboBox", MainPanel )
-	SelectTranslate:SetPos( 205, 97 )
+	SelectTranslate:SetPos( 265, 260 )
 	SelectTranslate:SetSize( 75, 20 )
 	SelectTranslate:SetValue( AntiAfkTranslate[AntiAfkLanguage]["NAME"] )
 	for k,v in pairs(AntiAfkTranslate) do
@@ -565,9 +524,6 @@ function NNTAntiafkAdminPanel()
 						net.WriteTable(temptable)
 						net.WriteString("SetSettings")
             		net.SendToServer()
-				--[[net.Start("AntiAfkSendHUDInfo")
-					net.WriteString(k)
-				net.SendToServer()]]
 			end
 		end
 	end
@@ -575,41 +531,50 @@ function NNTAntiafkAdminPanel()
     local list_btn = vgui.Create("DButton")
 	list_btn:SetParent( MainPanel )
 	list_btn:SetText( "SET KICK" )
-	list_btn:SetPos( 22, 160)
-	list_btn:SetSize( 65, 20 )
+	list_btn:SetPos( 18, 210)
+	list_btn:SetSize( 70, 20 )
     list_btn:SetColor(Color(255, 255, 255))
-	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn.DoClick = function ()
+			if TextEntry:GetValue() >= 180 then
 			net.Start("nnt-antiak-settings")
 				local temptable = {["KICK"] = TextEntry:GetValue() }
 				net.WriteTable(temptable)
 				net.WriteString("SetSettings")
             net.SendToServer()
+			else
+				LocalPlayer():ChatPrint("[AFK] You need to enter a time above or equal to 180 in the kick time !")
+			end
 	end
 
     local list_btn2 = vgui.Create("DButton")
 	list_btn2:SetParent( MainPanel )
 	list_btn2:SetText( "SET WARN" )
-	list_btn2:SetPos( 120, 160)
-	list_btn2:SetSize( 65, 20 )
+	list_btn2:SetPos( 116, 210)
+	list_btn2:SetSize( 70, 20 )
     list_btn2:SetColor(Color(255, 255, 255))
-	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn2.DoClick = function ()
+		if TextEntry2:GetValue() >= 30 then
             net.Start("nnt-antiak-settings")
 				local temptable = {["WARN"] = TextEntry2:GetValue() }
 				net.WriteTable(temptable)
 				net.WriteString("SetSettings")
             net.SendToServer()
+		else
+		LocalPlayer():ChatPrint("[AFK] You need to enter a time above or equal to 30 in the warn time !")
+		end
 	end
 
 
 	local Groups_btn = vgui.Create("DButton")
 	Groups_btn:SetParent( MainPanel )
 	Groups_btn:SetText( "Groups" )
-	Groups_btn:SetPos( 213, 70 )
-	Groups_btn:SetSize( 55, 20 )
+	Groups_btn:SetPos( 263, 110 )
+	Groups_btn:SetSize( 75, 30 )
+	Groups_btn:SetFont("Trebuchet18")
     Groups_btn:SetColor(Color(255, 255, 255))
-	Groups_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Groups_btn.Paint = function( self, w, h ) draw.RoundedBox( 15, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Groups_btn.DoClick = function ()
 		NNTAntiafkAdminPanelGroups()
 		MainPanel:Close()
@@ -618,17 +583,18 @@ function NNTAntiafkAdminPanel()
 	local Users_btn = vgui.Create("DButton")
 	Users_btn:SetParent( MainPanel )
 	Users_btn:SetText( "Users" )
-	Users_btn:SetPos( 213, 45 )
-	Users_btn:SetSize( 55, 20 )
+	Users_btn:SetPos( 263, 65 )
+	Users_btn:SetSize( 75, 30 )
+	Users_btn:SetFont("Trebuchet18")
     Users_btn:SetColor(Color(255, 255, 255))
-	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 15, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Users_btn.DoClick = function ()
 		NNTAntiafkAdminPanelUsers()
 		MainPanel:Close()
 	end
 
 	local Sign = vgui.Create( "DLabel", MainPanel )
-	Sign:SetPos( 100, 180 )
+	Sign:SetPos( 20, 260 )
 	Sign:SetSize(150 , 25)
 	Sign:SetText( "Made by Aiko Suzuki !" )
 
@@ -644,10 +610,10 @@ function NNTAntiafkAdminPanel()
 			for k,v in pairs(data4) do
 				if k == "AFK_WARN_TIME" then
 					AFK_WARN_TIME = v
-					info2:SetText('Warn Time : ' .. v )
+					TextEntry2:SetValue(tonumber(v,10))
 				elseif k == "AFK_TIME" then
 					AFK_TIME = v
-					info:SetText('Current Time : ' .. v )
+					 TextEntry:SetValue(tonumber(v,10))
 				elseif k == "AFK_ADMINBYPASS" then
 					AFK_ADMINBYPASS = v
 					if AFK_ADMINBYPASS == true then
@@ -663,23 +629,14 @@ function NNTAntiafkAdminPanel()
 					if AFK_ENABLE == true then
 						checkboxAntiAFK:SetValue( 1 )
 					end
-				elseif k == "AFK_TIME" then
-					AFK_TIME = v
-					info:SetText('Current Time : ' .. v )
 				end
 			end
 		elseif data5 == "Settings" then -- to load separate data
         	for k,v in pairs(data4) do
 				if k == "WARN" then
-					info2:SetText('Warn Time : ' .. v )
+					TextEntry2:SetValue(tonumber(v,10))
 				elseif k == "KICK" then
-					info:SetText('Current Time : ' .. v )
-				elseif k == "ANTIAFK" then
-
-				elseif k == "BYPASS" then
-
-				elseif k == "UBYPASS" then
-
+					TextEntry:SetValue(tonumber(v,10))
 				end
 			end
 		end
@@ -778,13 +735,16 @@ net.Receive("AntiAfkSendHUDInfo", function()
 	if (data1 == "AntiafkAdminSetAfk") then
 		NNTAntiafkAdminSetAfk()
 	elseif (data1 == "AntiafkMainHUD") then
-		NNTAntiafkMainHUD()
+		RunString(NNTAntiafkThemes[AntiAfkSelTheme],"Load Warning")
 	elseif (data1 == "AntiafkMainHUDSP") then
 		NNTAntiafkMainHUDSP()
 	elseif (data1 == "AntiafkAdminPanel") then
 		NNTAntiafkAdminPanel()
 	elseif (data1 == "AntiafkAdminPanelGroups") then
 		NNTAntiafkAdminPanelGroups()
+	elseif table.HasValue(AntiAfkDisponibleThemes, data1) then
+		AntiAfkSelTheme = data1
+		print("ANTIAFK: THEMES SELECTED " .. AntiAfkSelTheme)
 	elseif table.HasValue(AntiAfkDisponibleLang, data1) then
 		AntiAfkLanguage = data1
 		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkLanguage)

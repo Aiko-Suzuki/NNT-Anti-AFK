@@ -8,6 +8,14 @@ AntiAfkTranslate.JA = {
 	["MOVEKEY"] = "（移動キー/スペース/使用キー/リロードキー/ズームキー）",
 	["NAME"] = "日本語",
 
+
+	-- Admin Menu
+	["GENSETTINGS"] = "General Settings !",
+	["GROUPSUSERSW"] = "Whitelist !",
+	["TIMESSETTINGS"] = "Time Settings !",
+	["THEME"] = "Themes !",
+	["LANGUAGESET"] = "Languages !",
+
 	--Server Side
 	["KICKMESSAGES"] = "あなたはAFKのために蹴られました！",
 	["NOWAFK"] = "は今AFKです！",

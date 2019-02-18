@@ -6,6 +6,15 @@ AntiAfkTranslate.DE= {
     ["MOVEKEY"] = "(Schlüssel verschieben / Schlüssel verwenden / Use key / Schlüssel neu laden / Zoomtaste)",
 	["NAME"] = "Deutsch",
 
+
+    -- Admin Menu
+	["GENSETTINGS"] = "General Settings !",
+	["GROUPSUSERSW"] = "Whitelist !",
+	["TIMESSETTINGS"] = "Time Settings !",
+	["THEME"] = "Themes !",
+	["LANGUAGESET"] = "Languages !",
+
+
     --Server Side
 	["KICKMESSAGES"] = "Sie wurden nach AFK deportiert!",
     ["NOWAFK"] = "is now AFK !",

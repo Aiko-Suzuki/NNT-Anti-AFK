@@ -6,6 +6,14 @@ AntiAfkTranslate.IT = {
     ["MOVEKEY"] = "(Chiave commovente / Spazio / Usa chiave / Ricarica la chiave / Tasto Zoom)",
 	["NAME"] = "Italiano",
 
+
+    -- Admin Menu
+	["GENSETTINGS"] = "General Settings !",
+	["GROUPSUSERSW"] = "Whitelist !",
+	["TIMESSETTINGS"] = "Time Settings !",
+	["THEME"] = "Themes !",
+	["LANGUAGESET"] = "Languages !",
+
     --Server Side
 	["KICKMESSAGES"] = "Sei stato deportato in AFK!",
     ["NOWAFK"] = "is now AFK !",
