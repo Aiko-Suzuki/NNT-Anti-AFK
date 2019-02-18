@@ -1,4 +1,4 @@
-NNTAntiafkThemes.Large = "Large_NNTAntiafkMainHUD()"
+NNTAntiafkThemes.Large = "Large_NNTAntiafkMainHUD"
 function Large_NNTAntiafkMainHUD()
 
 	local w = ScrW() / 2

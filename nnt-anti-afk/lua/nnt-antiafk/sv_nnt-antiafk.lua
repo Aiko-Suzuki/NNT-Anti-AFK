@@ -349,7 +349,6 @@ end)
 
 net.Receive("AntiAfkloaBypassUsers", function(len, ply) -- LOAD USER FROM THE WHITELIST
     if (ply:GetUserGroup() == "superadmin") then
-        ply:ChatPrint("Received!")
         net.Start("AntiAfksenBypassUsers")
             net.WriteTable(AFK_ADMINBYPASS_USERS)
         net.Send(ply)
@@ -390,7 +389,6 @@ end)
 
 net.Receive("AntiAfkloaBypassGroups", function(len, ply) -- LOAD GROUPS FROM THE GROUPS WHITELIST
     if (ply:GetUserGroup() == "superadmin") then
-        ply:ChatPrint("Received!")
         net.Start("AntiAfksenBypassGroups")
             net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)

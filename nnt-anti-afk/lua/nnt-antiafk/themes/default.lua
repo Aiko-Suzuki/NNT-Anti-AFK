@@ -1,4 +1,4 @@
-NNTAntiafkThemes.Default = "Default_NNTAntiafkMainHUD()"
+NNTAntiafkThemes.Default = "Default_NNTAntiafkMainHUD"
 function Default_NNTAntiafkMainHUD()
 
 	local w = ScrW() / 2
