@@ -137,11 +137,6 @@ function NNTAntiafkAdminPanelUsers()
 		end
 	end
 
-	for k, v in pairs( player.GetAll() ) do
-		if !antiuserstring[v:SteamID()] then
-			UserList:AddChoice( v:Nick() )
-		end
-	end
 
 	local addgroups = vgui.Create("DButton")
 	addgroups:SetParent( AdminPanelUsers )
@@ -272,11 +267,6 @@ function NNTAntiafkAdminPanelGroups()
 
 	end
 
-	for k, v in pairs( ulx.group_names ) do
-		if !(table.HasValue(antiusergroupsstring, v)) then
-			GroupList:AddChoice( v )
-		end
-	end
 
 	local addgroups = vgui.Create("DButton")
 	addgroups:SetParent( AdminPanelGroups )
@@ -333,6 +323,7 @@ end
 |__/  |__/|_______/ |__/     |__/|______/|__/  \__/      |__/      |__/  |__/|__/  \__/|________/|________/
 ]]
 function NNTAntiafkAdminPanel()
+
 
     local w = ScrW() / 2
     local h = ScrH() / 2
