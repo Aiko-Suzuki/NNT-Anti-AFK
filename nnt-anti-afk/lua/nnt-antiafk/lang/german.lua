@@ -1,10 +1,19 @@
 AntiAfkTranslate.DE= {
     ["MAINTEXT"] = "AFK WARNUNG!",
-    ["WARN"] = "Sie werden für afk in getreten werden",
+    ["WARN"] = "Sie werden für afk in getreten werden :",
     ["CANCEL"] = "Drücken Sie eine beliebige Taste, um abzubrechen!",
     ["REMOVEWARN"] = "Drücken Sie eine beliebige Taste, um die Warnung zu entfernen!",
     ["MOVEKEY"] = "(Schlüssel verschieben / Schlüssel verwenden / Use key / Schlüssel neu laden / Zoomtaste)",
 	["NAME"] = "Deutsch",
+
+
+    -- Admin Menu
+	["GENSETTINGS"] = "General Settings !",
+	["GROUPSUSERSW"] = "Whitelist !",
+	["TIMESSETTINGS"] = "Time Settings !",
+	["THEME"] = "Themes !",
+	["LANGUAGESET"] = "Languages !",
+
 
     --Server Side
 	["KICKMESSAGES"] = "Sie wurden nach AFK deportiert!",
