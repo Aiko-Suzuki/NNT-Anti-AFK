@@ -53,7 +53,7 @@ end
 | $$  | $$| $$$$$$$/| $$ \/  | $$ /$$$$$$| $$ \  $$      | $$      | $$  | $$| $$ \  $$| $$$$$$$$| $$$$$$$$
 |__/  |__/|_______/ |__/     |__/|______/|__/  \__/      |__/      |__/  |__/|__/  \__/|________/|________/
 ]]
-function NNTAntiafkAdminPanel()
+function NNTAntiafkAdminPanel(data)
 
 
     local w = ScrW() / 2
@@ -134,6 +134,17 @@ function NNTAntiafkAdminPanel()
 		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["TIMESSETTINGS"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
 	end
 
+	local SetAFKMenu = vgui.Create( "DFrame" , MainPanel)
+	SetAFKMenu:SetPos( 0, 20 )
+	SetAFKMenu:SetSize( 400, 300 )
+	SetAFKMenu:SetTitle( "" )
+	SetAFKMenu:SetDraggable( false )
+	SetAFKMenu:ShowCloseButton( false )
+	function SetAFKMenu:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText("Set Player AFK !", "HudHintTextLarge",200, 5,Color( 255, 255, 255, 255 ),TEXT_ALIGN_CENTER)
+	end
+
 	local UserWhiteListPanel = vgui.Create( "DFrame" , MainPanel)
 	UserWhiteListPanel:SetPos( 0, 20 )
 	UserWhiteListPanel:SetSize( 400, 300 )
@@ -155,6 +166,7 @@ function NNTAntiafkAdminPanel()
 		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
 		draw.DrawText("Groups Whitelist !", "HudHintTextLarge",200, 5,Color( 255, 255, 255, 255 ),TEXT_ALIGN_CENTER)
 	end
+	SetAFKMenu:Hide()
 	UserWhiteListPanel:Hide()
 	GroupsWhiteListPanel:Hide()
 	local ReturnBut  = vgui.Create( "DImageButton", MainPanel )
@@ -178,10 +190,18 @@ function NNTAntiafkAdminPanel()
 			LangMenu:Show()
 			TimeSettingMenu:Show()
 			ReturnBut:Hide()
+		elseif SetAFKMenu:IsVisible() then
+			SetAFKMenu:Hide()
+			GeneralSettingsM:Show()
+			WhitelistS:Show()
+			ThemesMenu:Show()
+			LangMenu:Show()
+			TimeSettingMenu:Show()
+			ReturnBut:Hide()
+
 		end
 	end
 	ReturnBut:Hide()
-
 	local function NNTAntiafkAdminPanelOpen()
 		GeneralSettingsM:Show()
 		WhitelistS:Show()
@@ -198,21 +218,28 @@ function NNTAntiafkAdminPanel()
 		TimeSettingMenu:Hide()
 		ReturnBut:Show()
 	end
-
+	if data == "setafk" then
+		NNTAntiafkAdminPanelHide()
+		SetAFKMenu:Show()
+	end
 	local ExitBut = vgui.Create( "DImageButton", MainPanel )
 	ExitBut:SetPos( 365, 10 )
 	ExitBut:SetSize( 24, 24 )
 	ExitBut:SetImage( "icon16/cross.png" )
+	timer.Create("MoveExitButtoninfront",0.5,0, function()
+		ExitBut:MoveToFront()
+		ReturnBut:MoveToFront()
+	end)
 	ExitBut:MoveToFront()
 	ExitBut.DoClick = function()
 		MainPanel:Close()
-
+		timer.Destroy("MoveExitButtoninfront")
 	end
 
 
-    local TextEntry = vgui.Create( "DNumberWang")
+	local TextEntry = vgui.Create( "DNumberWang")
     TextEntry:SetParent( TimeSettingMenu )
-    TextEntry:SetPos( 22, 40 )
+    TextEntry:SetPos( 22, 24 )
     TextEntry:SetSize( 65, 25 )
     TextEntry:SetMin( 0 )
 	TextEntry:SetMax(999999)
@@ -222,14 +249,27 @@ function NNTAntiafkAdminPanel()
 
     local TextEntry2 = vgui.Create( "DNumberWang")
     TextEntry2:SetParent( TimeSettingMenu )
-    TextEntry2:SetPos( 120, 40 )
+    TextEntry2:SetPos( 120, 24 )
     TextEntry2:SetSize( 65, 25 )
     TextEntry2:SetMin( 0 )
 	TextEntry2:SetMax(999999)
-   function TextEntry2:OnValueChanged( val )
+   	function TextEntry2:OnValueChanged( val )
 	    	-- print the form's text as server text
     end
 
+
+	local Users_btn = vgui.Create("DButton")
+	Users_btn:SetParent( TimeSettingMenu )
+	Users_btn:SetText( "Set AFK" )
+	Users_btn:SetPos( 65, 100 )
+	Users_btn:SetSize( 75, 30 )
+	Users_btn:SetFont("Trebuchet18")
+    Users_btn:SetColor(Color(255, 255, 255))
+	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 15, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Users_btn.DoClick = function ()
+		NNTAntiafkAdminPanelHide()
+		SetAFKMenu:Show()
+	end
 
 
 	-- Groups Bypass
@@ -341,7 +381,7 @@ function NNTAntiafkAdminPanel()
     local list_btn = vgui.Create("DButton")
 	list_btn:SetParent( TimeSettingMenu )
 	list_btn:SetText( "SET KICK" )
-	list_btn:SetPos( 18, 80)
+	list_btn:SetPos( 18, 60)
 	list_btn:SetSize( 70, 20 )
     list_btn:SetColor(Color(255, 255, 255))
 	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -360,7 +400,7 @@ function NNTAntiafkAdminPanel()
     local list_btn2 = vgui.Create("DButton")
 	list_btn2:SetParent( TimeSettingMenu )
 	list_btn2:SetText( "SET WARN" )
-	list_btn2:SetPos( 116, 80)
+	list_btn2:SetPos( 116, 60)
 	list_btn2:SetSize( 70, 20 )
     list_btn2:SetColor(Color(255, 255, 255))
 	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -654,10 +694,6 @@ function NNTAntiafkAdminPanel()
 		net.SendToServer()
 	end
 
-
-
-
-end
 --[[
   /$$$$$$  /$$$$$$$$ /$$$$$$$$        /$$$$$$  /$$$$$$$$ /$$   /$$       /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
  /$$__  $$| $$_____/|__  $$__/       /$$__  $$| $$_____/| $$  /$$/      | $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
@@ -669,27 +705,11 @@ end
  \______/ |________/   |__/         |__/  |__/|__/      |__/  \__/      |__/      |__/  |__/|__/  \__/|________/|________/
 ]]
 
-function NNTAntiafkAdminSetAfk()
-
-
-    local w = ScrW() / 2
-    local h = ScrH() / 2
-
-	local list_window = vgui.Create( "DFrame" )
-	list_window:SetPos( w-200, h-200 )
-	list_window:SetSize( 400, 555 )
-	list_window:SetTitle( "Afk Set time" )
-	list_window:SetDraggable( true )
-	list_window:ShowCloseButton( true )
-	list_window:MakePopup()
-	function list_window:Paint(w, h)
-		draw.RoundedBox( 4, 0, 0, w, h,  Color(0, 0, 0, 175))
-	end
 
 	local list_view = vgui.Create("DListView")
-	list_view:SetParent(list_window)
-	list_view:SetPos(0, 30)
-	list_view:SetSize(400, 400)
+	list_view:SetParent(SetAFKMenu)
+	list_view:SetPos(25, 30)
+	list_view:SetSize(350, 175)
 	list_view:SetMultiSelect(false)
 	list_view.OnRowSelected = function( panel, rowIndex, row )
 			taplayer = row:GetValue(1)
@@ -700,8 +720,8 @@ function NNTAntiafkAdminSetAfk()
 	end
 
     local TextEntry = vgui.Create( "DNumberWang")
-    TextEntry:SetParent( list_window )
-    TextEntry:SetPos( 150, 440 )
+    TextEntry:SetParent( SetAFKMenu )
+    TextEntry:SetPos( 165, 210 )
     TextEntry:SetSize( 75, 25 )
     TextEntry:SetMin( 180 )
     TextEntry.OnEnter = function( self )
@@ -709,21 +729,15 @@ function NNTAntiafkAdminSetAfk()
     end
 
 	local list_btn = vgui.Create("DButton")
-	list_btn:SetParent( list_window )
+	list_btn:SetParent( SetAFKMenu )
 	list_btn:SetText( "Set AFK" )
-	list_btn:SetPos( 120, 480)
+	list_btn:SetPos( 120, 240)
 	list_btn:SetSize( 150, 25 )
     list_btn:SetColor(Color(255, 255, 255))
-	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn.DoClick = function ()
 			LocalPlayer():ConCommand( 'setafkplayer "' .. taplayer ..'" ' .. TextEntry:GetValue()  )
 	end
-
-	local Sign = vgui.Create( "DLabel", list_window )
-	Sign:SetPos( 25, 520 )
-	Sign:SetSize(150 , 25)
-	Sign:SetText( "Made by Aiko Suzuki !" )
-
 
 
 end
@@ -745,9 +759,9 @@ end
 net.Receive("AntiAfkSendHUDInfo", function()
 	local data1 = net.ReadString()
 	if (data1 == "AntiafkAdminSetAfk") then
-		NNTAntiafkAdminSetAfk()
+		NNTAntiafkAdminPanel("setafk")
 	elseif (data1 == "AntiafkMainHUD") then
-		RunString(NNTAntiafkThemes[AntiAfkSelTheme],"Load Warning")
+		RunString(NNTAntiafkThemes[AntiAfkSelTheme].."()","Load Warning")
 	elseif (data1 == "AntiafkMainHUDSP") then
 		NNTAntiafkMainHUDSP()
 	elseif (data1 == "AntiafkAdminPanel") then
