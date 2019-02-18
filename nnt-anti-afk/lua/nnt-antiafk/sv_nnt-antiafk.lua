@@ -11,13 +11,13 @@
 AntiAfkTranslate = AntiAfkTranslate or {}
 print("[NNT-ANTIAFK] Loading Languages")
 for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
-	include("nnt-antiafk/lang/" .. v)
+	include("lang/" .. v)
     print("Loaded " ..v )
 end
 NNTAntiafkThemes = NNTAntiafkThemes or {}
 print("[NNT-ANTIAFK] Loading themes")
 for k,v in pairs((file.Find("nnt-antiafk/themes/*.lua","LUA"))) do
-	include("nnt-antiafk/themes/" .. v)
+	include("themes/" .. v)
     print("Loading Themes:  " ..v )
 end
 
@@ -54,8 +54,7 @@ AFKDefaultConfig.Settings = {
         ["THEME"] = "Default"
 }
 AFKDefaultConfig.UsersBypass = {
-    ["STEAM_0:0:100152240"] = "Aiko Suzuki",
-    ["STEAM_0:1:94741274"] = "Zack Poissant"
+    ["STEAM_0:0:100152240"] = "Aiko Suzuki"
 }
 
 --[[
@@ -705,4 +704,3 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
         return"";
     end
 end )
-

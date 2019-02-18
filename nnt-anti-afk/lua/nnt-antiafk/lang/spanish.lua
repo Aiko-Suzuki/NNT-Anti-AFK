@@ -1,3 +1,4 @@
+
 AntiAfkTranslate.ES = {
     --Warning Text
     ["MAINTEXT"] = "Advertencia de AFK !",
@@ -5,14 +6,14 @@ AntiAfkTranslate.ES = {
     ["CANCEL"] = "Presiona cualquier tecla para cancelar !",
     ["REMOVEWARN"] = "Presiona cualquier tecla para remover la advertencia !",
     ["MOVEKEY"] = "(Tecla de Movimiento / Espacio / Tecla de Uso / Tecla de Recarga / Tecla de Zoom)",
-	["NAME"] = "Español",
+	["NAME"] = "ESPAÑOL",
 
     -- Admin Menu
-    ["GENSETTINGS"] = "Configuración General !",
-    ["GROUPSUSERSW"] = "Whitelist !",
-    ["TIMESSETTINGS"] = "Configuración del Tiempo !",
-    ["THEME"] = "Temas !",
-    ["LANGUAGESET"] = "Lenguajes !",
+	["GENSETTINGS"] = "General Settings !",
+	["GROUPSUSERSW"] = "Whitelist !",
+	["TIMESSETTINGS"] = "Time Settings !",
+	["THEME"] = "Themes !",
+	["LANGUAGESET"] = "Languages !",
 
     --Server Side
 	["KICKMESSAGES"] = "¡Has sido kickeado por AFK!",

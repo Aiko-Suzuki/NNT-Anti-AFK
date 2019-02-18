@@ -1,3 +1,4 @@
+
 AntiAfkTranslate.EN = {
 	--Warning Text
 	["MAINTEXT"] = "AFK WARNING !",
@@ -6,6 +7,7 @@ AntiAfkTranslate.EN = {
 	["REMOVEWARN"] = "Press any key remove the warning !",
 	["MOVEKEY"] = "(Moving Key / Space / Use key / Reload Key / Zoom key)",
 	["NAME"] = "English",
+
 
 	-- Admin Menu
 	["GENSETTINGS"] = "General Settings !",

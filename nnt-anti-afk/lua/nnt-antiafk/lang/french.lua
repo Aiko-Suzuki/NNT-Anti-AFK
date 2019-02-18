@@ -1,3 +1,4 @@
+
 AntiAfkTranslate.FR = {
 	--Warning Text
 	["MAINTEXT"] = "AFK AVERTISSEMENT!",

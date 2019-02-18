@@ -1,3 +1,4 @@
+
 AntiAfkTranslate.JA = {
 	--Warning Text
 	["MAINTEXT"] = "AFK警告！",
@@ -7,12 +8,13 @@ AntiAfkTranslate.JA = {
 	["MOVEKEY"] = "（移動キー/スペース/使用キー/リロードキー/ズームキー）",
 	["NAME"] = "日本語",
 
+
 	-- Admin Menu
-	["GENSETTINGS"] = "一般設定 ！",
-	["GROUPSUSERSW"] = "ホワイトリスト！",
-	["TIMESSETTINGS"] = "時間設定！",
-	["THEME"] = "テーマ",
-	["LANGUAGESET"] = "言語！",
+	["GENSETTINGS"] = "General Settings !",
+	["GROUPSUSERSW"] = "Whitelist !",
+	["TIMESSETTINGS"] = "Time Settings !",
+	["THEME"] = "Themes !",
+	["LANGUAGESET"] = "Languages !",
 
 	--Server Side
 	["KICKMESSAGES"] = "あなたはAFKのために蹴られました！",

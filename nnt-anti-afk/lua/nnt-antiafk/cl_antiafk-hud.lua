@@ -17,7 +17,7 @@ AntiAfkSelTheme = "Large"
 AntiAfkTranslate = AntiAfkTranslate or {}
 AntiAfkDisponibleLang = {}
 for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
-	include("nnt-antiafk/lang/" .. v)
+	include("lang/" .. v)
     print("Loaded Language: " ..v )
 end
 
@@ -29,7 +29,7 @@ end
 NNTAntiafkThemes = NNTAntiafkThemes or {}
 AntiAfkDisponibleThemes = {}
 for k,v in pairs((file.Find("nnt-antiafk/themes/*.lua","LUA"))) do
-	include("nnt-antiafk/themes/" .. v)
+	include("themes/" .. v)
     print("Loading Themes:  " ..v )
 end
 
