@@ -1,0 +1,11 @@
+{
+ "title"  : "[NNT] Anti-AFK",
+ "type"  : "ServerContent",
+ "tags"  : [ "roleplay","build" ],
+ "ignore" :
+ [
+  "*.psd",
+  "*.vcproj",
+  "*.svn*"
+ ]
+}

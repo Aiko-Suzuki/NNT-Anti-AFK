@@ -20,5 +20,5 @@ elseif SERVER then
         print("Adding CS Themes: " ..v )
 	end
     --Loading translation file
-    include("../nnt-antiafk/sv_nnt-antiafk.lua")
+    include("nnt-antiafk/sv_nnt-antiafk.lua")
 end
