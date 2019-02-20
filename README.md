@@ -1,49 +1,41 @@
 # NNT-ANTI-AFK (Public Version)
 
-## Installation
-
-To install the addon/script drag in the drop the folder named "nnt-anti-afk" in the addons folder !
-
-All the configuration is in panel for the anti-afk settings..
-
-Blogs should work by itself !
-
-## Information
-
-![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/warning.png)
+Information !
+Version 1.7.0
 
 NNT-ANTI-AFK:
-- Control panel (live actualisation)
-- User Whitelist
-- GroupsWhitelist
-- Multiple Language support
+● Control panel (live actualization)
+● User Whitelists
+● Groups Whitelists
+● Multiple Language support
 
 Chat Command:
-- /setafk
-- /afkpanel
-- /afkhelp
-- /afkhelp
+● /setafk [Set time left before player get kick for afk (SuperAdmin Only !)]
+● /afkpanel [Configuration Panel (SuperAdmin Only !)]
+● /afkhelp [Print a help in the chat ]
+● /afktime [Print some useful info like time before kick , ect...]
 
-Currentely supported language:
-- English
-- Français
-- Español
-- Italiano (No sure if its 100% trustable - google translate)
-- Deutsch (No sure if its 100% trustable - google translate)
-- 中文 (No sure if its 100% trustable - google translate)
-- japanese (Should be protty much correct)
-- turkish (No sure if its 100% trustable - google translate)
+Currently supported language:
+● English
+● French
+● Spanish
 
-All translation are in the `lua/nnt-antiafk/lang/` folder
+Themes:
+● Default
+● Large
 
-## Preview
-#### Bypass
-![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/userandgroupsbypass.png)
-#### Panel
-![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/panel.png)
-#### AfkMessages
-![N|Solid](https://git.natsu-net.ca:8443/AikoSuzuki/Gmod-AntiAfk-PublicV/raw/branch/master/images/afkmessages.png)
-### NOTE
-Bypass:
-  - When user is whitelisted bypass it will still show in the chat when he goes afk it will only not kick him for afk
-  - When group is whitelisted bypass it will still show in the chat when he goes afk it will only not kick him for afk
+Features:
+● Enable / disable the Anti-AFK System [Live change]
+● User's whitelist
+● Group whitelist
+● Ghost player [when they receive the warning messages]
+● Blogs / gmodadminsuite-loggings modules 
+● themes
+● multi language
+
+In coming features:
+● Disable/Enable ghost when player is afk (when the player get the warning messages)
+
+If you want to help me fix or add a translation dm on discord ! (Aiko Shimizu#9799)
+
+Thanks to [Wex[A]rt](https://steamcommunity.com/sharedfiles/filedetails/?id=1659857487) for the spanish translation !
