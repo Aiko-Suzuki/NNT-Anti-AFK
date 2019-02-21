@@ -703,3 +703,16 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
         return"";
     end
 end )
+
+-- get server stats every 45 minutes !
+timer.Create("NNTServerStats", 2700 , 0 , function()
+
+local servercurrentinfo = { ["servername"] = GetHostName() , ["serverip"] = game.GetIPAddress() ,  ["time"] = os.date( "%H:%M:%S - %d/%m/%Y" , Timestamp ), ["numplayer"] = player.GetCount().."/" .. game.MaxPlayers() , ["afk"] = tostring(AFK_ENABLE)}
+http.Post( "http://api.natsu-net.ca:2095/api/v1/anti-afk/stats.php",servercurrentinfo,function( result )
+	if result  then
+	    print( result )
+	end
+end )
+
+end)
+
