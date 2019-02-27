@@ -34,8 +34,6 @@ for k,v in pairs(NNTAntiafkThemes) do
     print("[ANTI-AFK] Themes working: " .. k)
 end
 
-
-
 AntiAFKPlayerEyesTrack = {}
 
 AntiAFKConfig = {}
@@ -58,7 +56,6 @@ AFKDefaultConfig.UsersBypass = {
 }
 
 util.AddNetworkString( "nnt-antiak-settings" )
-
 
 util.AddNetworkString( "AntiAfkSendHUDInfo" ) -- BASIC HUD INFO LANGUAGE/WHAT TO OPEN
 util.AddNetworkString("BroadcastAFKPLAYER")
@@ -96,7 +93,6 @@ util.AddNetworkString( "AFKHUDR" )
 
 -- Starting to load Script !
 print("[ANTI-AFK] : Checking if config file are there")
-
 
 function AnitAfkfirstloadconfiguration()
         if not file.Exists( "nnt-antiafk", "DATA" ) then file.CreateDir("nnt-antiafk") end
@@ -219,8 +215,6 @@ function AntiAFKChangeConfigData(settings,data,time)
         end
     end
 end
-
-
 --[[
  /$$        /$$$$$$   /$$$$$$  /$$$$$$$
 | $$       /$$__  $$ /$$__  $$| $$__  $$
@@ -239,8 +233,6 @@ print("[ANTI-AFK] : RELOAD CONF")
 ReloadAntiAfkConfig() -- reload the config to load all the config with the following format AFK_WARN_TIME, AFK_TIME, AFK_REPEAT, AFK_ENABLE, AFK_ADMINBYPASS, AFK_ADMINUBYPASS, AFK_ADMINBYPASS_GROUPS, AFK_ADMINBYPASS_USERS, AFK_LANGUAGE
 print("[ANTI-AFK] : FINISH RELOAD CONF")
 
-
-
 --[[
  /$$   /$$             /$$           /$$       /$$ /$$
 | $$$ | $$            | $$          | $$      |__/| $$
@@ -255,20 +247,11 @@ print("[ANTI-AFK] : FINISH RELOAD CONF")
                                                                                           \______/
 ]]
 
-
-
-
-
-
-
-
 net.Receive("AFKHUD2", function(len, ply)
     net.Start("AFKHUDR")
         net.WriteString(math.Round(ply:GetNextAFK() - CurTime()))
     net.Send(ply)
 end)
-
-
 
 net.Receive("nnt-antiak-settings", function(len,ply)
     if ply:IsSuperAdmin() then
@@ -307,7 +290,6 @@ net.Receive("nnt-antiak-settings", function(len,ply)
     end
 end)
 
-
 net.Receive("AntiAddBypassUsers", function(len, ply) -- ADD USER TO THE USERS WHITELIST
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
@@ -345,9 +327,6 @@ net.Receive("AntiAfkloaBypassUsers", function(len, ply) -- LOAD USER FROM THE WH
     end
 end)
 
-
-
-
 net.Receive("AntiAddBypassGroups", function(len, ply) -- ADD GROUPS TO THE GROUPS WHITELIST
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
@@ -384,7 +363,6 @@ net.Receive("AntiAfkloaBypassGroups", function(len, ply) -- LOAD GROUPS FROM THE
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
     end
 end)
-
 
 --[[
  /$$$$$$$$ /$$   /$$ /$$   /$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$
@@ -474,8 +452,6 @@ function PlyMeta:SPSetAFK(bool)
     end
 end
 
-
-
 --[[
   /$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$  /$$       /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
  /$$__  $$ /$$__  $$| $$$ | $$ /$$__  $$ /$$__  $$| $$      | $$_____/       /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$ /$$__  $$| $$$ | $$| $$__  $$
@@ -487,15 +463,12 @@ end
  \______/  \______/ |__/  \__/ \______/  \______/ |________/|________/       \______/  \______/ |__/     |__/|__/     |__/|__/  |__/|__/  \__/|_______/
 ]]
 
-
 concommand.Add( "afktime", function( ply, cmd, args )
         ply:ChatPrint("[ANTI-AFK] : Time before kick " .. AFK_TIME.. " secondes")
         ply:ChatPrint("[ANTI-AFK] : You should get a warning " .. AFK_WARN_TIME .. " secondes after being afk ")
         ply:ChatPrint("[ANTI-AFK] : Its been " ..  AFK_TIME - math.Round(ply:GetNextAFK() - CurTime()) .. " secondes since u are afk !")
         ply:ChatPrint("[ANTI-AFK] : "..  math.Round(ply:GetNextAFK() - CurTime()) .. " Secondes left before the kick")
 end)
-
-
 
 concommand.Add( "setafkplayer", function( ply, cmd, args )-- need to change this in net library ...
     if (ply:GetUserGroup() == "superadmin") then
@@ -678,15 +651,11 @@ end)
 ]]
 
 hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
-
-    -----------------------------------------------------------------
-    -----------------------------------------------------------------
     if (string.StartWith( text , "/afktime" ) == true) then
         commands = "/afktime"
         local AikoAfkCommands = hook.Call( "AikoAfkCommands", GAMEMODE, ply , commands)
         ply:ConCommand("afktime")
         return"";
-
     -----------------------------------------------------------------
     -----------------------------------------------------------------
     elseif(string.StartWith( text , "/setafk" ) == true) then
@@ -702,10 +671,8 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
             local AikoAfkCommandsFail = hook.Call( "AikoAfkCommandsFail", GAMEMODE, ply , commands)
         end
         return"";
-
-
-
-
+    -----------------------------------------------------------------
+    -----------------------------------------------------------------
     elseif(string.StartWith( text , "/afkpanel" ) == true) then
         commands = "/afkpanel"
         if (ply:GetUserGroup() == "superadmin") then
@@ -719,9 +686,6 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
         end
 
         return"";
-
-
-
     -----------------------------------------------------------------
     -----------------------------------------------------------------
     elseif(string.StartWith( text , "/afkhelp" ) == true) then
@@ -735,5 +699,3 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
         return"";
     end
 end )
-
-
