@@ -712,11 +712,12 @@ function NNTAntiafkAdminPanel(data)
 	list_view:SetSize(350, 175)
 	list_view:SetMultiSelect(false)
 	list_view.OnRowSelected = function( panel, rowIndex, row )
-			taplayer = row:GetValue(1)
+			taplayer = row:GetValue(2)
 	end
 	list_view:AddColumn("Player") -- Add columnfor k,v inpairs(player.GetAll()) do
+	list_view:AddColumn("SteamID")
 	for k,v in pairs(player.GetAll()) do
-    	list_view:AddLine(v:Nick()) -- Add lines
+    	list_view:AddLine(v:Nick(), v:SteamID()) -- Add lines
 	end
 
     local TextEntry = vgui.Create( "DNumberWang")
@@ -776,14 +777,14 @@ net.Receive("AntiAfkSendHUDInfo", function()
 		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkLanguage)
 	end
 end)
-
---[[
- /$$   /$$ /$$   /$$ /$$$$$$$        /$$$$$$$   /$$$$$$  /$$$$$$ /$$   /$$ /$$$$$$$$
-| $$  | $$| $$  | $$| $$__  $$      | $$__  $$ /$$__  $$|_  $$_/| $$$ | $$|__  $$__/
-| $$  | $$| $$  | $$| $$  \ $$      | $$  \ $$| $$  \ $$  | $$  | $$$$| $$   | $$
-| $$$$$$$$| $$  | $$| $$  | $$      | $$$$$$$/| $$$$$$$$  | $$  | $$ $$ $$   | $$
-| $$__  $$| $$  | $$| $$  | $$      | $$____/ | $$__  $$  | $$  | $$  $$$$   | $$
-| $$  | $$| $$  | $$| $$  | $$      | $$      | $$  | $$  | $$  | $$\  $$$   | $$
-| $$  | $$|  $$$$$$/| $$$$$$$/      | $$      | $$  | $$ /$$$$$$| $$ \  $$   | $$
-|__/  |__/ \______/ |_______/       |__/      |__/  |__/|______/|__/  \__/   |__/
-]]
+net.Receive("BroadcastAFKPLAYER", function()
+	local data2 = net.ReadTable()
+	if data2["AFKSTATE"] == true then
+		afktext = AntiAfkTranslate[AntiAfkLanguage]["NOWAFK"]
+		afkcolor = Color( 198, 0, 0 )
+	elseif data2["AFKSTATE"] == false then
+		afktext = AntiAfkTranslate[AntiAfkLanguage]["NOLONGERAFK"]
+		afkcolor = Color( 0, 0, 198 )
+	end
+	chat.AddText( Color( 255, 255, 255 ), "[ANTI-AFK]: ",Color( 0, 198, 0 ),data2["PlayerName"],afkcolor, " ", afktext)
+end)

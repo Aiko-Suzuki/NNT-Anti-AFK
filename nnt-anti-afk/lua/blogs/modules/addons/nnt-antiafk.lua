@@ -1,7 +1,7 @@
 local MODULE = bLogs:Module()
 
 MODULE.Category = "[NNT] Anti-AFK"
-MODULE.Name     = "AKF LOGS"
+MODULE.Name     = "AKF Logs"
 MODULE.Colour   = Color(255, 149, 63)
 
 MODULE:Hook("AikoAfkTimeBefore","AikoAfkTimeBefore",function(ply)
