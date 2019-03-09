@@ -1,45 +1,9 @@
---[[
- /$$$$$$$$ /$$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$  /$$        /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$
-|__  $$__/| $$__  $$ /$$__  $$| $$$ | $$ /$$__  $$| $$       /$$__  $$|__  $$__/|_  $$_/ /$$__  $$| $$$ | $$
-   | $$   | $$  \ $$| $$  \ $$| $$$$| $$| $$  \__/| $$      | $$  \ $$   | $$     | $$  | $$  \ $$| $$$$| $$
-   | $$   | $$$$$$$/| $$$$$$$$| $$ $$ $$|  $$$$$$ | $$      | $$$$$$$$   | $$     | $$  | $$  | $$| $$ $$ $$
-   | $$   | $$__  $$| $$__  $$| $$  $$$$ \____  $$| $$      | $$__  $$   | $$     | $$  | $$  | $$| $$  $$$$
-   | $$   | $$  \ $$| $$  | $$| $$\  $$$ /$$  \ $$| $$      | $$  | $$   | $$     | $$  | $$  | $$| $$\  $$$
-   | $$   | $$  | $$| $$  | $$| $$ \  $$|  $$$$$$/| $$$$$$$$| $$  | $$   | $$    /$$$$$$|  $$$$$$/| $$ \  $$
-   |__/   |__/  |__/|__/  |__/|__/  \__/ \______/ |________/|__/  |__/   |__/   |______/ \______/ |__/  \__/
-]]
-
-
 AntiAfkLanguage = "EN"
 AntiAfkSelTheme = "Large"
 
 
-AntiAfkTranslate = AntiAfkTranslate or {}
-AntiAfkDisponibleLang = {}
-for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
-	include("lang/" .. v)
-    print("Loaded Language: " ..v )
-end
-
-for k,v in pairs(AntiAfkTranslate) do
-	table.insert(AntiAfkDisponibleLang, table.Count(AntiAfkDisponibleLang) + 1,k)
-end
-
-
-NNTAntiafkThemes = NNTAntiafkThemes or {}
-AntiAfkDisponibleThemes = {}
-for k,v in pairs((file.Find("nnt-antiafk/themes/*.lua","LUA"))) do
-	include("themes/" .. v)
-    print("Loading Themes:  " ..v )
-end
-
-for k,v in pairs(NNTAntiafkThemes) do
-	table.ForceInsert(AntiAfkDisponibleThemes, k)
-	--table.insert(AntiAfkDisponibleThemes, table.Count(NNTAntiafkThemes) + 1,k)
-    print("Themes working: " .. k)
-end
-
-
+include("modules/sh_language.lua")
+include("modules/sh_themes.lua")
 
 
 
@@ -76,7 +40,7 @@ function NNTAntiafkAdminPanel(data)
 	function MainPanel:Paint(w, h)
 		Derma_DrawBackgroundBlur(MainPanel,1)
 		draw.RoundedBox( 10, 0, 0, w, h,  Color(0, 0, 0, 225))
-		draw.DrawText("ANTI-AFK PANEL", "Trebuchet24",200, 0,Color( 255, 0, 0, 255 ),TEXT_ALIGN_CENTER)
+		draw.DrawText("[NNT] Anti-AFK | Version :" .. NNTAntiAfkCurrentVersion, "Trebuchet24",200, 0,Color( 255, 0, 0, 255 ),TEXT_ALIGN_CENTER)
 	end
 
 
@@ -261,11 +225,11 @@ function NNTAntiafkAdminPanel(data)
 	local Users_btn = vgui.Create("DButton")
 	Users_btn:SetParent( TimeSettingMenu )
 	Users_btn:SetText( "Set AFK" )
-	Users_btn:SetPos( 65, 100 )
-	Users_btn:SetSize( 75, 30 )
-	Users_btn:SetFont("Trebuchet18")
+	Users_btn:SetPos( 65, 120 )
+	Users_btn:SetSize( 70, 20 )
+	Users_btn:SetFont("DermaDefaultBold")
     Users_btn:SetColor(Color(255, 255, 255))
-	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 15, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	Users_btn.DoClick = function ()
 		NNTAntiafkAdminPanelHide()
 		SetAFKMenu:Show()
@@ -383,6 +347,7 @@ function NNTAntiafkAdminPanel(data)
 	list_btn:SetText( "SET KICK" )
 	list_btn:SetPos( 18, 60)
 	list_btn:SetSize( 70, 20 )
+	list_btn:SetFont("DermaDefaultBold")
     list_btn:SetColor(Color(255, 255, 255))
 	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn.DoClick = function ()
@@ -402,6 +367,7 @@ function NNTAntiafkAdminPanel(data)
 	list_btn2:SetText( "SET WARN" )
 	list_btn2:SetPos( 116, 60)
 	list_btn2:SetSize( 70, 20 )
+	list_btn2:SetFont("DermaDefaultBold")
     list_btn2:SetColor(Color(255, 255, 255))
 	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn2.DoClick = function ()
@@ -556,9 +522,9 @@ function NNTAntiafkAdminPanel(data)
 
 	UserList.OnSelect = function( a, b, value )
 		for k,v in pairs(player.GetAll()) do
+			if v == nil then print("NO PLAYER") return end
 			if v:Nick() == value then
 				SelectedPlayeris = v
-				print(SelectedPlayeris:SteamID())
 			end
 		end
 	end
@@ -572,6 +538,7 @@ function NNTAntiafkAdminPanel(data)
     addgroups:SetColor(Color(255, 255, 255))
 	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	addgroups.DoClick = function ()
+		if SelectedPlayeris == nil then print("NO PLAYER") return end
 		if string.StartWith(SelectedPlayeris:SteamID() , " " ) then
 			LocalPlayer():ChatPrint('You cannot add a user starting with a space !')
 		return end
@@ -629,14 +596,14 @@ function NNTAntiafkAdminPanel(data)
 	end
 	AdminPanelGroups_view:AddColumn("Groups")
 	AdminPanelGroups_view:SetSortable(true)
+	if ulx then
+		local GroupList = vgui.Create( "DComboBox" , GroupsWhiteListPanel )
+		GroupList:SetPos( 135, 244 )
+		GroupList:SetSize( 130, 20 )
+		GroupList:SetValue( "Select a group" )
 
-	local GroupList = vgui.Create( "DComboBox" , GroupsWhiteListPanel )
-	GroupList:SetPos( 135, 244 )
-	GroupList:SetSize( 130, 20 )
-	GroupList:SetValue( "Select Group !" )
 
-
-	net.Start("AntiAfkloaBypassGroups")
+		net.Start("AntiAfkloaBypassGroups")
 		net.SendToServer()
 		net.Receive("AntiAfksenBypassGroups", function(len)
 			AdminPanelGroups_view:Clear()
@@ -653,9 +620,27 @@ function NNTAntiafkAdminPanel(data)
 		end)
 
 
-	GroupList.OnSelect = function( a, b, value )
-		SelectedGroups = value
+		GroupList.OnSelect = function( a, b, value )
+			SelectedGroups = value
 
+		end
+	else
+		net.Start("AntiAfkloaBypassGroups")
+		net.SendToServer()
+		net.Receive("AntiAfksenBypassGroups", function(len)
+			AdminPanelGroups_view:Clear()
+			antiusergroupsstring = net.ReadTable()
+			for k,v in pairs(antiusergroupsstring) do
+				AdminPanelGroups_view:AddLine(v)
+			end
+		end)
+		local GroupList = vgui.Create( "DTextEntry", GroupsWhiteListPanel ) -- create the form as a child of frame
+		GroupList:SetPos( 135, 244 )
+		GroupList:SetSize( 130, 20 )
+		GroupList:SetText( "Enter group name" )
+		GroupList.OnChange = function( self )
+			SelectedGroups = GroupList:GetValue()	-- print the form's text as server text
+		end
 	end
 
 
@@ -667,11 +652,11 @@ function NNTAntiafkAdminPanel(data)
     addgroups:SetColor(Color(255, 255, 255))
 	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	addgroups.DoClick = function ()
+		if SelectedGroups == "" or SelectedGroups == nil then
+			LocalPlayer():ChatPrint('You cannot add a empty group !')
+		return end
 		if string.StartWith(SelectedGroups , " " ) then
 			LocalPlayer():ChatPrint('You cannot add group starting with a space !')
-		return end
-		if SelectedGroups == "" then
-			LocalPlayer():ChatPrint('You cannot add a empty group !')
 		return end
 		if table.HasValue(antiusergroupsstring, SelectedGroups) then
 			LocalPlayer():ChatPrint('User group ' .. SelectedGroups ..' is already there !')
@@ -771,10 +756,10 @@ net.Receive("AntiAfkSendHUDInfo", function()
 		NNTAntiafkAdminPanelGroups()
 	elseif table.HasValue(AntiAfkDisponibleThemes, data1) then
 		AntiAfkSelTheme = data1
-		print("ANTIAFK: THEMES SELECTED " .. AntiAfkSelTheme)
+		print("ANTIAFK: THEMES SELECTED : " .. AntiAfkSelTheme)
 	elseif table.HasValue(AntiAfkDisponibleLang, data1) then
 		AntiAfkLanguage = data1
-		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED " .. AntiAfkLanguage)
+		print("ANTIAFK: LANGUAGE SETTINGS RECEIVED : " .. AntiAfkLanguage)
 	end
 end)
 net.Receive("BroadcastAFKPLAYER", function()

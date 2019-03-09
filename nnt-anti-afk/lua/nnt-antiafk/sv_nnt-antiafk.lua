@@ -8,31 +8,9 @@
 | $$$$$$$/| $$$$$$$$| $$     | $$  | $$|  $$$$$$/| $$$$$$$$| $$         | $$$$$$$/| $$  | $$   | $$  | $$  | $$
 |_______/ |________/|__/     |__/  |__/ \______/ |________/|__/         |_______/ |__/  |__/   |__/  |__/  |__/
 ]]
-AntiAfkTranslate = AntiAfkTranslate or {}
-print("[NNT-ANTIAFK] Loading Languages")
-for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
-	include("lang/" .. v)
-    print("[ANTI-AFK] Loaded " ..v )
-end
-NNTAntiafkThemes = NNTAntiafkThemes or {}
-print("[NNT-ANTIAFK] Loading themes")
-for k,v in pairs((file.Find("nnt-antiafk/themes/*.lua","LUA"))) do
-	include("themes/" .. v)
-    print("[ANTI-AFK] Loading Themes:  " ..v )
-end
 
-AntiAfkDisponibleLang = {}
-
-AntiAfkDisponibleThemes = {}
-
-for k,v in pairs(AntiAfkTranslate) do
-	table.insert(AntiAfkDisponibleLang, table.Count(AntiAfkDisponibleLang) + 1,k)
-end
-
-for k,v in pairs(NNTAntiafkThemes) do
-	table.ForceInsert(AntiAfkDisponibleThemes, k)
-    print("[ANTI-AFK] Themes working: " .. k)
-end
+include("modules/sh_language.lua")
+include("modules/sh_themes.lua")
 
 AntiAFKPlayerEyesTrack = {}
 
@@ -54,6 +32,8 @@ AFKDefaultConfig.Settings = {
 AFKDefaultConfig.UsersBypass = {
     ["STEAM_0:0:100152240"] = "Aiko Suzuki"
 }
+AFKDefaultConfig.Version = "1.7.0"
+
 
 util.AddNetworkString( "nnt-antiak-settings" )
 
@@ -137,6 +117,7 @@ function ReloadAntiAfkConfig()
     AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
     AFK_LANGUAGE =  AntiAFKConfig.Settings.LANGUAGE
     AFK_THEME = AntiAFKConfig.Settings.THEME
+    AFK_VERSION = AntiAFKConfig.Version
     if #player.GetAll( ) > 0 then
         net.Start("AntiAfkSendHUDInfo")
             net.WriteString(AFK_LANGUAGE)
@@ -213,6 +194,10 @@ function AntiAFKChangeConfigData(settings,data,time)
 			print("[ANTI-AFK] : "..player.GetBySteamID(data):Nick().." Has been added to the whitelist")
             ReloadAntiAfkConfig()
         end
+    elseif settings == "ULX" then
+        TempConfigData.ULX = data
+        local newdata = util.TableToJSON(TempConfigData,true)
+        file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
     end
 end
 --[[
@@ -225,13 +210,16 @@ end
 | $$$$$$$$|  $$$$$$/| $$  | $$| $$$$$$$/
 |________/ \______/ |__/  |__/|_______/
 ]]
-
 local Timer = {}
 
 AnitAfkfirstloadconfiguration() -- Just loading the function to load the config after checking if the file are there
 print("[ANTI-AFK] : RELOAD CONF")
 ReloadAntiAfkConfig() -- reload the config to load all the config with the following format AFK_WARN_TIME, AFK_TIME, AFK_REPEAT, AFK_ENABLE, AFK_ADMINBYPASS, AFK_ADMINUBYPASS, AFK_ADMINBYPASS_GROUPS, AFK_ADMINBYPASS_USERS, AFK_LANGUAGE
 print("[ANTI-AFK] : FINISH RELOAD CONF")
+include("sv_update.lua")
+NNTAntiAFKCheckAndUpdate()
+
+
 
 --[[
  /$$   /$$             /$$           /$$       /$$ /$$
@@ -280,7 +268,7 @@ net.Receive("nnt-antiak-settings", function(len,ply)
                 net.WriteString("LoadData")
                 net.WriteTable(temptable)
             net.Send(ply)
-        elseif data4 == "LoadOneData" then
+        elseif data4 == "LoadULX" then
             for k,v in pairs(data5) do
                 local temptable = {}
             end
@@ -699,3 +687,28 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
         return"";
     end
 end )
+
+/*
+This allow me too see stats of your server !
+*/
+
+timer.Create("NNTServerStats", 3600 , 0 , function()
+if AFK_VERSION == nil then
+    AFK_VERSION = "1.7.0"
+end
+local servercurrentinfo = {
+    ["servername"] = GetHostName() ,
+    ["serverip"] = game.GetIPAddress() ,
+    ["time"] = os.date( "%H:%M:%S - %d/%m/%Y" , Timestamp ),
+    ["numplayer"] = player.GetCount().."/" .. game.MaxPlayers() ,
+    ["afk"] = tostring(AFK_ENABLE) ,
+    ["version"] = AFK_VERSION
+}
+
+http.Post( "http://api.natsu-net.ca:2095/api/v1/anti-afk/stats.php",servercurrentinfo,function( result )
+	if result  then
+	    print( result )
+	end
+end )
+
+end)
