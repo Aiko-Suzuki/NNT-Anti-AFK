@@ -225,7 +225,7 @@ function NNTAntiafkAdminPanel(data)
 	local Users_btn = vgui.Create("DButton")
 	Users_btn:SetParent( TimeSettingMenu )
 	Users_btn:SetText( "Set AFK" )
-	Users_btn:SetPos( 65, 120 )
+	Users_btn:SetPos( 65, 110 )
 	Users_btn:SetSize( 70, 20 )
 	Users_btn:SetFont("DermaDefaultBold")
     Users_btn:SetColor(Color(255, 255, 255))
@@ -238,7 +238,7 @@ function NNTAntiafkAdminPanel(data)
 
 	-- Groups Bypass
 	local checkboxGroupsbypass = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
-	checkboxGroupsbypass:SetPos( 22,80 )
+	checkboxGroupsbypass:SetPos( 22,65 )
 	checkboxGroupsbypass:SetText( "Groups Bypass" )
 
 	function checkboxGroupsbypass:OnChange( val )
@@ -260,7 +260,7 @@ function NNTAntiafkAdminPanel(data)
 
 	-- User Bypass
 	local checkboxUbypass = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
-	checkboxUbypass:SetPos( 22, 55 )
+	checkboxUbypass:SetPos( 22, 45 )
 	checkboxUbypass:SetText( "User Bypass" )
 
 	function checkboxUbypass:OnChange( val )
@@ -282,7 +282,7 @@ function NNTAntiafkAdminPanel(data)
 
 	-- Anti AFK ENABLE
 	local checkboxAntiAFK = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
-	checkboxAntiAFK:SetPos( 22, 30 )
+	checkboxAntiAFK:SetPos( 22, 25 )
 	checkboxAntiAFK:SetText( "Activate AntiAFK" )
 
 	function checkboxAntiAFK:OnChange( val )
@@ -295,6 +295,48 @@ function NNTAntiafkAdminPanel(data)
 		else
 			net.Start("nnt-antiak-settings")
 				local temptable = {["ANTIAFK"] = false }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		end
+	end
+
+	-- Ghost User When AFK
+	local checkboxGHOST = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
+	checkboxGHOST:SetPos( 22, 85 )
+	checkboxGHOST:SetText( "Ghost Mode" )
+
+	function checkboxGHOST:OnChange( val )
+		if val then
+			net.Start("nnt-antiak-settings")
+				local temptable = {["GHOST"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		else
+			net.Start("nnt-antiak-settings")
+				local temptable = {["GHOST"] = false  }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		end
+	end
+
+	-- Freeze Salary When user is AFK
+	local checkboxDarkRPFreeze = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
+	checkboxDarkRPFreeze:SetPos( 22, 105 )
+	checkboxDarkRPFreeze:SetText( "Freeze Salary (DarkRP)" )
+
+	function checkboxDarkRPFreeze:OnChange( val )
+		if val then
+			net.Start("nnt-antiak-settings")
+				local temptable = {["DARKPMONEY"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		else
+			net.Start("nnt-antiak-settings")
+				local temptable = {["DARKPMONEY"] = false  }
 				net.WriteTable(temptable)
 				net.WriteString("SetSettings")
             net.SendToServer()
@@ -444,6 +486,16 @@ function NNTAntiafkAdminPanel(data)
 					AFK_ENABLE = v
 					if AFK_ENABLE == true then
 						checkboxAntiAFK:SetValue( 1 )
+					end
+				elseif k == "AFK_GHOST" then --Activate AntiAFK
+					AFK_GHOST = v
+					if AFK_GHOST == true then
+						checkboxGHOST:SetValue( 1 )
+					end
+				elseif k == "AFK_DARKRPMONEY" then --Activate AntiAFK
+					AFK_DARKRPMONEY = v
+					if AFK_DARKRPMONEY == true then
+						checkboxDarkRPFreeze:SetValue( 1 )
 					end
 				end
 			end

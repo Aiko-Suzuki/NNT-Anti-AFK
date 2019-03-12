@@ -27,7 +27,9 @@ AFKDefaultConfig.Settings = {
         ["UBYPASS"] = false,
         ["ANTIAFK"] = true,
         ["LANGUAGE"] = "EN",
-        ["THEME"] = "Default"
+        ["THEME"] = "Default",
+        ["GHOST"] = false,
+        ["DARKPMONEY"] = false
 }
 AFKDefaultConfig.UsersBypass = {
     ["STEAM_0:0:100152240"] = "Aiko Suzuki"
@@ -118,6 +120,8 @@ function ReloadAntiAfkConfig()
     AFK_LANGUAGE =  AntiAFKConfig.Settings.LANGUAGE
     AFK_THEME = AntiAFKConfig.Settings.THEME
     AFK_VERSION = AntiAFKConfig.Version
+    AFK_GHOST = AntiAFKConfig.Settings.GHOST
+    AFK_DARKRPMONEY = AntiAFKConfig.Settings.DARKPMONEY
     if #player.GetAll( ) > 0 then
         net.Start("AntiAfkSendHUDInfo")
             net.WriteString(AFK_LANGUAGE)
@@ -138,6 +142,8 @@ function AntiAFKChangeConfigData(settings,data,time)
         if data == "KICK" then  TempConfigData.Settings.KICK = time end
         if data == "BYPASS" then  TempConfigData.Settings.BYPASS = time end
         if data == "UBYPASS" then TempConfigData.Settings.UBYPASS = time end
+        if data == "GHOST" then TempConfigData.Settings.GHOST = time end
+        if data == "DARKPMONEY" then TempConfigData.Settings.DARKPMONEY = time end
         if data == "LANGUAGE" then
             if table.HasValue(AntiAfkDisponibleLang, time) then
                 TempConfigData.Settings.LANGUAGE = time
@@ -213,11 +219,12 @@ end
 local Timer = {}
 
 AnitAfkfirstloadconfiguration() -- Just loading the function to load the config after checking if the file are there
+print("[ANTI-AFK] : Checking if config is update !")
+include("sv_update.lua")
+NNTAntiAFKCheckAndUpdate()
 print("[ANTI-AFK] : RELOAD CONF")
 ReloadAntiAfkConfig() -- reload the config to load all the config with the following format AFK_WARN_TIME, AFK_TIME, AFK_REPEAT, AFK_ENABLE, AFK_ADMINBYPASS, AFK_ADMINUBYPASS, AFK_ADMINBYPASS_GROUPS, AFK_ADMINBYPASS_USERS, AFK_LANGUAGE
 print("[ANTI-AFK] : FINISH RELOAD CONF")
-include("sv_update.lua")
-NNTAntiAFKCheckAndUpdate()
 
 
 
@@ -263,7 +270,9 @@ net.Receive("nnt-antiak-settings", function(len,ply)
                     ["AFK_TIME"] = AFK_TIME,
                     ["AFK_ADMINBYPASS"] = AFK_ADMINBYPASS,
                     ["AFK_ADMINUBYPASS"] = AFK_ADMINUBYPASS,
-                    ["AFK_ENABLE"] = AFK_ENABLE
+                    ["AFK_ENABLE"] = AFK_ENABLE,
+                    ["AFK_GHOST"] = AFK_GHOST,
+                    ["AFK_DARKRPMONEY"] = AFK_DARKRPMONEY
                 }
                 net.WriteString("LoadData")
                 net.WriteTable(temptable)
@@ -387,6 +396,12 @@ function PlyMeta:SetAFK(bool)
             ["PlayerName"] = self:Nick() ,
             ["AFKSTATE"] = self.HaveWarning
         }
+        if self.Ghost then
+            self:SetCollisionGroup(COLLISION_GROUP_NONE)
+            self:SetRenderMode( RENDERMODE_NORMAL )
+		    self:Fire( "alpha", 255, 0 )
+            self.Ghost = false
+        end
         net.Start("BroadcastAFKPLAYER")
             net.WriteTable(temporytable)
         net.Broadcast()
@@ -396,6 +411,12 @@ function PlyMeta:SetAFK(bool)
             ["PlayerName"] = self:Nick() ,
             ["AFKSTATE"] = self.HaveWarning
         }
+        if AFK_GHOST then
+            self:SetRenderMode( RENDERMODE_TRANSALPHA )
+			self:Fire( "alpha", 150, 0 )
+            self:SetCollisionGroup(COLLISION_GROUP_WORLD)
+            self.Ghost = true
+        end
         net.Start("BroadcastAFKPLAYER")
             net.WriteTable(temporytable)
         net.Broadcast()
@@ -440,6 +461,15 @@ function PlyMeta:SPSetAFK(bool)
     end
 end
 
+if gmod.GetGamemode().Name == "DarkRP" then
+hook.Add("playerGetSalary", "AFKGetSalary", function(ply, amount)
+    if AFK_DARKRPMONEY then
+        if ply.HaveWarning then
+            return false, DarkRP.getPhrase("salary_frozen"), 0
+        end
+    end
+end)
+end
 --[[
   /$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$  /$$       /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
  /$$__  $$ /$$__  $$| $$$ | $$ /$$__  $$ /$$__  $$| $$      | $$_____/       /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$ /$$__  $$| $$$ | $$| $$__  $$
@@ -512,14 +542,11 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 		            if AFK_ADMINUBYPASS == false then
                         if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
 		                    if AFK_ADMINBYPASS == false then
-			                    ply:SetRenderMode( RENDERMODE_TRANSALPHA )
-			                    ply:Fire( "alpha", 150, 0 )
                                 net.Start("AntiAfkSendHUDInfo")
                                     net.WriteString("AntiafkMainHUD")
                                 net.Send(ply)
                                 AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
 			                    local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
-			                    ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
 			                    ply:SetAFK(true)
                                 return
 	                        else
@@ -527,14 +554,11 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                                 return
 	                        end
                         else
-			                ply:SetRenderMode( RENDERMODE_TRANSALPHA )
-			                ply:Fire( "alpha", 150, 0 )
                             net.Start("AntiAfkSendHUDInfo")
                                 net.WriteString("AntiafkMainHUD")
                             net.Send(ply)
                             AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
 			                local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
-			                ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
 			                ply:SetAFK(true)
                         end
 	                else
@@ -542,23 +566,17 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 	                end
 			    elseif table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
 		            if AFK_ADMINBYPASS == false then
-			            ply:SetRenderMode( RENDERMODE_TRANSALPHA )
-			            ply:Fire( "alpha", 150, 0 )
                         net.Start("AntiAfkSendHUDInfo")
                             net.WriteString("AntiafkMainHUD")
                         net.Send(ply)
                         AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
 			            local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
-			            ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
 			            ply:SetAFK(true)
 	                else
 	                    ply:SPSetAFK(true)
 	               end
 			    else
-			        ply:SetRenderMode( RENDERMODE_TRANSALPHA )
-			        ply:Fire( "alpha", 150, 0 )
 				    print("[ANTI-AFK]" ..ply:Name() .. "est maintenant AFK !")
-		            ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
 				    ply:SetAFK(true)
 				    net.Start("AntiAfkSendHUDInfo")
                         net.WriteString("AntiafkMainHUD")
@@ -597,9 +615,6 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
 		                        net.Start("AFKHUD1")
                                     net.WriteString("true")
                                 net.Send(ply)
-                                ply:SetCollisionGroup(COLLISION_GROUP_NONE)
-                                ply:SetRenderMode( RENDERMODE_NORMAL )
-		                        ply:Fire( "alpha", 255, 0 )
                                 return
 	                        else
 	                            return
@@ -608,9 +623,6 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
                            	net.Start("AFKHUD1")
                                 net.WriteString("true")
                             net.Send(ply)
-                            ply:SetCollisionGroup(COLLISION_GROUP_NONE)
-                            ply:SetRenderMode( RENDERMODE_NORMAL )
-		                    ply:Fire( "alpha", 255, 0 )
                             return
                         end
 	                else
@@ -620,9 +632,6 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
 		            net.Start("AFKHUD1")
                         net.WriteString("true")
                     net.Send(ply)
-                    ply:SetCollisionGroup(COLLISION_GROUP_NONE)
-                    ply:SetRenderMode( RENDERMODE_NORMAL )
-		            ply:Fire( "alpha", 255, 0 )
                 end
 	    end
 	end
