@@ -1,4 +1,4 @@
-NNTAntiAfkCurrentVersion = "1.8.2"
+NNTAntiAfkCurrentVersion = "1.8.3"
 
 if CLIENT then
     AddCSLuaFile("nnt-antiafk/cl_antiafk-hud.lua")

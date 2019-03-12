@@ -460,7 +460,7 @@ function PlyMeta:SPSetAFK(bool)
         self.SuperAbuse = nil
     end
 end
-
+hook.Add( "Initialize", "NNT-AntiAFK-FinishLoading", function()
 if gmod.GetGamemode().Name == "DarkRP" then
 hook.Add("playerGetSalary", "AFKGetSalary", function(ply, amount)
     if AFK_DARKRPMONEY then
@@ -469,7 +469,9 @@ hook.Add("playerGetSalary", "AFKGetSalary", function(ply, amount)
         end
     end
 end)
+print("[ANTI-AFK] Finished Loading")
 end
+end)
 --[[
   /$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$  /$$       /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
  /$$__  $$ /$$__  $$| $$$ | $$ /$$__  $$ /$$__  $$| $$      | $$_____/       /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$ /$$__  $$| $$$ | $$| $$__  $$
