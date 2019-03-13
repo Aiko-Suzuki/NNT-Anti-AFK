@@ -1,7 +1,8 @@
-NNTAntiAfkCurrentVersion = "1.8.3"
+NNTAntiAfkCurrentVersion = "1.9.0"
 
 if CLIENT then
     AddCSLuaFile("nnt-antiafk/cl_antiafk-hud.lua")
+    AddCSLuaFile("nnt-antiafk/cl_skin.lua")
     for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
 		AddCSLuaFile("nnt-antiafk/lang/" .. v)
         print("Adding CS Language: " ..v )
@@ -17,6 +18,7 @@ if CLIENT then
     include("nnt-antiafk/cl_antiafk-hud.lua")
 elseif SERVER then
     AddCSLuaFile("nnt-antiafk/cl_antiafk-hud.lua")
+    AddCSLuaFile("nnt-antiafk/cl_skin.lua")
     for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
 		AddCSLuaFile("nnt-antiafk/lang/" .. v)
         print("Adding CS Language: " ..v )

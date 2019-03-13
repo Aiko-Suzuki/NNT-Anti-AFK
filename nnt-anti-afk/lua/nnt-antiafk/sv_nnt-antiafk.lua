@@ -34,7 +34,7 @@ AFKDefaultConfig.Settings = {
 AFKDefaultConfig.UsersBypass = {
     ["STEAM_0:0:100152240"] = "Aiko Suzuki"
 }
-AFKDefaultConfig.Version = "1.7.0"
+AFKDefaultConfig.Version = "1.9.0"
 
 
 util.AddNetworkString( "nnt-antiak-settings" )

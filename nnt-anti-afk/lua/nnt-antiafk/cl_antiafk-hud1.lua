@@ -4,10 +4,8 @@ AntiAfkSelTheme = "Large"
 
 include("modules/sh_language.lua")
 include("modules/sh_themes.lua")
-hook.Add( "Initialize", "NNT-AntiAFK-FinishLoading-Client", function()
-	include("nnt-antiafk/cl_skin.lua")
-end)
-include("cl_skin.lua")
+
+
 --[[
   /$$$$$$  /$$$$$$$  /$$      /$$ /$$$$$$ /$$   /$$       /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
  /$$__  $$| $$__  $$| $$$    /$$$|_  $$_/| $$$ | $$      | $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
@@ -31,102 +29,181 @@ function NNTAntiafkAdminPanel(data)
 
 
 	local MainPanel = vgui.Create( "DFrame" )
-	MainPanel:SetPos( w-250, h-200 )
-	MainPanel:SetSize( 500, 400 )
+	MainPanel:SetPos( w-200, h-150 )
+	MainPanel:SetSize( 400, 300 )
 	MainPanel:SetTitle( "" )
 	MainPanel:SetDraggable( false )
-	MainPanel:ShowCloseButton( true )
+	MainPanel:ShowCloseButton( false )
 	MainPanel:MakePopup()
-	MainPanel:SetSkin("NNT-AntiAFK")
 
-	local WindowSelect = vgui.Create( "DPropertySheet", MainPanel )
-	WindowSelect:SetPos(-1,33)
-	WindowSelect:SetSize(502, 369)
+	function MainPanel:Paint(w, h)
+		Derma_DrawBackgroundBlur(MainPanel,1)
+		draw.RoundedBox( 10, 0, 0, w, h,  Color(0, 0, 0, 225))
+		draw.DrawText("[NNT] Anti-AFK | Version :" .. NNTAntiAfkCurrentVersion, "Trebuchet24",200, 0,Color( 255, 0, 0, 255 ),TEXT_ALIGN_CENTER)
+	end
 
 
-	local GeneralSettingsM = vgui.Create( "DPanel" , WindowSelect)
-	GeneralSettingsM:SetPos( 0, 0 )
-	GeneralSettingsM:SetSize( 500, 336 )
 
+	local GeneralSettingsM = vgui.Create( "DFrame" , MainPanel)
+	GeneralSettingsM:SetPos( 0, 20 )
+	GeneralSettingsM:SetSize( 200, 120 )
+	GeneralSettingsM:SetTitle( "" )
+	GeneralSettingsM:SetDraggable( false )
+	GeneralSettingsM:ShowCloseButton( false )
 	function GeneralSettingsM:Paint(w, h)
-		surface.SetDrawColor(0, 0, 0, 230)
-		surface.DrawRect(0, 0, w, h)
-		surface.SetDrawColor(255, 255, 255, 255)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
 		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["GENSETTINGS"], "HudHintTextLarge",100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
-		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["TIMESSETTINGS"], "HudHintTextLarge",380, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
 	end
-	WindowSelect:AddSheet( " Settings", GeneralSettingsM, "nnt-antiafk/option.png" )
-
-
-	local WhitelistS = vgui.Create( "DPanel" , WindowSelect)
-	WhitelistS:SetPos( 0, 0 )
-	WhitelistS:SetSize( 250, 200)
-	WindowSelect:AddSheet( " WhiteList!", WhitelistS, "nnt-antiafk/users.png" )
+	local WhitelistS = vgui.Create( "DFrame" , MainPanel)
+	WhitelistS:SetPos( 200, 20 )
+	WhitelistS:SetSize( 200, 120 )
+	WhitelistS:SetTitle( "" )
+	WhitelistS:SetDraggable( false )
+	WhitelistS:ShowCloseButton( false )
 	function WhitelistS:Paint(w, h)
-		surface.SetDrawColor(0, 0, 0, 230)
-		surface.DrawRect(0, 0, w, h)
-		surface.SetDrawColor(255, 255, 255, 255)
-		draw.DrawText("User's Whitelist!", "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
-		draw.DrawText("Groups Whitelist!", "HudHintTextLarge", 365, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["GROUPSUSERSW"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
 	end
-
-
-	local LanguagesAndThemes = vgui.Create( "DPanel" , WindowSelect)
-	LanguagesAndThemes:SetPos( 0, 0 )
-	LanguagesAndThemes:SetSize( 500, 336 )
-	function LanguagesAndThemes:Paint(w, h)
-		surface.SetDrawColor(0, 0, 0, 230)
-		surface.DrawRect(0, 0, w, h)
-		surface.SetDrawColor(255, 255, 255, 255)
-	end
-	WindowSelect:AddSheet( " Languages and Themes", LanguagesAndThemes, "nnt-antiafk/translate.png" )
-
-	local SetAFKMenu = vgui.Create( "DPanel" , MainPanel)
-	SetAFKMenu:SetPos( 0, 20 )
-	SetAFKMenu:SetSize( 400, 300 )
-	function SetAFKMenu:Paint(w, h)
-		surface.SetDrawColor(0, 0, 0, 230)
-		surface.DrawRect(0, 0, w, h)
-		surface.SetDrawColor(255, 255, 255, 255)
-		draw.DrawText("Set Player AFK !", "HudHintTextLarge",250, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
-	end
-	WindowSelect:AddSheet( " Set Player", SetAFKMenu, "nnt-antiafk/clock.png" )
-
-	local MoreInfo = vgui.Create( "DPanel" , WindowSelect)
-	MoreInfo:SetPos( 0, 0 )
-	MoreInfo:SetSize( 250, 200)
-	WindowSelect:AddSheet( " More Info!", MoreInfo, "nnt-antiafk/question-mark.png" )
-
-	local ThemesMenu = vgui.Create( "DFrame" , LanguagesAndThemes)
-	ThemesMenu:SetPos( 250, 0 )
-	ThemesMenu:SetSize( 250, 70 )
+	local ThemesMenu = vgui.Create( "DFrame" , MainPanel)
+	ThemesMenu:SetPos( 200, 140 )
+	ThemesMenu:SetSize( 200, 70 )
 	ThemesMenu:SetTitle( "" )
 	ThemesMenu:SetDraggable( false )
 	ThemesMenu:ShowCloseButton( false )
 	function ThemesMenu:Paint(w, h)
-		//draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 255, 100))
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
 		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["THEME"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
 	end
 
-	local LangMenu = vgui.Create( "DFrame" , LanguagesAndThemes)
-	LangMenu:SetPos( 0, 0 )
-	LangMenu:SetSize( 250, 70 )
+	local LangMenu = vgui.Create( "DFrame" , MainPanel)
+	LangMenu:SetPos( 200, 210 )
+	LangMenu:SetSize( 200, 70 )
 	LangMenu:SetTitle( "" )
 	LangMenu:SetDraggable( false )
 	LangMenu:ShowCloseButton( false )
 	function LangMenu:Paint(w, h)
-		//draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 255, 255, 100))
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
 		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["LANGUAGESET"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
 	end
 
+	local TimeSettingMenu = vgui.Create( "DFrame" , MainPanel)
+	TimeSettingMenu:SetPos( 0, 140 )
+	TimeSettingMenu:SetSize( 200, 140 )
+	TimeSettingMenu:SetTitle( "" )
+	TimeSettingMenu:SetDraggable( false )
+	TimeSettingMenu:ShowCloseButton( false )
+	function TimeSettingMenu:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["TIMESSETTINGS"], "HudHintTextLarge", 100, 5,Color( 255, 255, 0, 255 ),TEXT_ALIGN_CENTER)
+	end
 
+	local SetAFKMenu = vgui.Create( "DFrame" , MainPanel)
+	SetAFKMenu:SetPos( 0, 20 )
+	SetAFKMenu:SetSize( 400, 300 )
+	SetAFKMenu:SetTitle( "" )
+	SetAFKMenu:SetDraggable( false )
+	SetAFKMenu:ShowCloseButton( false )
+	function SetAFKMenu:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText("Set Player AFK !", "HudHintTextLarge",200, 5,Color( 255, 255, 255, 255 ),TEXT_ALIGN_CENTER)
+	end
 
+	local UserWhiteListPanel = vgui.Create( "DFrame" , MainPanel)
+	UserWhiteListPanel:SetPos( 0, 20 )
+	UserWhiteListPanel:SetSize( 400, 300 )
+	UserWhiteListPanel:SetTitle( "" )
+	UserWhiteListPanel:SetDraggable( false )
+	UserWhiteListPanel:ShowCloseButton( false )
+	function UserWhiteListPanel:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText("User Whitelist !", "HudHintTextLarge",200, 5,Color( 255, 255, 255, 255 ),TEXT_ALIGN_CENTER)
+	end
 
+	local GroupsWhiteListPanel = vgui.Create( "DFrame" , MainPanel)
+	GroupsWhiteListPanel:SetPos( 0, 20 )
+	GroupsWhiteListPanel:SetSize( 400, 300 )
+	GroupsWhiteListPanel:SetTitle( "" )
+	GroupsWhiteListPanel:SetDraggable( false )
+	GroupsWhiteListPanel:ShowCloseButton( false )
+	function GroupsWhiteListPanel:Paint(w, h)
+		draw.RoundedBox( 0, 0, 0, w, h,  Color(0, 0, 0, 10))
+		draw.DrawText("Groups Whitelist !", "HudHintTextLarge",200, 5,Color( 255, 255, 255, 255 ),TEXT_ALIGN_CENTER)
+	end
+	SetAFKMenu:Hide()
+	UserWhiteListPanel:Hide()
+	GroupsWhiteListPanel:Hide()
+	local ReturnBut  = vgui.Create( "DImageButton", MainPanel )
+	ReturnBut:SetPos( 10, 10 )
+	ReturnBut:SetSize( 32, 32 )
+	ReturnBut:SetImage( "icon16/arrow_left.png" )
+	ReturnBut.DoClick = function()
+		surface.PlaySound( "ui/buttonclickrelease.wav" )
+		if UserWhiteListPanel:IsVisible() then
+			UserWhiteListPanel:Hide()
+			GeneralSettingsM:Show()
+			WhitelistS:Show()
+			ThemesMenu:Show()
+			LangMenu:Show()
+			TimeSettingMenu:Show()
+			ReturnBut:Hide()
+		elseif GroupsWhiteListPanel:IsVisible() then
+			GroupsWhiteListPanel:Hide()
+			GeneralSettingsM:Show()
+			WhitelistS:Show()
+			ThemesMenu:Show()
+			LangMenu:Show()
+			TimeSettingMenu:Show()
+			ReturnBut:Hide()
+		elseif SetAFKMenu:IsVisible() then
+			SetAFKMenu:Hide()
+			GeneralSettingsM:Show()
+			WhitelistS:Show()
+			ThemesMenu:Show()
+			LangMenu:Show()
+			TimeSettingMenu:Show()
+			ReturnBut:Hide()
+
+		end
+	end
+	ReturnBut:Hide()
+	local function NNTAntiafkAdminPanelOpen()
+		GeneralSettingsM:Show()
+		WhitelistS:Show()
+		ThemesMenu:Show()
+		LangMenu:Show()
+		TimeSettingMenu:Show()
+		ReturnBut:Hide()
+	end
+	local function NNTAntiafkAdminPanelHide()
+		GeneralSettingsM:Hide()
+		WhitelistS:Hide()
+		ThemesMenu:Hide()
+		LangMenu:Hide()
+		TimeSettingMenu:Hide()
+		ReturnBut:Show()
+	end
+	if data == "setafk" then
+		NNTAntiafkAdminPanelHide()
+		SetAFKMenu:Show()
+	end
+	local ExitBut = vgui.Create( "DImageButton", MainPanel )
+	ExitBut:SetPos( 365, 10 )
+	ExitBut:SetSize( 24, 24 )
+	ExitBut:SetImage( "icon16/cross.png" )
+	timer.Create("MoveExitButtoninfront",0.5,0, function()
+		ExitBut:MoveToFront()
+		ReturnBut:MoveToFront()
+	end)
+	ExitBut:MoveToFront()
+	ExitBut.DoClick = function()
+		MainPanel:Close()
+		timer.Destroy("MoveExitButtoninfront")
+	end
 
 
 	local TextEntry = vgui.Create( "DNumberWang")
-    TextEntry:SetParent( GeneralSettingsM )
-    TextEntry:SetPos( 280, 24 )
+    TextEntry:SetParent( TimeSettingMenu )
+    TextEntry:SetPos( 22, 24 )
     TextEntry:SetSize( 65, 25 )
     TextEntry:SetMin( 0 )
 	TextEntry:SetMax(999999)
@@ -135,8 +212,8 @@ function NNTAntiafkAdminPanel(data)
     end
 
     local TextEntry2 = vgui.Create( "DNumberWang")
-    TextEntry2:SetParent( GeneralSettingsM )
-    TextEntry2:SetPos( 400, 24 )
+    TextEntry2:SetParent( TimeSettingMenu )
+    TextEntry2:SetPos( 120, 24 )
     TextEntry2:SetSize( 65, 25 )
     TextEntry2:SetMin( 0 )
 	TextEntry2:SetMax(999999)
@@ -145,44 +222,131 @@ function NNTAntiafkAdminPanel(data)
     end
 
 
+	local Users_btn = vgui.Create("DButton")
+	Users_btn:SetParent( TimeSettingMenu )
+	Users_btn:SetText( "Set AFK" )
+	Users_btn:SetPos( 65, 110 )
+	Users_btn:SetSize( 70, 20 )
+	Users_btn:SetFont("DermaDefaultBold")
+    Users_btn:SetColor(Color(255, 255, 255))
+	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Users_btn.DoClick = function ()
+		NNTAntiafkAdminPanelHide()
+		SetAFKMenu:Show()
+	end
+
 
 	-- Groups Bypass
 	local checkboxGroupsbypass = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
 	checkboxGroupsbypass:SetPos( 22,65 )
 	checkboxGroupsbypass:SetText( "Groups Bypass" )
-	checkboxGroupsbypass:SetTextColor(Color(255, 255, 255))
 
+	function checkboxGroupsbypass:OnChange( val )
+		surface.PlaySound( "ui/buttonclick.wav" )
+		if val then
+			net.Start("nnt-antiak-settings")
+				local temptable = {["BYPASS"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		else
+			net.Start("nnt-antiak-settings")
+				local temptable = {["BYPASS"] = false }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		end
+	end
 
 
 	-- User Bypass
 	local checkboxUbypass = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
 	checkboxUbypass:SetPos( 22, 45 )
 	checkboxUbypass:SetText( "User Bypass" )
-	checkboxUbypass:SetTextColor(Color(255, 255, 255))
 
-
+	function checkboxUbypass:OnChange( val )
+		surface.PlaySound( "ui/buttonclick.wav" )
+		if val then
+			net.Start("nnt-antiak-settings")
+				local temptable = {["UBYPASS"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		else
+			net.Start("nnt-antiak-settings")
+				local temptable = {["UBYPASS"] = false  }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		end
+	end
 
 
 	-- Anti AFK ENABLE
 	local checkboxAntiAFK = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
 	checkboxAntiAFK:SetPos( 22, 25 )
 	checkboxAntiAFK:SetText( "Activate AntiAFK" )
-	checkboxAntiAFK:SetTextColor(Color(255, 255, 255))
 
+	function checkboxAntiAFK:OnChange( val )
+		surface.PlaySound( "ui/buttonclick.wav" )
+		if val then
+			net.Start("nnt-antiak-settings")
+				local temptable = {["ANTIAFK"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		else
+			net.Start("nnt-antiak-settings")
+				local temptable = {["ANTIAFK"] = false }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		end
+	end
 
 	-- Ghost User When AFK
 	local checkboxGHOST = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
 	checkboxGHOST:SetPos( 22, 85 )
 	checkboxGHOST:SetText( "Ghost Mode" )
-	checkboxGHOST:SetTextColor(Color(255, 255, 255))
 
+	function checkboxGHOST:OnChange( val )
+		surface.PlaySound( "ui/buttonclick.wav" )
+		if val then
+			net.Start("nnt-antiak-settings")
+				local temptable = {["GHOST"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		else
+			net.Start("nnt-antiak-settings")
+				local temptable = {["GHOST"] = false  }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		end
+	end
 
 	-- Freeze Salary When user is AFK
 	local checkboxDarkRPFreeze = vgui.Create( "DCheckBoxLabel", GeneralSettingsM )
 	checkboxDarkRPFreeze:SetPos( 22, 105 )
 	checkboxDarkRPFreeze:SetText( "Freeze Salary (DarkRP)" )
-	checkboxDarkRPFreeze:SetTextColor(Color(255, 255, 255))
 
+	function checkboxDarkRPFreeze:OnChange( val )
+		surface.PlaySound( "ui/buttonclick.wav" )
+		if val then
+			net.Start("nnt-antiak-settings")
+				local temptable = {["DARKPMONEY"] = true }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		else
+			net.Start("nnt-antiak-settings")
+				local temptable = {["DARKPMONEY"] = false  }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+		end
+	end
 
 
 	local SelectTheme = vgui.Create( "DComboBox", ThemesMenu )
@@ -205,39 +369,6 @@ function NNTAntiafkAdminPanel(data)
 	end
 
 
-	local MoreInfoTittle = vgui.Create( "DLabel", MoreInfo )
-	MoreInfoTittle:SetPos( 10, 10 )
-	MoreInfoTittle:SetSize(200, 24)
-	MoreInfoTittle:SetFont("Trebuchet24")
-	MoreInfoTittle:SetText( "InComming Features!" )
-	MoreInfoTittle:SetTextColor(Color(255, 255, 255))
-
-	local MoreInfoFeatures = vgui.Create( "DLabel", MoreInfo )
-	MoreInfoFeatures:SetPos( 10, 40 )
-	MoreInfoFeatures:SetSize(250, 50)
-	MoreInfoFeatures:SetFont("Trebuchet18")
-	MoreInfoFeatures:SetTextColor(Color(255, 255, 255))
-	MoreInfoFeatures:SetText( [[
-		- Enable / Disable God
-		- Activate AFK in a certain time of the day
-	]] )
-	local MoreInfoTittle2 = vgui.Create( "DLabel", MoreInfo )
-	MoreInfoTittle2:SetPos( 10, 75 )
-	MoreInfoTittle2:SetSize(200, 24)
-	MoreInfoTittle2:SetFont("Trebuchet24")
-	MoreInfoTittle2:SetTextColor(Color(255, 255, 255))
-	MoreInfoTittle2:SetText( "Credits!" )
-
-	local MoreInfoCredits = vgui.Create( "DLabel", MoreInfo )
-	MoreInfoCredits:SetPos( 10, 90 )
-	MoreInfoCredits:SetSize(450, 100)
-	MoreInfoCredits:SetFont("Trebuchet18")
-	MoreInfoCredits:SetTextColor(Color(255, 255, 255))
-	MoreInfoCredits:SetText( [[
-		- Icons made by Freepik from www.flaticon.com is licensed by CC 3.0 BY
-		- Icons made by Chanut from www.flaticon.com is licensed by CC 3.0 BY
-		- Spanish translation made by Wex[A]rt
-	]] )
 
 	local SelectTranslate = vgui.Create( "DComboBox", LangMenu )
 	SelectTranslate:SetPos( 65, 35 )
@@ -259,13 +390,13 @@ function NNTAntiafkAdminPanel(data)
 	end
 
     local list_btn = vgui.Create("DButton")
-	list_btn:SetParent( GeneralSettingsM )
+	list_btn:SetParent( TimeSettingMenu )
 	list_btn:SetText( "SET KICK" )
-	list_btn:SetPos( 278, 60)
+	list_btn:SetPos( 18, 60)
 	list_btn:SetSize( 70, 20 )
 	list_btn:SetFont("DermaDefaultBold")
     list_btn:SetColor(Color(255, 255, 255))
-	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 230) ) end
+	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn.DoClick = function ()
 			surface.PlaySound( "ui/buttonclickrelease.wav" )
 			if TextEntry:GetValue() >= 180 then
@@ -280,13 +411,13 @@ function NNTAntiafkAdminPanel(data)
 	end
 
     local list_btn2 = vgui.Create("DButton")
-	list_btn2:SetParent( GeneralSettingsM )
+	list_btn2:SetParent( TimeSettingMenu )
 	list_btn2:SetText( "SET WARN" )
-	list_btn2:SetPos( 400, 60)
+	list_btn2:SetPos( 116, 60)
 	list_btn2:SetSize( 70, 20 )
 	list_btn2:SetFont("DermaDefaultBold")
     list_btn2:SetColor(Color(255, 255, 255))
-	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 230) ) end
+	list_btn2.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn2.DoClick = function ()
 		surface.PlaySound( "ui/buttonclickrelease.wav" )
 		if TextEntry2:GetValue() >= 30 then
@@ -301,11 +432,37 @@ function NNTAntiafkAdminPanel(data)
 	end
 
 
+	local Groups_btn = vgui.Create("DButton")
+	Groups_btn:SetParent( WhitelistS )
+	Groups_btn:SetText( "Groups" )
+	Groups_btn:SetPos( 65, 75 )
+	Groups_btn:SetSize( 75, 30 )
+	Groups_btn:SetFont("Trebuchet18")
+    Groups_btn:SetColor(Color(255, 255, 255))
+	Groups_btn.Paint = function( self, w, h ) draw.RoundedBox( 15, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Groups_btn.DoClick = function ()
+		surface.PlaySound( "ui/buttonclickrelease.wav" )
+		NNTAntiafkAdminPanelHide()
+		GroupsWhiteListPanel:Show()
+	end
+
+	local Users_btn = vgui.Create("DButton")
+	Users_btn:SetParent( WhitelistS )
+	Users_btn:SetText( "Users" )
+	Users_btn:SetPos( 65, 35 )
+	Users_btn:SetSize( 75, 30 )
+	Users_btn:SetFont("Trebuchet18")
+    Users_btn:SetColor(Color(255, 255, 255))
+	Users_btn.Paint = function( self, w, h ) draw.RoundedBox( 15, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
+	Users_btn.DoClick = function ()
+		surface.PlaySound( "ui/buttonclickrelease.wav" )
+		NNTAntiafkAdminPanelHide()
+		UserWhiteListPanel:Show()
+	end
 
 	local Sign = vgui.Create( "DLabel", MainPanel )
-	Sign:SetPos( 20, 375 )
+	Sign:SetPos( 20, 280 )
 	Sign:SetSize(150 , 25)
-	Sign:SetColor(Color(255,255,255))
 	Sign:SetText( "Made by Aiko Suzuki !" )
 
 	net.Start("nnt-antiak-settings")
@@ -360,99 +517,7 @@ function NNTAntiafkAdminPanel(data)
 				end
 			end
 		end
-
-	function checkboxGroupsbypass:OnChange( val )
-		surface.PlaySound( "ui/buttonclick.wav" )
-		if val then
-			net.Start("nnt-antiak-settings")
-				local temptable = {["BYPASS"] = true }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		else
-			net.Start("nnt-antiak-settings")
-				local temptable = {["BYPASS"] = false }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		end
-	end
-
-
-	function checkboxUbypass:OnChange( val )
-		surface.PlaySound( "ui/buttonclick.wav" )
-		if val then
-			net.Start("nnt-antiak-settings")
-				local temptable = {["UBYPASS"] = true }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		else
-			net.Start("nnt-antiak-settings")
-				local temptable = {["UBYPASS"] = false  }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		end
-	end
-
-
-	function checkboxAntiAFK:OnChange( val )
-		surface.PlaySound( "ui/buttonclick.wav" )
-		if val then
-			net.Start("nnt-antiak-settings")
-				local temptable = {["ANTIAFK"] = true }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		else
-			net.Start("nnt-antiak-settings")
-				local temptable = {["ANTIAFK"] = false }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		end
-	end
-
-
-	function checkboxGHOST:OnChange( val )
-		surface.PlaySound( "ui/buttonclick.wav" )
-		if val then
-			net.Start("nnt-antiak-settings")
-				local temptable = {["GHOST"] = true }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		else
-			net.Start("nnt-antiak-settings")
-				local temptable = {["GHOST"] = false  }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		end
-	end
-
-
-	function checkboxDarkRPFreeze:OnChange( val )
-		surface.PlaySound( "ui/buttonclick.wav" )
-		if val then
-			net.Start("nnt-antiak-settings")
-				local temptable = {["DARKPMONEY"] = true }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		else
-			net.Start("nnt-antiak-settings")
-				local temptable = {["DARKPMONEY"] = false  }
-				net.WriteTable(temptable)
-				net.WriteString("SetSettings")
-            net.SendToServer()
-		end
-	end
-
 	end)
-
-
 --[[
  /$$   /$$  /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$  /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
 | $$  | $$ /$$__  $$| $$_____/| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/ | $$      |_  $$_/ /$$__  $$|__  $$__/
@@ -475,9 +540,9 @@ function NNTAntiafkAdminPanel(data)
 
 
 	local AdminPanelUsers_view = vgui.Create("DListView")
-	AdminPanelUsers_view:SetParent(WhitelistS)
-	AdminPanelUsers_view:SetPos(0, 30)
-	AdminPanelUsers_view:SetSize(225, 200)
+	AdminPanelUsers_view:SetParent(UserWhiteListPanel)
+	AdminPanelUsers_view:SetPos(25, 30)
+	AdminPanelUsers_view:SetSize(350, 200)
 	AdminPanelUsers_view:SetMultiSelect(false)
 	--AdminPanelUsers_view.OnClickLine = function(parent,selected,isselected) print(selected:GetValue(1)) end
 	AdminPanelUsers_view.OnRowSelected = function(parent,selected,isselected) print(isselected:GetValue(1))
@@ -487,10 +552,10 @@ function NNTAntiafkAdminPanel(data)
 	AdminPanelUsers_view:AddColumn("Name")
 	AdminPanelUsers_view:SetSortable(true)
 
-	local UserList = vgui.Create( "DComboBox" , WhitelistS )
-	UserList:SetPos( 45, 240 )
+	local UserList = vgui.Create( "DComboBox" , UserWhiteListPanel )
+	UserList:SetPos( 135, 244 )
 	UserList:SetSize( 130, 20 )
-	UserList:SetValue( "Select!" )
+	UserList:SetValue( "Select Player !" )
 
 		net.Start("AntiAfkloaBypassUsers")
 		net.SendToServer()
@@ -527,9 +592,9 @@ function NNTAntiafkAdminPanel(data)
 
 
 	local addgroups = vgui.Create("DButton")
-	addgroups:SetParent( WhitelistS )
+	addgroups:SetParent( UserWhiteListPanel )
 	addgroups:SetText( "Add User" )
-	addgroups:SetPos( 125, 270)
+	addgroups:SetPos( 280, 240)
 	addgroups:SetSize( 100, 25 )
     addgroups:SetColor(Color(255, 255, 255))
 	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -551,9 +616,9 @@ function NNTAntiafkAdminPanel(data)
 	end
 
 	local delbutton = vgui.Create("DButton")
-	delbutton:SetParent( WhitelistS )
+	delbutton:SetParent( UserWhiteListPanel )
 	delbutton:SetText( "Del User" )
-	delbutton:SetPos( 0, 270)
+	delbutton:SetPos( 20, 240)
 	delbutton:SetSize( 100, 25 )
     delbutton:SetColor(Color(255, 255, 255))
 	delbutton.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -585,9 +650,9 @@ function NNTAntiafkAdminPanel(data)
 ]]
 
 	local AdminPanelGroups_view = vgui.Create("DListView")
-	AdminPanelGroups_view:SetParent(WhitelistS)
-	AdminPanelGroups_view:SetPos(260, 30)
-	AdminPanelGroups_view:SetSize(225, 200)
+	AdminPanelGroups_view:SetParent(GroupsWhiteListPanel)
+	AdminPanelGroups_view:SetPos(25, 30)
+	AdminPanelGroups_view:SetSize(350, 200)
 	AdminPanelGroups_view:SetMultiSelect(false)
 	AdminPanelGroups_view.OnRowSelected = function( panel, rowIndex, row )
 			tagroups = row:GetValue(1)
@@ -595,8 +660,8 @@ function NNTAntiafkAdminPanel(data)
 	AdminPanelGroups_view:AddColumn("Groups")
 	AdminPanelGroups_view:SetSortable(true)
 	if ulx then
-		local GroupList = vgui.Create( "DComboBox" , WhitelistS )
-		GroupList:SetPos( 310, 240 )
+		local GroupList = vgui.Create( "DComboBox" , GroupsWhiteListPanel )
+		GroupList:SetPos( 135, 244 )
 		GroupList:SetSize( 130, 20 )
 		GroupList:SetValue( "Select a group" )
 
@@ -632,7 +697,7 @@ function NNTAntiafkAdminPanel(data)
 				AdminPanelGroups_view:AddLine(v)
 			end
 		end)
-		local GroupList = vgui.Create( "DTextEntry", WhitelistS ) -- create the form as a child of frame
+		local GroupList = vgui.Create( "DTextEntry", GroupsWhiteListPanel ) -- create the form as a child of frame
 		GroupList:SetPos( 135, 244 )
 		GroupList:SetSize( 130, 20 )
 		GroupList:SetText( "Enter group name" )
@@ -643,9 +708,9 @@ function NNTAntiafkAdminPanel(data)
 
 
 	local addgroups = vgui.Create("DButton")
-	addgroups:SetParent( WhitelistS )
+	addgroups:SetParent( GroupsWhiteListPanel )
 	addgroups:SetText( "Add Groups" )
-	addgroups:SetPos( 385, 270)
+	addgroups:SetPos( 280, 240)
 	addgroups:SetSize( 100, 25 )
     addgroups:SetColor(Color(255, 255, 255))
 	addgroups.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -666,9 +731,9 @@ function NNTAntiafkAdminPanel(data)
 	end
 
 	local delbutton = vgui.Create("DButton")
-	delbutton:SetParent( WhitelistS )
+	delbutton:SetParent( GroupsWhiteListPanel )
 	delbutton:SetText( "Del Groups" )
-	delbutton:SetPos( 260, 270)
+	delbutton:SetPos( 20, 240)
 	delbutton:SetSize( 100, 25 )
     delbutton:SetColor(Color(255, 255, 255))
 	delbutton.Paint = function( self, w, h ) draw.RoundedBox( 0, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
@@ -693,8 +758,8 @@ function NNTAntiafkAdminPanel(data)
 
 	local list_view = vgui.Create("DListView")
 	list_view:SetParent(SetAFKMenu)
-	list_view:SetPos(5, 30)
-	list_view:SetSize(475, 175)
+	list_view:SetPos(25, 30)
+	list_view:SetSize(350, 175)
 	list_view:SetMultiSelect(false)
 	list_view.OnRowSelected = function( panel, rowIndex, row )
 			taplayer = row:GetValue(2)
@@ -704,9 +769,10 @@ function NNTAntiafkAdminPanel(data)
 	for k,v in pairs(player.GetAll()) do
     	list_view:AddLine(v:Nick(), v:SteamID()) -- Add lines
 	end
+
     local TextEntry = vgui.Create( "DNumberWang")
     TextEntry:SetParent( SetAFKMenu )
-    TextEntry:SetPos( 205, 220 )
+    TextEntry:SetPos( 165, 210 )
     TextEntry:SetSize( 75, 25 )
     TextEntry:SetMin( 180 )
     TextEntry.OnEnter = function( self )
@@ -716,10 +782,10 @@ function NNTAntiafkAdminPanel(data)
 	local list_btn = vgui.Create("DButton")
 	list_btn:SetParent( SetAFKMenu )
 	list_btn:SetText( "Set AFK" )
-	list_btn:SetPos( 170, 260)
+	list_btn:SetPos( 120, 240)
 	list_btn:SetSize( 150, 25 )
     list_btn:SetColor(Color(255, 255, 255))
-	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 230) ) end
+	list_btn.Paint = function( self, w, h ) draw.RoundedBox( 10, 0, 0, w, h,  Color(145, 0, 0, 100) ) end
 	list_btn.DoClick = function ()
 			LocalPlayer():ConCommand( 'setafkplayer "' .. taplayer ..'" ' .. TextEntry:GetValue()  )
 	end
