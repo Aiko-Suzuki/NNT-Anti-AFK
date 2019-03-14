@@ -20,6 +20,12 @@ AFKDefaultConfig = {}
 AFKDefaultConfig.BypassGroups = {
         "superadmin"
 }
+AFKDefaultConfig.TimeSettings = {
+    ["StartHours"] = 21,
+    ["StartMinutes"] = 0,
+    ["StopHours"] = 8,
+    ["StopMinutes"] = 0
+}
 AFKDefaultConfig.Settings = {
         ["WARN"] = 300,
         ["KICK"] = 600,
@@ -29,12 +35,16 @@ AFKDefaultConfig.Settings = {
         ["LANGUAGE"] = "EN",
         ["THEME"] = "Default",
         ["GHOST"] = false,
-        ["DARKPMONEY"] = false
+        ["DARKPMONEY"] = false,
+        ["GODMODE"] = false,
+        ["JOBENABLE"] = false,
+        ["JOBNAME"] = "Spectator",
+        ["ENABLETIME"] = false
 }
 AFKDefaultConfig.UsersBypass = {
     ["STEAM_0:0:100152240"] = "Aiko Suzuki"
 }
-AFKDefaultConfig.Version = "1.9.0"
+AFKDefaultConfig.Version = "2.0.0"
 
 
 util.AddNetworkString( "nnt-antiak-settings" )
@@ -122,6 +132,17 @@ function ReloadAntiAfkConfig()
     AFK_VERSION = AntiAFKConfig.Version
     AFK_GHOST = AntiAFKConfig.Settings.GHOST
     AFK_DARKRPMONEY = AntiAFKConfig.Settings.DARKPMONEY
+    AFK_GODMODE = AntiAFKConfig.Settings.GODMODE
+    AFK_JOBENABLE = AntiAFKConfig.Settings.JOBENABLE
+    AFK_JOBNAME = AntiAFKConfig.Settings.JOBNAME
+    AFK_ENABLETIME = AntiAFKConfig.Settings.ENABLETIME
+
+    AFK_StartTimeHours = math.Round(AntiAFKConfig.TimeSettings.StartHours)
+    AFK_StartTimeMinutes = math.Round(AntiAFKConfig.TimeSettings.StartMinutes)
+
+    AFK_StopTimeHours = math.Round(AntiAFKConfig.TimeSettings.StopHours)
+    AFK_StopTimeMinutes = math.Round(AntiAFKConfig.TimeSettings.StopMinutes)
+
     if #player.GetAll( ) > 0 then
         net.Start("AntiAfkSendHUDInfo")
             net.WriteString(AFK_LANGUAGE)
@@ -131,6 +152,7 @@ function ReloadAntiAfkConfig()
         net.Broadcast()
     end
 end
+
 
 function AntiAFKChangeConfigData(settings,data,time)
     local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
@@ -144,6 +166,14 @@ function AntiAFKChangeConfigData(settings,data,time)
         if data == "UBYPASS" then TempConfigData.Settings.UBYPASS = time end
         if data == "GHOST" then TempConfigData.Settings.GHOST = time end
         if data == "DARKPMONEY" then TempConfigData.Settings.DARKPMONEY = time end
+        if data == "GODMODE" then TempConfigData.Settings.GODMODE = time end
+        if data == "JOBENABLE" then TempConfigData.Settings.JOBENABLE = time end
+        if data == "JOBNAME" then TempConfigData.Settings.JOBNAME = time end
+        if data == "ENABLETIME" then TempConfigData.Settings.ENABLETIME = time end
+        if data == "StartHours" then TempConfigData.TimeSettings.StartHours = time end
+        if data == "StartMinutes" then TempConfigData.TimeSettings.StartMinutes = time end
+        if data == "StopHours" then TempConfigData.TimeSettings.StopHours = time end
+        if data == "StopMinutes" then TempConfigData.TimeSettings.StopMinutes = time end
         if data == "LANGUAGE" then
             if table.HasValue(AntiAfkDisponibleLang, time) then
                 TempConfigData.Settings.LANGUAGE = time
@@ -272,7 +302,17 @@ net.Receive("nnt-antiak-settings", function(len,ply)
                     ["AFK_ADMINUBYPASS"] = AFK_ADMINUBYPASS,
                     ["AFK_ENABLE"] = AFK_ENABLE,
                     ["AFK_GHOST"] = AFK_GHOST,
-                    ["AFK_DARKRPMONEY"] = AFK_DARKRPMONEY
+                    ["AFK_DARKRPMONEY"] = AFK_DARKRPMONEY,
+                    ["AFK_LANGUAGE"] = AFK_LANGUAGE,
+                    ["AFK_THEME"] = AFK_THEME,
+                    ["AFK_GODMODE"] = AFK_GODMODE,
+                    ["AFK_JOBENABLE"] = AFK_JOBENABLE,
+                    ["AFK_JOBNAME"] = AFK_JOBNAME,
+                    ["AFK_ENABLETIME"] = AFK_ENABLETIME,
+                    ["AFK_StartTimeHours"] = AFK_StartTimeHours,
+                    ["AFK_StartTimeMinutes"] = AFK_StartTimeMinutes,
+                    ["AFK_StopTimeHours"] = AFK_StopTimeHours,
+                    ["AFK_StopTimeMinutes"] = AFK_StopTimeMinutes
                 }
                 net.WriteString("LoadData")
                 net.WriteTable(temptable)
@@ -402,10 +442,29 @@ function PlyMeta:SetAFK(bool)
 		    self:Fire( "alpha", 255, 0 )
             self.Ghost = false
         end
+        if self.GodModeAFK then
+            self:GodDisable()
+            self.GodModeAFK = false
+        end
         net.Start("BroadcastAFKPLAYER")
             net.WriteTable(temporytable)
         net.Broadcast()
     elseif bool == true then
+        if AFK_JOBENABLE then
+            for k in pairs(team.GetAllTeams()) do
+                if team.GetName(k) == AFK_JOBNAME then
+                    if gmod.GetGamemode().Name == "DarkRP" then
+                        if not (self:Team() == k) then
+                            self:changeTeam(k)
+                        end
+                    else
+                        if (not self:Team() == k) then
+                            self:SetTeam(k)
+                        end
+                    end
+                end
+            end
+        end
         self.HaveWarning = true
         local temporytable = {
             ["PlayerName"] = self:Nick() ,
@@ -416,6 +475,10 @@ function PlyMeta:SetAFK(bool)
 			self:Fire( "alpha", 150, 0 )
             self:SetCollisionGroup(COLLISION_GROUP_WORLD)
             self.Ghost = true
+        end
+        if AFK_GODMODE then
+            self:GodEnable()
+            self.GodModeAFK = true
         end
         net.Start("BroadcastAFKPLAYER")
             net.WriteTable(temporytable)
@@ -472,6 +535,30 @@ end)
 print("[ANTI-AFK] Finished Loading")
 end
 end)
+
+local function getMinutes(hours, minutes)
+    return (hours*60)+minutes
+end
+
+local function IsTimeBetween(StartH, StartM, StopH, StopM, TestH, TestM)
+    if (StopH < StartH) then
+        local StopHOrg=StopH
+        StopH = StopH + 24
+        if (TestH <= StopHOrg) then
+            TestH = TestH + 24
+        end
+    end
+
+    local StartTVal = getMinutes(StartH, StartM)
+    local StopTVal = getMinutes(StopH, StopM)
+    local curTVal = getMinutes(TestH, TestM)
+    return (curTVal >= StartTVal and curTVal <= StopTVal)
+end
+
+local function IsNowBetween(StartH,StartM,StopH,StopM)
+  local time = os.date("*t")
+  return IsTimeBetween(StartH, StartM, StopH, StopM, time.hour, time.min)
+end
 --[[
   /$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$  /$$       /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
  /$$__  $$ /$$__  $$| $$$ | $$ /$$__  $$ /$$__  $$| $$      | $$_____/       /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$ /$$__  $$| $$$ | $$| $$__  $$
@@ -534,6 +621,9 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
             if !AFK_ENABLE then
                     ply:SetNextAFK(AFK_TIME)
                 return
+            end
+            if AFK_ENABLETIME then
+                if not IsNowBetween(AFK_StartTimeHours, AFK_StartTimeMinutes, AFK_StopTimeHours, AFK_StopTimeMinutes) then return end
             end
 			if (!ply:GetNextAFK()) then
 				ply:SetNextAFK(AFK_TIME)

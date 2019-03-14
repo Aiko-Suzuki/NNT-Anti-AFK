@@ -52,7 +52,7 @@ function Default_NNTAntiafkMainHUD()
 		end)
 	end)
 
-	local AfkPanelHUD = vgui.Create( "DFrame" )
+	AfkPanelHUD = vgui.Create( "DFrame" )
 	AfkPanelHUD:SetPos( ScrW() - w * 1.5  , h-200 )
 	AfkPanelHUD:SetSize( ScrW()/2, ScrH() / 3 )
 	AfkPanelHUD:SetTitle( "" )
