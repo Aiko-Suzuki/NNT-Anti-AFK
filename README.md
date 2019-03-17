@@ -1,13 +1,7 @@
 # NNT-ANTI-AFK (Workshop version)
 
 ### Information !
-#### Version 1.7.0
-
-##### NNT-ANTI-AFK:
-- Control panel (live actualization)
-- User Whitelists
-- Groups Whitelists
-- Multiple Language support
+#### Version 2.0.0
 
 ##### Chat Command:
 - /setafk [Set time left before player get kick for afk (SuperAdmin Only !)]
@@ -16,27 +10,34 @@
 - /afktime [Print some useful info like time before kick , ect...]
 
 ##### Currently supported language:
-- English
-- French
-- Spanish
+- English / Full
+- French / Afk warning and chat
+- Spanish / Afk warning and chat
 
 ##### Themes:
 - Default
 - Large
 
 ##### Features:
-- Enable / disable the Anti-AFK System [Live change]
-- User's whitelist
-- Group whitelist
-- Ghost player [when they receive the warning messages]
-- Blogs / gmodadminsuite-loggings modules 
-- themes
-- multi language
+- InGame Control panel with live actualization!
+- Enable / Disable Ghost Mod when AFK
+- Enable / Disable DarkRP Salary Freeze when AFK 
+- Enable / Disable the Anti-AFK System 
+- Enable / Disable God when AFK
+- Enable / Disable Team change when AFK
+- Enable / Disable Anti-AFK a certain moment of the day!
+- User's whitelist 
+- Groups whitelist
+- Themes
+- Multiple language support
 
 ##### In coming features:
-- Disable/Enable ghost when player is afk (when the player get the warning messages)
+- Logs in the panel
+- Temp bypass so you can add a user for like 10 minutes etc...
 
 
 If you want to help me fix or add a translation dm on discord ! (Aiko Shimizu#9799)
 
 Thanks to [Wex[A]rt](https://steamcommunity.com/sharedfiles/filedetails/?id=1659857487) for the spanish translation !
+
+Full credit
