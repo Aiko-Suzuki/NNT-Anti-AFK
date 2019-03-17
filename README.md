@@ -40,4 +40,4 @@ If you want to help me fix or add a translation dm on discord ! (Aiko Shimizu#97
 
 Thanks to [Wex[A]rt](https://steamcommunity.com/sharedfiles/filedetails/?id=1659857487) for the spanish translation !
 
-Full credit
+Icons made by Freepik and Chanut from www.flaticon.com is licensed by CC 3.0
