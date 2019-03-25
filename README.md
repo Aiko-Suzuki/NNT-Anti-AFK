@@ -34,6 +34,7 @@
 ##### In coming features:
 - Logs in the panel
 - Temp bypass so you can add a user for like 10 minutes etc...
+- Maybe a permission manager ?
 
 
 If you want to help me fix or add a translation dm on discord ! (Aiko Shimizu#9799)
