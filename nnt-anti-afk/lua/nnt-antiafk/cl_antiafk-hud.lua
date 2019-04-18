@@ -578,7 +578,7 @@ local function NNTAntiafkAdminPanel(data)
 
 
 	local Sign = vgui.Create( "DLabel", NNT_ANTI_MainPanel )
-	Sign:SetPos( 15, 370 )
+	Sign:SetPos( 10, 375 )
 	Sign:SetSize(150 , 25)
 	Sign:SetColor(Color(0,0,0))
 	Sign:SetText( "Made by Aiko Suzuki !" )
@@ -682,7 +682,6 @@ local function NNTAntiafkAdminPanel(data)
 					end
 				end
 			end
-			notification.Kill( "Loading Panel" )
 		elseif data5 == "Settings" then -- to load separate data
         	for k,v in pairs(data4) do
 				if k == "WARN" then
@@ -1085,6 +1084,9 @@ net.Receive("AntiAfkSendHUDInfo", function()
 		NNTAntiafkMainHUDSP()
 	elseif (data1 == "AntiafkAdminPanel") then
 		notification.AddProgress( "Loading Panel", "Receiving data from the server..." )
+		timer.Simple(1, function()
+			notification.Kill( "Loading Panel" )
+		end)
 		NNTAntiafkAdminPanel()
 	elseif table.HasValue(NNTAntiafkThemes, data1) then
 		AntiAfkSelTheme = data1
