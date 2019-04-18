@@ -67,7 +67,8 @@ function NNTAntiAFKUpdate()
         ["GODMODE"] = checkafkdata(AFK_GODMODE),
         ["JOBENABLE"] = checkafkdata(AFK_JOBENABLE),
         ["JOBNAME"] = checkafkdata(AFK_JOBNAME,"JOB"),
-        ["ENABLETIME"] =checkafkdata(AFK_ENABLETIME)
+        ["ENABLETIME"] = checkafkdata(AFK_ENABLETIME),
+        ["JOBREVERT"] = checkafkdata(AFK_JOBREVERT)
     }
     AFKDefaultConfigUpdate.UsersBypass = AntiAFKConfig.UsersBypass
     AFKDefaultConfigUpdate.Version = NNTAntiAfkCurrentVersion

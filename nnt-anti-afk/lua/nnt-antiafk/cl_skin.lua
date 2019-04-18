@@ -9,6 +9,30 @@ function nntdrawCircle( x, y, radius, seg , color)
 	surface.DrawPoly( nntcirle )
 end
 
+surface.CreateFont( "AFKLarge", {
+	font = "Arial",
+	extended = false,
+	size = 60,
+} )
+
+surface.CreateFont( "AFKMedium", {
+	font = "Arial",
+	extended = false,
+	size = 30,
+} )
+
+surface.CreateFont( "AFKsmall", {
+	font = "Arial",
+	extended = false,
+	size = 21,
+} )
+
+surface.CreateFont( "AFKsmallK", {
+	font = "Arial",
+	extended = false,
+	size = 18,
+} )
+
 
 surface.CreateFont( "HUDLARGETEXT", {
 	font = "Arial",
@@ -64,10 +88,12 @@ local SKIN = {}
         surface.SetDrawColor(255, 255, 255, 255)
         surface.DrawRect(0, 32, panel:GetWide(), panel:GetTall())
 
-        surface.SetFont( "HudHintTextLarge" )
-	    surface.SetTextColor( 255, 255, 255 )
-	    surface.SetTextPos( 10, 10 )
-	    surface.DrawText( "[NNT] Anti-AFK | Version :" .. NNTAntiAfkCurrentVersion )
+			DisableClipping(true)
+			surface.SetFont( "HudHintTextLarge" )
+	    	surface.SetTextColor( 255, 255, 255 )
+	    	surface.SetTextPos( 10, 7 )
+	    	surface.DrawText( "[NNT] Anti-AFK | Version :" .. NNTAntiAfkCurrentVersion  )
+			DisableClipping(false)
 
 	end
 
@@ -110,7 +136,6 @@ local SKIN = {}
 		local color3 = Color(26, 83, 188, 200)
 
 		draw.NoTexture()
-		if ( panel:GetDisabled() ) then	return self.tex.Input.Slider.H.Disabled( 0, 0, w, h ) end
 
 		if ( panel.Depressed ) then
 			nntdrawCircle(x, y, radius, seg , color2) nntdrawCircle(x, y, radius, seg , color)
@@ -120,10 +145,8 @@ local SKIN = {}
 			nntdrawCircle(x, y, radius, seg , color2) nntdrawCircle(x, y, radius, seg , color)
 		end
 
-
 		nntdrawCircle(x, y,11, seg , color3) nntdrawCircle(x, y, radius, seg , color) nntdrawCircle(x, y, 6, seg , color2)
 		DisableClipping( false  )
-		surface.SetDrawColor( Color( 255, 255, 255, 255 ) )
 
 
 
@@ -192,17 +215,6 @@ local SKIN = {}
 -----------------------------------------------------------]]
 function SKIN:PaintTextEntry( panel, w, h )
 
-	if ( panel.m_bBackground ) then
-
-		if ( panel:GetDisabled() ) then
-			self.tex.TextBox_Disabled( 0, 0, w, h )
-		elseif ( panel:HasFocus() ) then
-			self.tex.TextBox_Focus( 0, 0, w, h )
-		else
-			self.tex.TextBox( 0, 0, w, h )
-		end
-
-	end
 	surface.SetDrawColor(0, 0, 0, 255)
 	surface.SetTextPos(0, 0)
 	surface.DrawText(panel:GetValue())
@@ -225,6 +237,25 @@ end
         surface.DrawRect(0, 20, w, h)
 
     end
+
+--[[---------------------------------------------------------
+	CheckBox
+-----------------------------------------------------------]]
+
+function SKIN:PaintCheckBox( panel, w, h )
+	DisableClipping(true)
+	if ( panel:GetChecked() ) then
+		if panel:GetParent().SetAnimtionPos == 2 then
+			panel:GetParent().SetAnimtionPos = 18
+		end
+		draw.RoundedBox(7, 1, -1, 37, panel:GetTall(), Color(52, 105, 229))
+		draw.RoundedBox(7,panel:GetParent().SetAnimtionPos, 1, 16, 16, Color(255, 255, 255))
+	else
+		draw.RoundedBox(7, 1, -1, 37, panel:GetTall(), Color(211, 211, 211))
+		draw.RoundedBox(7,panel:GetParent().SetAnimtionPos + 1 , 1, 16, 16, Color(255, 255, 255))
+	end
+	DisableClipping(false)
+end
 
 --[[---------------------------------------------------------
 	Tab
@@ -288,4 +319,120 @@ end
 	end
 
 derma.DefineSkin("NNT-AntiAFK", "[NNT] Skin", SKIN)
+
+--[[---------------------------------------------------------
+	DCheckBoxLabel
+-----------------------------------------------------------]]
+
+local DCHECKPANEL = {}   --- this is just for adding space for the switch !
+
+AccessorFunc( DCHECKPANEL, "m_iIndent", "Indent" )
+
+function DCHECKPANEL:Init()
+	self:SetTall( 16 )
+
+	self.Button = vgui.Create( "DCheckBox", self )
+	self.Button.OnChange = function( _, val ) self:OnChange( val ) end
+
+	self.Label = vgui.Create( "DLabel", self )
+	self.Label:SetMouseInputEnabled( true )
+	self.Label.DoClick = function() self:Toggle() end
+end
+
+function DCHECKPANEL:SetDark( b )
+	self.Label:SetDark( b )
+end
+
+function DCHECKPANEL:SetBright( b )
+	self.Label:SetBright( b )
+end
+
+function DCHECKPANEL:SetConVar( cvar )
+	self.Button:SetConVar( cvar )
+end
+
+function DCHECKPANEL:SetValue( val )
+	self.Button:SetValue( val )
+end
+
+function DCHECKPANEL:SetChecked( val )
+	self.Button:SetChecked( val )
+end
+
+function DCHECKPANEL:GetChecked( val )
+	return self.Button:GetChecked()
+end
+
+function DCHECKPANEL:Toggle()
+	self.Button:Toggle()
+end
+
+function DCHECKPANEL:PerformLayout()
+
+	local x = self.m_iIndent || 0
+
+	self.Button:SetSize( 38, 20 )
+	self.Button:SetPos( x, math.floor( ( self:GetTall() - self.Button:GetTall() ) / 2 ) )
+
+	self.Label:SizeToContents()
+	self.Label:SetPos( x + self.Button:GetWide() + 9, 1 )
+
+end
+
+function DCHECKPANEL:SetTextColor( color )
+
+	self.Label:SetTextColor( color )
+
+end
+
+function DCHECKPANEL:SizeToContents()
+
+	self:InvalidateLayout( true ) -- Update the size of the DLabel and the X offset
+	self:SetWide( self.Label.x + self.Label:GetWide() )
+	self:SetTall( math.max( self.Button:GetTall(), self.Label:GetTall() ) )
+	self:InvalidateLayout() -- Update the positions of all children
+
+end
+
+function DCHECKPANEL:SetText( text )
+
+	self.Label:SetText( text )
+	self:SizeToContents()
+
+end
+
+function DCHECKPANEL:SetFont( font )
+
+	self.Label:SetFont( font )
+	self:SizeToContents()
+
+end
+
+function DCHECKPANEL:GetText()
+
+	return self.Label:GetText()
+
+end
+
+function DCHECKPANEL:Paint()
+end
+
+function DCHECKPANEL:OnChange( bVal )
+
+	-- For override
+
+end
+
+function DCHECKPANEL:GenerateExample( ClassName, PropertySheet, Width, Height )
+
+	local ctrl = vgui.Create( ClassName )
+	ctrl:SetText( "Switch / CheckBox" )
+	ctrl:SetWide( 200 )
+
+	PropertySheet:AddSheet( ClassName, ctrl, nil, true, true )
+
+end
+
+derma.DefineControl( "NNTDCheckBoxLabel", "Simple Switch / Checkbox reskin", DCHECKPANEL, "DCheckBoxLabel" )
+
 derma.RefreshSkins()

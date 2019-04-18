@@ -1,43 +1,10 @@
-NNTAntiafkThemes.Large = "Large_NNTAntiafkMainHUD"
 function Large_NNTAntiafkMainHUD()
 
 	local w = ScrW() / 2
     local h = ScrH() / 2
 
 	AntiAFKTimer = AntiAFKTimer or {}
-
-
     VarTimeleft = "00m 00s"
-
-
-    surface.CreateFont( "AFKLarge", {
-	font = "Arial",
-	extended = false,
-	size = 60,
-    } )
-    surface.CreateFont( "AFKMedium", {
-	font = "Arial",
-	extended = false,
-	size = 30,
-    } )
-    surface.CreateFont( "AFKsmall", {
-	font = "Arial",
-	extended = false,
-	size = 21,
-    } )
-    surface.CreateFont( "AFKsmallK", {
-	font = "Arial",
-	extended = false,
-	size = 18,
-    } )
-
-	function timeToStr( time )
-		local tmp = time
-		local s = tmp % 60
-		tmp = math.floor( tmp / 60 )
-		local m = tmp
-		return string.format( "%02im %02is", m, s )
-	end
 	AntiAFKTimer.TimeLeft = "00m 00s"
 
 	net.Start("AFKHUD2")
@@ -91,3 +58,5 @@ function Large_NNTAntiafkMainHUD()
 
 
 end
+
+NNT_AntiAFK_AddThemes("Large",Large_NNTAntiafkMainHUD)
