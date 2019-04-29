@@ -1083,10 +1083,6 @@ net.Receive("AntiAfkSendHUDInfo", function()
 	elseif (data1 == "AntiafkMainHUDSP") then
 		NNTAntiafkMainHUDSP()
 	elseif (data1 == "AntiafkAdminPanel") then
-		notification.AddProgress( "Loading Panel", "Receiving data from the server..." )
-		timer.Simple(1, function()
-			notification.Kill( "Loading Panel" )
-		end)
 		NNTAntiafkAdminPanel()
 	elseif table.HasValue(NNTAntiafkThemes, data1) then
 		AntiAfkSelTheme = data1
