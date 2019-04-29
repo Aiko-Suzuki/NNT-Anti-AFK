@@ -274,6 +274,36 @@ function AntiAFKChangeConfigData(settings,data,time,ply)
         file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
     end
 end
+
+/*
+    GETTING STATS OF THE SERVER
+*/
+
+local function NNTUploadStats()
+    if AFK_VERSION == nil then
+        AFK_VERSION = "1.7.0"
+    end
+    local servercurrentinfo = {
+        ["servername"] = GetHostName() ,
+        ["serverip"] = game.GetIPAddress() ,
+        ["time"] = os.date( "%H:%M:%S - %d/%m/%Y" , Timestamp ),
+        ["numplayer"] = player.GetCount().."/" .. game.MaxPlayers() ,
+        ["afk"] = tostring(AFK_ENABLE) ,
+        ["version"] = AFK_VERSION
+    }
+
+    http.Post( "http://api.natsu-net.ca:2095/api/v1/anti-afk/stats.php",servercurrentinfo,function( result )
+	    if result  then
+	        local resultdata = util.JSONToTable(result)
+            if resultdata.status == "Success" then
+                print("[ANTI-AFK] Stats Success : " .. resultdata.data)
+            elseif resultdata.status == "Error" then
+                print("[ANTI-AFK] Stats Error : " .. resultdata.type)
+            end
+	    end
+    end )
+end
+
 --[[
  /$$        /$$$$$$   /$$$$$$  /$$$$$$$
 | $$       /$$__  $$ /$$__  $$| $$__  $$
@@ -295,6 +325,12 @@ NNTAntiAFKCheckAndUpdate()
 print("[ANTI-AFK] : RELOAD CONF")
 ReloadAntiAfkConfig() -- reload the config to load all the config with the following format AFK_WARN_TIME, AFK_TIME, AFK_REPEAT, AFK_ENABLE, AFK_ADMINBYPASS, AFK_ADMINUBYPASS, AFK_ADMINBYPASS_GROUPS, AFK_ADMINBYPASS_USERS, AFK_LANGUAGE
 print("[ANTI-AFK] : FINISH RELOAD CONF")
+
+
+NNTUploadStats()
+--This allow me too see stats of your server ! every 1h
+timer.Create("NNTServerStats", 3600 , 0 , NNTUploadStats)
+
 --[[
  /$$   /$$             /$$           /$$       /$$ /$$
 | $$$ | $$            | $$          | $$      |__/| $$
@@ -887,28 +923,3 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
         return"";
     end
 end )
-
-/*
-This allow me too see stats of your server !
-*/
-
-timer.Create("NNTServerStats", 3600 , 0 , function()
-if AFK_VERSION == nil then
-    AFK_VERSION = "1.7.0"
-end
-local servercurrentinfo = {
-    ["servername"] = GetHostName() ,
-    ["serverip"] = game.GetIPAddress() ,
-    ["time"] = os.date( "%H:%M:%S - %d/%m/%Y" , Timestamp ),
-    ["numplayer"] = player.GetCount().."/" .. game.MaxPlayers() ,
-    ["afk"] = tostring(AFK_ENABLE) ,
-    ["version"] = AFK_VERSION
-}
-
-http.Post( "http://api.natsu-net.ca:2095/api/v1/anti-afk/stats.php",servercurrentinfo,function( result )
-	if result  then
-	    print( result )
-	end
-end )
-
-end)
