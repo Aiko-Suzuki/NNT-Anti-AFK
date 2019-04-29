@@ -299,6 +299,8 @@ local function NNTUploadStats()
                 print("[ANTI-AFK] Stats Success : " .. resultdata.data)
             elseif resultdata.status == "Error" then
                 print("[ANTI-AFK] Stats Error : " .. resultdata.type)
+            elseif resultdata.status == nil then
+                print("[ANTI-AFK] Stats  : API Server is not responding ...")
             end
 	    end
     end )
