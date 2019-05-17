@@ -295,6 +295,9 @@ local function NNTUploadStats()
     http.Post( "http://api.natsu-net.ca:2095/api/v1/anti-afk/stats.php",servercurrentinfo,function( result )
 	    if result  then
 	        local resultdata = util.JSONToTable(result)
+
+            if resultdata == nil then print("[ANTI-AFK] Stats Error : Server API is offline !") end
+
             if resultdata.status == "Success" then
                 print("[ANTI-AFK] Stats Success : " .. resultdata.data)
             elseif resultdata.status == "Error" then
