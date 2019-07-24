@@ -749,7 +749,7 @@ hook.Add("PlayerInitialSpawn", "MakeAFKVarAndSendLanguage", function(ply) -- lit
 end)
 
 hook.Add("Think", "NNT-AFKPLAYERS", function()
-	for _, ply in pairs (player.GetAll()) do
+	for _, ply in pairs (player.GetHumans()) do
 		if ( ply:IsConnected() and ply:IsFullyAuthenticated() ) then
             if !AFK_ENABLE then
                     ply:SetNextAFK(AFK_TIME)
