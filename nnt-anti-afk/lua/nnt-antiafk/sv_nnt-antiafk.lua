@@ -296,7 +296,7 @@ local function NNTUploadStats()
 	    if result  then
 	        local resultdata = util.JSONToTable(result)
 
-            if resultdata == nil then print("[ANTI-AFK] Stats Error : Server API is offline !") end
+            if resultdata == nil then print("[ANTI-AFK] Stats Error : Server API is offline !") return end
 
             if resultdata.status == "Success" then
                 print("[ANTI-AFK] Stats Success : " .. resultdata.data)
@@ -662,6 +662,7 @@ hook.Add( "Initialize", "NNT-AntiAFK-FinishLoading", function()
     end
 end)
 
+
 local function getMinutes(hours, minutes)
     return (hours*60)+minutes
 end
@@ -682,8 +683,8 @@ local function IsTimeBetween(StartH, StartM, StopH, StopM, TestH, TestM)
 end
 
 local function IsNowBetween(StartH,StartM,StopH,StopM)
-  local time = os.date("*t")
-  return IsTimeBetween(StartH, StartM, StopH, StopM, time.hour, time.min)
+    local time = os.date("*t")
+    return IsTimeBetween(StartH, StartM, StopH, StopM, time.hour, time.min)
 end
 --[[
   /$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$  /$$       /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
