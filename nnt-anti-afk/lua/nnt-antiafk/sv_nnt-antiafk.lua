@@ -185,48 +185,48 @@ function ReloadAntiAfkConfig(ply)
 end
 
 
-function AntiAFKChangeConfigData(settings,data,time,ply)
+function AntiAFKSetConfig(settings,opt,data,ply)
     local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
     local AntiAFKConfig = util.JSONToTable(x)
     local TempConfigData = AntiAFKConfig
     if settings == "Settings" then
-        if data == "ANTIAFK" then  TempConfigData.Settings.ANTIAFK = time end
-        if data == "WARN" then  TempConfigData.Settings.WARN = time end
-        if data == "KICK" then  TempConfigData.Settings.KICK = time end
-        if data == "BYPASS" then  TempConfigData.Settings.BYPASS = time end
-        if data == "UBYPASS" then TempConfigData.Settings.UBYPASS = time end
-        if data == "GHOST" then TempConfigData.Settings.GHOST = time end
-        if data == "DARKPMONEY" then TempConfigData.Settings.DARKPMONEY = time end
-        if data == "GODMODE" then TempConfigData.Settings.GODMODE = time end
-        if data == "JOBENABLE" then TempConfigData.Settings.JOBENABLE = time end
-        if data == "JOBNAME" then TempConfigData.Settings.JOBNAME = time end
-        if data == "ENABLETIME" then TempConfigData.Settings.ENABLETIME = time end
-        if data == "StartHours" then TempConfigData.TimeSettings.StartHours = time end
-        if data == "StartMinutes" then TempConfigData.TimeSettings.StartMinutes = time end
-        if data == "StopHours" then TempConfigData.TimeSettings.StopHours = time end
-        if data == "StopMinutes" then TempConfigData.TimeSettings.StopMinutes = time end
-        if data == "JOBREVERT" then TempConfigData.Settings.JOBREVERT = time end
-        if data == "LANGUAGE" then
-            if table.HasValue(AntiAfkDisponibleLang, time) then
-                TempConfigData.Settings.LANGUAGE = time
+        if opt == "ANTIAFK" then  TempConfigData.Settings.ANTIAFK = data end
+        if opt == "WARN" then  TempConfigData.Settings.WARN = data end
+        if opt == "KICK" then  TempConfigData.Settings.KICK = data end
+        if opt == "BYPASS" then  TempConfigData.Settings.BYPASS = data end
+        if opt == "UBYPASS" then TempConfigData.Settings.UBYPASS = data end
+        if opt == "GHOST" then TempConfigData.Settings.GHOST = data end
+        if opt == "DARKPMONEY" then TempConfigData.Settings.DARKPMONEY = data end
+        if opt == "GODMODE" then TempConfigData.Settings.GODMODE = data end
+        if opt == "JOBENABLE" then TempConfigData.Settings.JOBENABLE = data end
+        if opt == "JOBNAME" then TempConfigData.Settings.JOBNAME = time end
+        if opt == "ENABLETIME" then TempConfigData.Settings.ENABLETIME = data end
+        if opt == "StartHours" then TempConfigData.TimeSettings.StartHours = data end
+        if opt == "StartMinutes" then TempConfigData.TimeSettings.StartMinutes = data end
+        if opt == "StopHours" then TempConfigData.TimeSettings.StopHours = data end
+        if opt == "StopMinutes" then TempConfigData.TimeSettings.StopMinutes = data end
+        if opt == "JOBREVERT" then TempConfigData.Settings.JOBREVERT = data end
+        if opt == "LANGUAGE" then
+            if table.HasValue(AntiAfkDisponibleLang, data) then
+                TempConfigData.Settings.LANGUAGE = data
             end
         end
-         if data == "THEME" then
-            if NNTAntiafkThemes[time] then
-                TempConfigData.Settings.THEME = time
-                print("[ANTI-AFK] : Themes has been changed to "..time)
+         if opt == "THEME" then
+            if NNTAntiafkThemes[data] then
+                TempConfigData.Settings.THEME = data
+                print("[ANTI-AFK] : Themes has been changed to "..data)
             end
         end
         local newdata = util.TableToJSON(TempConfigData,true)
         file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
         ReloadAntiAfkConfig()
     elseif settings == "BypassGroups" then
-        if time == "DEL" then
+        if opt == "DEL" then
             table.RemoveByValue(TempConfigData.BypassGroups,data)
             local newdata = util.TableToJSON(TempConfigData,true)
             file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
             ReloadAntiAfkConfig()
-        elseif time == "ADD" then
+        elseif opt == "ADD" then
             local count = table.Count(AntiAFKConfig.BypassGroups)
             table.insert(TempConfigData.BypassGroups, count + 1 , data)
             local newdata = util.TableToJSON(TempConfigData,true)
@@ -234,9 +234,9 @@ function AntiAFKChangeConfigData(settings,data,time,ply)
             ReloadAntiAfkConfig()
         end
     elseif   settings == "UsersBypass" then
-        if time == "ADD" then
+        if opt == "ADD" then
             if string.StartWith(data, "STEAM_") then
-                if data == "STEAM_0:0" then return end
+                if opt == "STEAM_0:0" then return end
                 local count = table.Count(AntiAFKConfig.UsersBypass)
                 local temptable = {[data] = player.GetBySteamID(data):Nick()}
                 table.Merge(TempConfigData.UsersBypass, temptable)
@@ -247,7 +247,7 @@ function AntiAFKChangeConfigData(settings,data,time,ply)
             else
             end
 
-        elseif time == "DEL" then
+        elseif opt == "DEL" then
             print(TempConfigData.UsersBypass[data])
             local TempTable = {}
             for k,v in pairs(TempConfigData.UsersBypass) do
@@ -363,7 +363,7 @@ net.Receive("nnt-antiak-settings", function(len,ply)
 
         if data4 == "SetSettings" then
             for k,v in pairs(data5) do
-                AntiAFKChangeConfigData("Settings",k,v)
+                AntiAFKSetConfig("Settings",k,v)
                 net.Start("nnt-antiak-settings")
                     local temptable = {[k] = v}
                     net.WriteString("Settings")
@@ -420,7 +420,7 @@ net.Receive("AntiAddBypassUsers", function(len, ply) -- ADD USER TO THE USERS WH
         if string.StartWith(SomeShittyTest , " " ) then return end
 		if SomeShittyTest == "" then return end
         if AFK_ADMINBYPASS_USERS[SomeShittyTest] then return end
-        AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"ADD")
+        AntiAFKSetConfig("UsersBypass","ADD",SomeShittyTest)
         net.Start("AntiAfksenBypassUsers")
             net.WriteTable(AFK_ADMINBYPASS_USERS)
         net.Send(ply)
@@ -435,7 +435,7 @@ end)
 net.Receive("AntiRemBypassUsers", function(len, ply) -- REMOVE USER FROM THE WHITE LIST
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
-        AntiAFKChangeConfigData("UsersBypass",SomeShittyTest,"DEL")
+        AntiAFKSetConfig("UsersBypass","DEL",SomeShittyTest)
         net.Start("AntiAfksenBypassUsers")
             net.WriteTable(AFK_ADMINBYPASS_USERS)
         net.Send(ply)
@@ -466,7 +466,7 @@ net.Receive("AntiAddBypassGroups", function(len, ply) -- ADD GROUPS TO THE GROUP
         if string.StartWith(SomeShittyTest , " " ) then return end
 		if SomeShittyTest == "" then return end
         if table.HasValue(AFK_ADMINBYPASS_GROUPS,SomeShittyTest ) then return end
-        AntiAFKChangeConfigData("BypassGroups",SomeShittyTest,"ADD")
+        AntiAFKSetConfig("BypassGroups","ADD",SomeShittyTest)
         net.Start("AntiAfksenBypassGroups")
             net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
@@ -481,7 +481,7 @@ end)
 net.Receive("AntiRemBypassGroups", function(len, ply)  -- REMOVE GROUPS FROM THE GROUPS WHITELIST
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
-        AntiAFKChangeConfigData("BypassGroups",SomeShittyTest,"DEL")
+        AntiAFKSetConfig("BypassGroups","DEL",SomeShittyTest)
         net.Start("AntiAfksenBypassGroups")
             net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)

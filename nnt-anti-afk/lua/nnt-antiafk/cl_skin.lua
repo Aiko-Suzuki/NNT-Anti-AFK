@@ -76,22 +76,14 @@ local SKIN = {}
 	SKIN.Colours.Button.Disabled = Color(0, 0, 0, 100)
 
 	function SKIN:PaintFrame(panel)
-		surface.SetDrawColor(45, 45, 45, 200)
-		surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
-
-		surface.SetDrawColor(0, 123, 255,255)
-		surface.DrawRect(0, 0, panel:GetWide(), 32)
-
-        surface.SetDrawColor(0, 0, 0,80)
-		surface.DrawRect(0, 0, panel:GetWide(), 18)
-
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawRect(0, 32, panel:GetWide(), panel:GetTall())
+			surface.SetDrawColor( 255, 255, 255, 255 )
+			surface.SetMaterial(Material("nnt-antiafk/Main-BG.png"))
+			surface.DrawTexturedRect( 0, 0, 500, 400 )
 
 			DisableClipping(true)
 			surface.SetFont( "HudHintTextLarge" )
 	    	surface.SetTextColor( 255, 255, 255 )
-	    	surface.SetTextPos( 10, 7 )
+	    	surface.SetTextPos( 18, 9 )
 	    	surface.DrawText( "[NNT] Anti-AFK | Version :" .. NNTAntiAfkCurrentVersion  )
 			DisableClipping(false)
 
@@ -298,9 +290,10 @@ end
 		if (panel:GetPaintBackground()) then
 			local w, h = panel:GetWide(), panel:GetTall()
 			DisableClipping( true )
-			draw.RoundedBox( 8, 0, 0, w  , h + 3 ,  Color(0, 0, 0, 200) )
+			surface.SetDrawColor( 255, 255, 255, 255 )
+			surface.SetMaterial(Material("nnt-antiafk/Small-BTN.png"))
+			surface.DrawTexturedRect( 0, 0, 100, 30 )
 			DisableClipping( false )
-			draw.RoundedBox( 8, 0, 0, w, h,  Color(26, 83, 188, 255) )
 		end
 	end
     function SKIN:PaintWindowCloseButton( panel, w, h )

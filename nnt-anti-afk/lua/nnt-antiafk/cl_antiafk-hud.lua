@@ -951,8 +951,11 @@ local function NNTAntiafkAdminPanel(data)
 			end
 		end)
 		local GroupList = vgui.Create( "DTextEntry", WhitelistS ) -- create the form as a child of frame
-		GroupList:SetPos( 125, 244 )
+		GroupList:SetPos( 300, 240 )
 		GroupList:SetSize( 130, 20 )
+		GroupList:SetSkin("Default")		
+		GroupList:SetTextColor(Color(0,0,0,255))
+		GroupList:SetPlaceholderColor( Color(0, 0, 0) )
 		GroupList:SetText( "Enter group name" )
 		GroupList.OnChange = function( self )
 			SelectedGroups = GroupList:GetValue()	-- print the form's text as server text
