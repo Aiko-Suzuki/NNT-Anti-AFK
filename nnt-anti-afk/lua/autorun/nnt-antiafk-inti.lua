@@ -1,7 +1,12 @@
-NNTAntiAfkCurrentVersion = "2.0.1"
+NNTAntiAfkCurrentVersion = "3.0.0"
 
 if CLIENT then
     include("nnt-antiafk/cl_antiafk-hud.lua")
+    
+    for _,v in pairs((file.Find("nnt-antiafk/vgui/*.lua","LUA"))) do
+		include("nnt-antiafk/vgui/" .. v)
+        print("Loading VGUI: " ..v )
+	end
 elseif SERVER then
 
     resource.AddFile( "materials/nnt-antiafk/clock.png" )
@@ -18,6 +23,7 @@ elseif SERVER then
     for _,v in pairs((file.Find("nnt-antiafk/sh_*.lua","LUA"))) do
 		AddCSLuaFile("nnt-antiafk/"..v)
 	end
+    
     for _,v in pairs((file.Find("nnt-antiafk/lang/*.lua","LUA"))) do
 		AddCSLuaFile("nnt-antiafk/lang/" .. v)
         print("Adding CS Language: " ..v )
@@ -26,9 +32,9 @@ elseif SERVER then
 		AddCSLuaFile("nnt-antiafk/themes/" .. v)
         print("Adding CS Themes: " ..v )
 	end
-    for _,v in pairs((file.Find("nnt-antiafk/themes/*.lua","LUA"))) do
-		AddCSLuaFile("nnt-antiafk/themes/" .. v)
-        print("Adding CS Themes: " ..v )
+    for _,v in pairs((file.Find("nnt-antiafk/vgui/*.lua","LUA"))) do
+		AddCSLuaFile("nnt-antiafk/vgui/" .. v)
+        print("Adding CS VGUI: " ..v )
 	end
 
 

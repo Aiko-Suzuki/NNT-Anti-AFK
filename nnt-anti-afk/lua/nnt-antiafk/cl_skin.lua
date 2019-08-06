@@ -247,6 +247,7 @@ function SKIN:PaintCheckBox( panel, w, h )
 		draw.RoundedBox(7,panel:GetParent().SetAnimtionPos + 1 , 1, 16, 16, Color(255, 255, 255))
 	end
 	DisableClipping(false)
+	
 end
 
 --[[---------------------------------------------------------
@@ -296,11 +297,13 @@ end
 			DisableClipping( false )
 		end
 	end
+
+
     function SKIN:PaintWindowCloseButton( panel, w, h )
         DisableClipping( true )
         surface.SetDrawColor( 255, 255, 255, 255 )
         surface.SetMaterial( Material("nnt-antiafk/exit.png"))
-	    surface.DrawTexturedRect( 0, 4, 24, 24 )
+	    surface.DrawTexturedRect( 6, 4, 24, 24 )
         DisableClipping( false )
     end
 
