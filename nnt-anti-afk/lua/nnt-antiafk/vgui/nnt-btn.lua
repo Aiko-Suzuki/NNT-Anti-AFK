@@ -46,18 +46,16 @@ function PANEL:SetImage( img )
 
 	self.m_Image:SetImage( img )
 	self.m_Image:SizeToContents()
-	self:InvalidateLayout()
-
 end
 
 function PANEL:Paint( w, h )
 	local textposX, textposY = self.TextPos, 5
 	if self.Activated then
-		draw.RoundedBox(0, 0, 0, w, h,Color(255,255,255,255))
-		draw.DrawText(self:GetText(), "DermaDefault",textposX, textposY, Color( 0, 0, 0, 255 ), TEXT_ALIGN_LEFT)
+		draw.RoundedBox(0, 0, 0, w, h,Color(75,75,75,255))
+		draw.DrawText(self:GetText(), "DermaDefault",textposX, textposY, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT)
 	else
-		draw.RoundedBox(0, 0, 0, w, h,Color(200,200,200,130))
-		draw.DrawText(self:GetText(), "DermaDefault", textposX, textposY, Color( 0, 0, 0, 255 ), TEXT_ALIGN_LEFT)
+		draw.RoundedBox(0, 0, 0, w, h,Color(50,50,50,255))
+		draw.DrawText(self:GetText(), "DermaDefault", textposX, textposY, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT)
 	end
 	return true
 
@@ -74,17 +72,9 @@ function PANEL:UpdateColours( skin )
 end
 
 function PANEL:PerformLayout()
-
-	--
-	-- If we have an image we have to place the image on the left
-	-- and make the text align to the left, then set the inset
-	-- so the text will be to the right of the icon.
-	--
 	if ( IsValid( self.m_Image ) ) then
 
-		self.m_Image:SetPos( 6, ( self:GetTall() - self.m_Image:GetTall() ) * 0.5 )
-
-		self:SetTextInset( self.m_Image:GetWide() + 16, 0 )
+		self.m_Image:SetPos( 1, ( self:GetTall() - self.m_Image:GetTall() ) * 0.5 )
 
 	end
 
@@ -154,9 +144,9 @@ end
 
 function PANEL:Paint( w, h )
 	surface.DisableClipping(true)
-	surface.SetDrawColor( 255, 255, 255, 255 )
-	if self:IsDown() then surface.SetMaterial(Material("nnt-antiafk/Small-BTN-H.png"))  else  surface.SetMaterial(Material("nnt-antiafk/Small-BTN.png")) end
-	surface.DrawTexturedRect( 0, 0+3, w, h )
+	surface.SetDrawColor( 43, 187, 101, 255 )
+	if self:IsDown() then surface.DrawRect( 0, 0, w, h ) else surface.DrawOutlinedRect( 0, 0, w, h ) surface.DrawOutlinedRect( 1, 1, w-2, h-2 ) end
+	--surface.DrawTexturedRect( 0, 0, w, h )
 	surface.DisableClipping(false)
 
 end

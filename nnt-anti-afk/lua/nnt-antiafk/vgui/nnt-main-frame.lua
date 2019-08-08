@@ -44,7 +44,7 @@ function PANEL:Init()
 	self:SetSizable( false )
 	self:SetScreenLock( false )
 	self:SetDeleteOnClose( true )
-	self:SetTitle( "[NNT] Anti-AFK | Version :" .. NNTAntiAfkCurrentVersion )
+	self:SetTitle( "[NNT] Anti-AFK | Version : " .. NNTAntiAfkCurrentVersion )
 
 	self:SetMinWidth( 50 )
 	self:SetMinHeight( 50 )
@@ -65,7 +65,7 @@ function PANEL:Init()
 		return change / ( fraction ^ 0.6 )
 	end
 
-	self.LoadMenu:Start( 0.6 )
+	self.LoadMenu:Start( 1 )
 
 end
 
@@ -82,7 +82,7 @@ end
 
 function PANEL:SetTitle( strTitle )
 
-	self.lblTitle:SetText(  "[NNT] Anti-AFK | Version :" .. NNTAntiAfkCurrentVersion )
+	self.lblTitle:SetText(  "[NNT] Anti-AFK | Version : " .. NNTAntiAfkCurrentVersion )
 
 end
 
@@ -184,7 +184,7 @@ end
 
 function PANEL:Paint( w, h )
 		surface.SetDrawColor( 255, 255, 255, 255 )
-		surface.SetMaterial(Material("nnt-antiafk/Main-BG.png"))
+		surface.SetMaterial(Material("nnt-antiafk/Main-BG-D.png"))
 		surface.DrawTexturedRect( 0, 0, 500, 400 )
 	return true
 
@@ -213,11 +213,11 @@ end
 function PANEL:PerformLayout()
 
 
-	self.btnClose:SetPos( self:GetWide() - 31, 5 )
+	self.btnClose:SetPos( self:GetWide() - 31, 3 )
 	self.btnClose:SetSize( 24, 24 )
 
 
-	self.lblTitle:SetPos( 16 , 5 )
+	self.lblTitle:SetPos( 16 , 4 )
     self.lblTitle:SetFont( "HudHintTextLarge" )
 	self.lblTitle:SetSize( self:GetWide() - 25 , 20 )
 

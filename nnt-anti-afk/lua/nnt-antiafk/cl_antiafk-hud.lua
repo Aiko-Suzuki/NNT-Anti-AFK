@@ -66,24 +66,22 @@ local function NNTAntiafkAdminPanel(data)
 		end
 	end
 	
-	local function NNTNavPageCreationMain(position,size,name,icon,vis,textpos)
+	local function NNTNavPageCreationMain(name,icon,vis)
 		local Pos = table.Count(NNTNavPage)
 		local Panel = vgui.Create("nnt-frame",NNT_ANTI_MainPanel)
-		Panel:SetPos(0,60)
-		Panel:SetSize(500,340)
-		function Panel:Paint(w,h) end
+		Panel:SetPos(90,31)
+		Panel:SetSize(420,369)
+		function Panel:Paint(w,h) 
+			--draw.RoundedBox(0, 0, 0, w, h, Color(120,120,120,255)) 
+		end
 
 		Panel.NavBTN = vgui.Create("nnt-nav-btn", NNT_ANTI_MainPanel)
 		Panel.NavBTN:SetText(name)
 		Panel.NavBTN:SetImage( icon )
-		Panel.NavBTN:SetPos( position, 34)
-		Panel.NavBTN:SetSize(size,24)
+		Panel.NavBTN:SetPos( 0, 31 + (Pos * 27))
+		Panel.NavBTN:SetSize(90,26)
 		Panel.NavBTN:SetTextColor(Color(0,0,0,255))
-		if textpos then
-			Panel.NavBTN.TextPos = 30 + textpos
-		else
-			Panel.NavBTN.TextPos = 30
-		end
+		Panel.NavBTN.TextPos = 30
 		Panel.NavBTN.DoClick = function()
 			SetActivePage(Panel,NNTNavPage)
 		end
@@ -95,11 +93,17 @@ local function NNTAntiafkAdminPanel(data)
 
 	end
 
-	local GeneralSettingsM = NNTNavPageCreationMain(0,99,"Settings","nnt-antiafk/option.png",true)
-	local WhitelistS = NNTNavPageCreationMain(100,82,"Whitelist","nnt-antiafk/users.png",false)
-	local LanguagesAndThemes = NNTNavPageCreationMain(183,145,"Languages & Themes","nnt-antiafk/translate.png",false)
-	local SetAFKMenu = NNTNavPageCreationMain(329,90,"Set AFK","nnt-antiafk/clock.png",false)
-	local MoreInfo = NNTNavPageCreationMain(420,80,"Info","nnt-antiafk/info-mark.png",false,10)
+	local GeneralSettingsM = NNTNavPageCreationMain("Settings","nnt-antiafk/option.png",true)
+
+	local WhitelistS = NNTNavPageCreationMain("Whitelist","nnt-antiafk/users.png",false)
+
+	local SetAFKMenu = NNTNavPageCreationMain("Set AFK","nnt-antiafk/clock.png",false)
+
+	local Themes = NNTNavPageCreationMain("Themes","nnt-antiafk/translate.png",false)
+
+	local Languages = NNTNavPageCreationMain("Languages","nnt-antiafk/translate.png",false)
+
+	local MoreInfo = NNTNavPageCreationMain("Info","nnt-antiafk/info-mark.png",false)
 
 
 	
@@ -122,118 +126,77 @@ local function NNTAntiafkAdminPanel(data)
 								Loading CheckBox
 	----------------------------------------------------------------------]]--
 
-	-- local function NNTAddCheckBox(text,posX,posY,netdata,parent)
-	-- 	local NNTCheckBox = vgui.Create( "nnt-switch", parent)
-	-- 	NNTCheckBox:SetPos(6 * posY , 21 + (24 * posX) )
-	-- 	NNTCheckBox:SetText(text)
-	-- 	NNTCheckBox:SetTextColor(Color(0, 0, 0, 255))
-	-- 	NNTCheckBox.netdata = netdata
-	-- end
+	local SwitchLabel = vgui.Create("DLabel", GeneralSettingsM)
+	SwitchLabel:SetText("Enable / Disable")
+	SwitchLabel:SetTextColor(Color(255, 255, 255, 255))
+	SwitchLabel:SetPos(35,5)
+	SwitchLabel:SizeToContents()
 
-	-- local NNTCheck_ActivateAFK = NNTAddCheckBox("Avitvate Anti-AFK",1,1,"ANTIAFK",GeneralSettingsM)
+	local switchTable = {}
 
-	-- local NNTCheck_UsersBypass = NNTAddCheckBox("User's Whitelist",2,1,"UBYPASS",GeneralSettingsM)
+	local function NNTAddCheckBox(text,posX,posY,netdata,parent)
+		local Pos = table.Count(switchTable)
+		local NNTCheckBox = vgui.Create( "nnt-switch", parent)
+		NNTCheckBox:SetPos(7, 30 + (24 * Pos) )
+		NNTCheckBox:SetText(text)
+		NNTCheckBox:SetTextColor(Color(255, 255, 255, 255))
+		NNTCheckBox.netdata = netdata
+		
+		switchTable[netdata] = {}
+		switchTable[netdata].valid = true
+		switchTable[netdata].check = NNTCheckBox
+	end
 
-	-- local NNTCheck_GroupsBypass = NNTAddCheckBox("Groups Whitelist",3,1,"BYPASS",GeneralSettingsM)
+	local NNTCheck_ActivateAFK = NNTAddCheckBox("Avitvate Anti-AFK",1,1,"ANTIAFK",GeneralSettingsM)
 
-	-- local NNTCheck_GhostMode = NNTAddCheckBox("Ghost Mode",4,1,"GHOST",GeneralSettingsM)
+	local NNTCheck_UsersBypass = NNTAddCheckBox("User's Whitelist",2,1,"UBYPASS",GeneralSettingsM)
 
-	-- local NNTCheck_FreezeSalary = NNTAddCheckBox("Freeze Salary (DarkRP)",5,1,"DARKPMONEY",GeneralSettingsM)
+	local NNTCheck_GroupsBypass = NNTAddCheckBox("Groups Whitelist",3,1,"BYPASS",GeneralSettingsM)
 
-	-- local NNTCheck_AFKGodMode = NNTAddCheckBox("God Mode",6,1,"GODMODE",GeneralSettingsM)
+	local NNTCheck_GhostMode = NNTAddCheckBox("Ghost Mode",4,1,"GHOST",GeneralSettingsM)
 
-	-- local NNTCheck_AFKJobEnable = NNTAddCheckBox("Change Team",7,1,"JOBENABLE",GeneralSettingsM)
+	local NNTCheck_FreezeSalary = NNTAddCheckBox("Freeze Salary (DarkRP)",5,1,"DARKPMONEY",GeneralSettingsM)
 
-	-- local NNTCheck_AFKEnableTime = NNTAddCheckBox("Use Hours Settings",8,1,"ENABLETIME",GeneralSettingsM)
+	local NNTCheck_AFKGodMode = NNTAddCheckBox("God Mode",6,1,"GODMODE",GeneralSettingsM)
 
-	-- local NNTCheck_AFKJOBREVERT = NNTAddCheckBox("Job/Team Revert Back",9,1,"JOBREVERT",GeneralSettingsM)
+	local NNTCheck_AFKJobEnable = NNTAddCheckBox("Change Team",7,1,"JOBENABLE",GeneralSettingsM)
+
+	local NNTCheck_AFKEnableTime = NNTAddCheckBox("Use Hours Settings",8,1,"ENABLETIME",GeneralSettingsM)
+
+	local NNTCheck_AFKJOBREVERT = NNTAddCheckBox("Job/Team Revert Back",9,1,"JOBREVERT",GeneralSettingsM)
 
 
 
 	--[[----------------------------------------------------------------------
 						   Finished Loading CheckBox
 	----------------------------------------------------------------------]]--
+	local InfoKickMinutes = vgui.Create( "DLabel", GeneralSettingsM )
+	InfoKickMinutes:SetPos( 240, 5 )
+	InfoKickMinutes:SetText( "Kick Time [Minutes]" )
+	InfoKickMinutes:SizeToContents(true)
+	InfoKickMinutes:SetTextColor(Color(255,255,255))
+
+	local InfoWarnMinutes = vgui.Create( "DLabel", GeneralSettingsM )
+	InfoWarnMinutes:SetPos( 235, 70 )
+	InfoWarnMinutes:SetText( "Warn Time [Minutes]" )
+	InfoWarnMinutes:SizeToContents(true)
+	InfoWarnMinutes:SetTextColor(Color(255,255,255))
 
 
+	local KickSliderSelect = vgui.Create( "Slider" , GeneralSettingsM)
+    KickSliderSelect:SetPos( 190, 35 )
+    KickSliderSelect:SetSize( 250, 20 )
+    KickSliderSelect:SetMin( 5 )
+	KickSliderSelect:SetMax(60)
+	KickSliderSelect:SetDecimals(0)
 
 
-
-
-
-
-
-
-
-
-
--- 	local ThemesMenu = vgui.Create( "DFrame" , LanguagesAndThemes)
--- 	ThemesMenu:SetPos( 250, 0 )
--- 	ThemesMenu:SetSize( 250, 70 )
--- 	ThemesMenu:SetTitle( "" )
--- 	ThemesMenu:SetDraggable( false )
--- 	ThemesMenu:ShowCloseButton( false )
--- 	function ThemesMenu:Paint(w, h) end
-
--- 	local LangMenu = vgui.Create( "DFrame" , LanguagesAndThemes)
--- 	LangMenu:SetPos( 0, 0 )
--- 	LangMenu:SetSize( 250, 70 )
--- 	LangMenu:SetTitle( "" )
--- 	LangMenu:SetDraggable( false )
--- 	LangMenu:ShowCloseButton( false )
--- 	function LangMenu:Paint(w, h) end
-
--- 	local ServerConfigLanguagesAndThemes = vgui.Create( "DLabel", LanguagesAndThemes )
--- 	ServerConfigLanguagesAndThemes:SetPos( 175, 60 )
--- 	ServerConfigLanguagesAndThemes:SetSize(100, 24)
--- 	ServerConfigLanguagesAndThemes:SetFont("HUDLARGETEXT")
--- 	ServerConfigLanguagesAndThemes:SetText( "Server Config !" )
--- 	ServerConfigLanguagesAndThemes:SetTextColor(Color(0, 0, 0))
-
--- 	local ServerConfigLanguages = vgui.Create( "DLabel", LanguagesAndThemes )
--- 	ServerConfigLanguages:SetPos( 150, 80 )
--- 	ServerConfigLanguages:SetSize(140, 24)
--- 	ServerConfigLanguages:SetFont("Trebuchet18")
--- 	ServerConfigLanguages:SetText( "Languages :" )
--- 	ServerConfigLanguages:SetTextColor(Color(0, 0, 0))
-
--- 	local ServerConfigThemes = vgui.Create( "DLabel", LanguagesAndThemes )
--- 	ServerConfigThemes:SetPos( 150, 100 )
--- 	ServerConfigThemes:SetSize(100, 24)
--- 	ServerConfigThemes:SetFont("Trebuchet18")
--- 	ServerConfigThemes:SetText( "Theme :" )
--- 	ServerConfigThemes:SetTextColor(Color(0, 0, 0))
-
-
-
--- 	local InfoKickMinutes = vgui.Create( "DLabel", GeneralSettingsM )
--- 	InfoKickMinutes:SetPos( 320, 14 )
--- 	InfoKickMinutes:SetSize(100, 18)
--- 	InfoKickMinutes:SetTextColor(Color(0,0,0))
--- 	InfoKickMinutes:SetText( "Kick Time [Minutes]" )
-
--- 	local InfoWarnMinutes = vgui.Create( "DLabel", GeneralSettingsM )
--- 	InfoWarnMinutes:SetPos( 320, 70 )
--- 	InfoWarnMinutes:SetSize(100, 18)
--- 	InfoWarnMinutes:SetTextColor(Color(0,0,0))
--- 	InfoWarnMinutes:SetText( "Warn Time [Minutes]" )
-
-
--- 	local KickSliderSelect = vgui.Create( "Slider" , GeneralSettingsM)
---     KickSliderSelect:SetPos( 255, 40 )
---     KickSliderSelect:SetSize( 250, 20 )
---     KickSliderSelect:SetMin( 5 )
--- 	KickSliderSelect:SetMax(60)
--- 	KickSliderSelect:SetDecimals(0)
--- 	KickSliderSelect:SetSkin("NNT-AntiAFK")
-
-
--- 	local WarnSliderSelect = vgui.Create( "Slider" , GeneralSettingsM)
---     WarnSliderSelect:SetPos( 255, 100 )
---     WarnSliderSelect:SetSize( 250, 20 )
---     WarnSliderSelect:SetMin( 2 )
--- 	WarnSliderSelect:SetMax(55)
--- 	WarnSliderSelect:SetDecimals(0)
--- 	WarnSliderSelect:SetSkin("NNT-AntiAFK")
+	local WarnSliderSelect = vgui.Create( "Slider" , GeneralSettingsM)
+    WarnSliderSelect:SetPos( 190, 95 )
+    WarnSliderSelect:SetSize( 250, 20 )
+    WarnSliderSelect:SetMin( 2 )
+	WarnSliderSelect:SetMax(55)
+	WarnSliderSelect:SetDecimals(0)
 
 
 
@@ -252,41 +215,6 @@ local function NNTAntiafkAdminPanel(data)
 -- 			end
 -- 		end
 -- 	end
-
-
--- 	local MoreInfoTittle = vgui.Create( "DLabel", MoreInfo )
--- 	MoreInfoTittle:SetPos( 10, 10 )
--- 	MoreInfoTittle:SetSize(200, 24)
--- 	MoreInfoTittle:SetFont("HUDLARGETEXT")
--- 	MoreInfoTittle:SetTextColor(Color(0, 0, 0))
--- 	MoreInfoTittle:SetText( "Incomming Features !" )
-
--- 	local MoreInfoFeatures = vgui.Create( "DLabel", MoreInfo )
--- 	MoreInfoFeatures:SetPos( 10, 30 )
--- 	MoreInfoFeatures:SetSize(500, 50)
--- 	MoreInfoFeatures:SetFont("HUDLARGESMALL")
--- 	MoreInfoFeatures:SetTextColor(Color(0, 0, 0))
--- 	MoreInfoFeatures:SetText( [[
--- 		- Temp bypass for user
--- 	]] )
--- 	local MoreInfoTittle2 = vgui.Create( "DLabel", MoreInfo )
--- 	MoreInfoTittle2:SetPos( 10, 75 )
--- 	MoreInfoTittle2:SetSize(200, 24)
--- 	MoreInfoTittle2:SetFont("HUDLARGETEXT")
--- 	MoreInfoTittle2:SetTextColor(Color(0, 0, 0))
--- 	MoreInfoTittle2:SetText( "Credits!" )
-
--- 	local MoreInfoCredits = vgui.Create( "DLabel", MoreInfo )
--- 	MoreInfoCredits:SetPos( 10, 85 )
--- 	MoreInfoCredits:SetSize(450, 100)
--- 	MoreInfoCredits:SetFont("HUDLARGESMALL")
--- 	MoreInfoCredits:SetTextColor(Color(0, 0, 0))
--- 	MoreInfoCredits:SetText( [[
--- 		- Icons made by Freepik from www.flaticon.com is licensed by CC 3.0 BY
--- 		- Icons made by Chanut from www.flaticon.com is licensed by CC 3.0 BY
--- 		- Spanish translation made by Wex[A]rt
--- 	]] )
-
 -- 	local SelectTranslate = vgui.Create( "DComboBox", LangMenu )
 -- 	SelectTranslate:SetPos( 65, 35 )
 -- 	SelectTranslate:SetSize( 75, 20 )
@@ -303,43 +231,40 @@ local function NNTAntiafkAdminPanel(data)
 -- 		end
 -- 	end
 
---     local list_btn = vgui.Create("DButton")
--- 	list_btn:SetParent( GeneralSettingsM )
--- 	list_btn:SetText( "APPLY CHANGE" )
--- 	list_btn:SetPos( 317, 135)
--- 	list_btn:SetSize( 100, 20 )
--- 	list_btn:SetFont("DermaDefaultBold")
---     list_btn:SetColor(Color(255, 255, 255))
--- 	list_btn:SetSkin("NNT-AntiAFK")
-
-
--- 	list_btn.DoClick = function ()
--- 		surface.PlaySound( "garrysmod/ui_click.wav")
--- 		if math.Round(KickSliderSelect:GetValue()) >= 2 then
--- 			if not (math.Round(KickSliderSelect:GetValue()) - 2 >= math.Round(WarnSliderSelect:GetValue())) then
--- 				LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time at least 2 min above the warn time !")
--- 				return
--- 			end
--- 			net.Start("nnt-antiak-settings")
--- 				local temptable = {["KICK"] = math.Round(KickSliderSelect:GetValue()) * 60 }
--- 				net.WriteTable(temptable)
--- 				net.WriteString("SetSettings")
---             net.SendToServer()
--- 			LocalPlayer():ChatPrint("[ANTI-AFK] Kick Time has been save !")
--- 		else
--- 			LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time above or equal to 180 in the kick time !")
--- 		end
--- 		if math.Round(WarnSliderSelect:GetValue()) >= 2 then
---             net.Start("nnt-antiak-settings")
--- 				local temptable = {["WARN"] = math.Round(WarnSliderSelect:GetValue()) * 60 }
--- 				net.WriteTable(temptable)
--- 				net.WriteString("SetSettings")
---             net.SendToServer()
--- 			LocalPlayer():ChatPrint("[ANTI-AFK] Warn Time has been save !")
--- 		else
--- 			LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time above or equal to 30 in the warn time !")
--- 		end
--- 	end
+ 	local list_btn = vgui.Create("nnt-small-btn")
+	list_btn:SetParent( GeneralSettingsM )
+	list_btn:SetText( "APPLY CHANGE" )
+	list_btn:SetPos( 240, 130)
+	list_btn:SetSize( 100, 24 )
+	list_btn:SetFont("DermaDefaultBold")
+    list_btn:SetColor(Color(255, 255, 255))
+	list_btn.DoClick = function ()
+		surface.PlaySound( "garrysmod/ui_click.wav")
+		if math.Round(KickSliderSelect:GetValue()) >= 2 then
+			if not (math.Round(KickSliderSelect:GetValue()) - 2 >= math.Round(WarnSliderSelect:GetValue())) then
+				LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time at least 2 min above the warn time !")
+				return
+			end
+			net.Start("nnt-antiak-settings")
+				local temptable = {["KICK"] = math.Round(KickSliderSelect:GetValue()) * 60 }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+			LocalPlayer():ChatPrint("[ANTI-AFK] Kick Time has been save !")
+		else
+			LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time above or equal to 180 in the kick time !")
+		end
+		if math.Round(WarnSliderSelect:GetValue()) >= 2 then
+            net.Start("nnt-antiak-settings")
+				local temptable = {["WARN"] = math.Round(WarnSliderSelect:GetValue()) * 60 }
+				net.WriteTable(temptable)
+				net.WriteString("SetSettings")
+            net.SendToServer()
+			LocalPlayer():ChatPrint("[ANTI-AFK] Warn Time has been save !")
+		else
+			LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time above or equal to 30 in the warn time !")
+		end
+	end
 
 
 -- 	local InfoTimeSettings = vgui.Create( "DLabel", GeneralSettingsM )
@@ -496,120 +421,131 @@ local function NNTAntiafkAdminPanel(data)
 -- 	Sign:SetColor(Color(0,0,0))
 -- 	Sign:SetText( "Made by Aiko Suzuki !" )
 
--- 	net.Start("nnt-antiak-settings")
--- 		net.WriteTable({"Pleasedata"})
--- 		net.WriteString("LoadData")
--- 	net.SendToServer()
--- 	net.Receive("nnt-antiak-settings", function()
--- 		local data5 = net.ReadString()
--- 		local data4 = net.ReadTable()
--- 		if data5 == "LoadData" then
--- 			print("Loading DATA")
--- 			for k,v in pairs(data4) do
--- 				if k == "AFK_WARN_TIME" then
--- 					AFK_WARN_TIME = v
--- 					WarnSliderSelect:SetValue(tonumber(v,10) / 60)
--- 				elseif k == "AFK_TIME" then
--- 					AFK_TIME = v
--- 					 KickSliderSelect:SetValue(tonumber(v,10) / 60)
--- 				elseif k == "AFK_ADMINBYPASS" then
--- 					AFK_ADMINBYPASS = v
--- 					if AFK_ADMINBYPASS == true then
--- 						NNTCheckBoxGroupsBypass:SetValue( 1 )
--- 					end
--- 				elseif k == "AFK_ADMINUBYPASS" then
--- 					AFK_ADMINUBYPASS = v
--- 					if AFK_ADMINUBYPASS == true then
--- 						NNTCheckBoxUsersBypass:SetValue( 1 )
--- 					end
--- 				elseif k == "AFK_ENABLE" then
--- 					AFK_ENABLE = v
--- 					if AFK_ENABLE == true then
--- 						NNTCheckBoxActivateAFK :SetValue( 1 )
--- 					end
--- 				elseif k == "AFK_GHOST" then
--- 					AFK_GHOST = v
--- 					if AFK_GHOST == true then
--- 						NNTCheckBoxGhostMode:SetValue( 1 )
--- 					end
--- 				elseif k == "AFK_DARKRPMONEY" then
--- 					AFK_DARKRPMONEY = v
--- 					if AFK_DARKRPMONEY == true then
--- 						NNTCheckBoxFreezeSalary:SetValue( 1 )
--- 					end
--- 				elseif k == "AFK_LANGUAGE" then
--- 					AFK_LANGUAGE = v
--- 					AntiAfkLanguage = AFK_LANGUAGE
--- 					AntiAFKSelectedLanguages = AFK_LANGUAGE
--- 					ServerConfigLanguages:SetText( "Languages : " .. AntiAfkTranslate[AFK_LANGUAGE]["NAME"] )
--- 				elseif k == "AFK_THEME" then
--- 					AFK_THEME = v
--- 					AntiAfkSelTheme = AFK_THEME
--- 					AntiAFKSelectedTheme = AFK_THEME
--- 					ServerConfigThemes:SetText( "Theme : "..AFK_THEME )
--- 				elseif k == "AFK_GODMODE" then
--- 					AFK_GODMODE = v
--- 					if AFK_GODMODE then
--- 						NNTCheckBoxGodMode:SetValue( 1 )
--- 					end
--- 				elseif k == "AFK_JOBNAME" then
--- 					AFK_JOBNAME = v
--- 					if AFK_JOBNAME then
--- 						JobSelection:SetValue(AFK_JOBNAME)
--- 						JobSelected = AFK_JOBNAME
--- 					end
--- 				elseif k == "AFK_JOBENABLE" then
--- 					AFK_JOBENABLE = v
--- 					if AFK_JOBENABLE then
--- 						NNTCheckBoxJobChange:SetValue( 1 )
--- 					end
--- 				elseif k == "AFK_ENABLETIME" then
--- 					AFK_ENABLETIME = v
--- 					if AFK_ENABLETIME then
--- 						NNTCheckBoxEnableTime:SetValue( 1 )
--- 					end
--- 				elseif k == "AFK_StartTimeHours" then
--- 					AFK_StartTimeHours = v
--- 					if AFK_StartTimeHours then
--- 						FirstHourSelector:SetValue( AFK_StartTimeHours )
--- 					end
--- 				elseif k == "AFK_StartTimeMinutes" then
--- 					AFK_StartTimeMinutes = v
--- 					if AFK_StartTimeMinutes then
--- 						FirstMinutesSelector:SetValue( AFK_StartTimeMinutes )
--- 					end
--- 				elseif k == "AFK_StopTimeHours" then
--- 					AFK_StopTimeHours = v
--- 					if AFK_StopTimeHours then
--- 						SecondHourSelector:SetValue( AFK_StopTimeHours )
--- 					end
--- 				elseif k == "AFK_StopTimeMinutes" then
--- 					AFK_StopTimeMinutes = v
--- 					if AFK_StopTimeMinutes then
--- 						SecondMinutesSelector:SetValue( AFK_StopTimeMinutes )
--- 					end
--- 				elseif k == "AFK_JOBREVERT" then
--- 					AFK_JOBREVERT = v
--- 					if AFK_JOBREVERT == true then
--- 						NNTCheckBoxJOBREVERT:SetValue( 1 )
--- 					end
--- 				end
--- 			end
--- 		elseif data5 == "Settings" then -- to load separate data
---         	for k,v in pairs(data4) do
--- 				if k == "WARN" then
--- 					WarnSliderSelect:SetValue(tonumber(v,10) / 60)
--- 				elseif k == "KICK" then
--- 					KickSliderSelect:SetValue(tonumber(v,10)/60)
--- 				elseif k == "THEME" then
--- 					AFK_THEME = v
--- 					AntiAfkSelTheme = AFK_THEME
--- 					ServerConfigThemes:SetText( "Theme : "..AFK_THEME )
--- 				end
--- 			end
--- 		end
+	net.Start("nnt-antiak-settings")
+		net.WriteTable({"Pleasedata"})
+		net.WriteString("LoadData")
+	net.SendToServer()
+	net.Receive("nnt-antiak-settings", function()
+		local data5 = net.ReadString()
+		local data4 = net.ReadTable()
+		if data5 == "LoadData" then
+			print("Loading DATA")
+			for k,v in pairs(data4) do
+				if switchTable[k] != nil then
+					if v == true then 
+						switchTable[k].check:SetValue( 1 )
+					elseif v == false then 
+						switchTable[k].check:SetValue( 0 )
+					end
+				elseif k == "KICK" then
+					KickSliderSelect:SetValue(tonumber(v,10) / 60)
+				elseif k == "WARN" then
+					WarnSliderSelect:SetValue(tonumber(v,10) / 60)
+				end
+				-- if k == "AFK_WARN_TIME" then
+				-- 	AFK_WARN_TIME = v
+				-- 	WarnSliderSelect:SetValue(tonumber(v,10) / 60)
+				-- elseif k == "AFK_TIME" then
+				-- 	AFK_TIME = v
+				-- 	KickSliderSelect:SetValue(tonumber(v,10) / 60)
+				-- elseif k == "AFK_ADMINBYPASS" then
+				-- 	AFK_ADMINBYPASS = v
+				-- 	if AFK_ADMINBYPASS == true then
+				-- 		NNTCheckBoxGroupsBypass:SetValue( 1 )
+				-- 	end
+				-- elseif k == "AFK_ADMINUBYPASS" then
+				-- 	AFK_ADMINUBYPASS = v
+				-- 	if AFK_ADMINUBYPASS == true then
+				-- 		NNTCheckBoxUsersBypass:SetValue( 1 )
+				-- 	end
+				-- elseif k == "AFK_ENABLE" then
+				-- 	AFK_ENABLE = v
+				-- 	if AFK_ENABLE == true then
+				-- 		NNTCheckBoxActivateAFK:SetValue( 1 )
+				-- 	end
+				-- elseif k == "AFK_GHOST" then
+				-- 	AFK_GHOST = v
+				-- 	if AFK_GHOST == true then
+				-- 		NNTCheckBoxGhostMode:SetValue( 1 )
+				-- 	end
+				-- elseif k == "AFK_DARKRPMONEY" then
+				-- 	AFK_DARKRPMONEY = v
+				-- 	if AFK_DARKRPMONEY == true then
+				-- 		NNTCheckBoxFreezeSalary:SetValue( 1 )
+				-- 	end
+				-- elseif k == "AFK_LANGUAGE" then
+				-- 	AFK_LANGUAGE = v
+				-- 	AntiAfkLanguage = AFK_LANGUAGE
+				-- 	AntiAFKSelectedLanguages = AFK_LANGUAGE
+				-- 	ServerConfigLanguages:SetText( "Languages : " .. AntiAfkTranslate[AFK_LANGUAGE]["NAME"] )
+				-- elseif k == "AFK_THEME" then
+				-- 	AFK_THEME = v
+				-- 	AntiAfkSelTheme = AFK_THEME
+				-- 	AntiAFKSelectedTheme = AFK_THEME
+				-- 	ServerConfigThemes:SetText( "Theme : "..AFK_THEME )
+				-- elseif k == "AFK_GODMODE" then
+				-- 	AFK_GODMODE = v
+				-- 	if AFK_GODMODE then
+				-- 		NNTCheckBoxGodMode:SetValue( 1 )
+				-- 	end
+				-- elseif k == "AFK_JOBNAME" then
+				-- 	AFK_JOBNAME = v
+				-- 	if AFK_JOBNAME then
+				-- 		JobSelection:SetValue(AFK_JOBNAME)
+				-- 		JobSelected = AFK_JOBNAME
+				-- 	end
+				-- elseif k == "AFK_JOBENABLE" then
+				-- 	AFK_JOBENABLE = v
+				-- 	if AFK_JOBENABLE then
+				-- 		NNTCheckBoxJobChange:SetValue( 1 )
+				-- 	end
+				-- elseif k == "AFK_ENABLETIME" then
+				-- 	AFK_ENABLETIME = v
+				-- 	if AFK_ENABLETIME then
+				-- 		NNTCheckBoxEnableTime:SetValue( 1 )
+				-- 	end
+				-- elseif k == "AFK_StartTimeHours" then
+				-- 	AFK_StartTimeHours = v
+				-- 	if AFK_StartTimeHours then
+				-- 		FirstHourSelector:SetValue( AFK_StartTimeHours )
+				-- 	end
+				-- elseif k == "AFK_StartTimeMinutes" then
+				-- 	AFK_StartTimeMinutes = v
+				-- 	if AFK_StartTimeMinutes then
+				-- 		FirstMinutesSelector:SetValue( AFK_StartTimeMinutes )
+				-- 	end
+				-- elseif k == "AFK_StopTimeHours" then
+				-- 	AFK_StopTimeHours = v
+				-- 	if AFK_StopTimeHours then
+				-- 		SecondHourSelector:SetValue( AFK_StopTimeHours )
+				-- 	end
+				-- elseif k == "AFK_StopTimeMinutes" then
+				-- 	AFK_StopTimeMinutes = v
+				-- 	if AFK_StopTimeMinutes then
+				-- 		SecondMinutesSelector:SetValue( AFK_StopTimeMinutes )
+				-- 	end
+				-- elseif k == "AFK_JOBREVERT" then
+				-- 	AFK_JOBREVERT = v
+				-- 	if AFK_JOBREVERT == true then
+				-- 		NNTCheckBoxJOBREVERT:SetValue( 1 )
+				-- 	end
+				-- end
+			end
+		elseif data5 == "Settings" then -- to load separate data
+        	for k,v in pairs(data4) do
+				if k == "WARN" then
+					WarnSliderSelect:SetValue(tonumber(v,10) / 60)
+				elseif k == "KICK" then
+					KickSliderSelect:SetValue(tonumber(v,10)/60)
+				elseif k == "THEME" then
+					AFK_THEME = v
+					AntiAfkSelTheme = AFK_THEME
+					ServerConfigThemes:SetText( "Theme : "..AFK_THEME )
+				end
+			end
+		end
 
--- 	end)
+	end)
 
 -- 	local ApplyThemesAndLanguages = vgui.Create("DButton")
 -- 	ApplyThemesAndLanguages:SetParent( LanguagesAndThemes )
@@ -682,7 +618,7 @@ local function NNTAntiafkAdminPanel(data)
 
 
 
--- --[[
+-- [[
 --  /$$   /$$  /$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$  /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
 -- | $$  | $$ /$$__  $$| $$_____/| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/ | $$      |_  $$_/ /$$__  $$|__  $$__/
 -- | $$  | $$| $$  \__/| $$      | $$  \ $$| $$  \__/      | $$ /$$$| $$| $$  | $$  | $$     | $$   | $$       | $$        | $$  | $$  \__/   | $$
@@ -708,7 +644,7 @@ local function NNTAntiafkAdminPanel(data)
 -- 	AdminPanelUsers_view:SetPos(10, 30)
 -- 	AdminPanelUsers_view:SetSize(225, 200)
 -- 	AdminPanelUsers_view:SetMultiSelect(false)
--- 	--AdminPanelUsers_view.OnClickLine = function(parent,selected,isselected) print(selected:GetValue(1)) end
+-- 	AdminPanelUsers_view.OnClickLine = function(parent,selected,isselected) print(selected:GetValue(1)) end
 -- 	AdminPanelUsers_view.OnRowSelected = function(parent,selected,isselected) print(isselected:GetValue(1))
 -- 			tauser = isselected:GetValue(1)
 -- 	end
@@ -794,7 +730,7 @@ local function NNTAntiafkAdminPanel(data)
 -- 		net.SendToServer()
 -- 	end
 
--- --[[
+-- [[
 --   /$$$$$$  /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$   /$$$$$$        /$$      /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$$$$$$$ /$$       /$$$$$$  /$$$$$$  /$$$$$$$$
 --  /$$__  $$| $$__  $$ /$$__  $$| $$  | $$| $$__  $$ /$$__  $$      | $$  /$ | $$| $$  | $$|_  $$_/|__  $$__/| $$_____/| $$      |_  $$_/ /$$__  $$|__  $$__/
 -- | $$  \__/| $$  \ $$| $$  \ $$| $$  | $$| $$  \ $$| $$  \__/      | $$ /$$$| $$| $$  | $$  | $$     | $$   | $$      | $$        | $$  | $$  \__/   | $$
@@ -913,7 +849,7 @@ local function NNTAntiafkAdminPanel(data)
 -- 		net.SendToServer()
 -- 	end
 
--- --[[
+-- [[
 --   /$$$$$$  /$$$$$$$$ /$$$$$$$$        /$$$$$$  /$$$$$$$$ /$$   /$$       /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$
 --  /$$__  $$| $$_____/|__  $$__/       /$$__  $$| $$_____/| $$  /$$/      | $$__  $$ /$$__  $$| $$$ | $$| $$_____/| $$
 -- | $$  \__/| $$         | $$         | $$  \ $$| $$      | $$ /$$/       | $$  \ $$| $$  \ $$| $$$$| $$| $$      | $$
@@ -1035,3 +971,4 @@ net.Receive("nnt-antiak-settings", function()
 		end
 	end
 end)
+

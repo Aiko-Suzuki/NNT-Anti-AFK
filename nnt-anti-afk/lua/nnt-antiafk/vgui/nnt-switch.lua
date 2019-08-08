@@ -84,16 +84,20 @@ function PANEL:Init()
 	self:SetTall( 16 )
 
 	self.Button = vgui.Create( "NNTCheckBox", self )
-	self.Button.OnChange = function( _, val ) self:OnChange( val ) end
 
 	self.Label = vgui.Create( "DLabel", self )
 	self.Label:SetMouseInputEnabled( true )
 	self.Label.DoClick = function() self:Toggle() end
-    self.SetAnimtionPos = 4
-    timer.Simple(0.3, function()
-		if self:GetValue() == 1 then
-			self.SetAnimtionPos =  18
-	    end
+	self.SetAnimtionPos = 1
+    timer.Simple(0.2, function()
+		self.Button.OnChange =  function( _, val )
+			self:OnChange( val ) 
+		end
+	end)
+	timer.Simple(0.3, function()
+		if self:GetChecked() then
+			self.SetAnimtionPos = 19
+		end
 	end)
 
 end
@@ -177,12 +181,11 @@ end
 
 function PANEL:Paint()
     DisableClipping(true)
+	draw.RoundedBox(4, 3, 5, 32, 8, Color(66, 66, 66))
 	if ( self:GetChecked() ) then
-		draw.RoundedBox(6.5, 1, -1, 37, self:GetTall(), Color(52, 105, 229))
-		draw.RoundedBox(6.5,self.SetAnimtionPos, 1, 16, 16, Color(255, 255, 255))
+		draw.RoundedBox(6.5,self.SetAnimtionPos, 1, 16, 16, Color(40, 176, 0))
 	else
-		draw.RoundedBox(6.5, 1, -1, 37, self:GetTall(), Color(211, 211, 211))
-		draw.RoundedBox(6.5,self.SetAnimtionPos, 1, 16, 16, Color(255, 255, 255))
+		draw.RoundedBox(6.5,self.SetAnimtionPos, 1, 16, 16, Color(192, 15, 0))
 	end
 	DisableClipping(false)
     return true
@@ -193,10 +196,10 @@ function PANEL.CheckAnim( fraction, beginning, change ) -- USED FOR THE ANIMATIO
 end
 
 function PANEL:OnChange( bVal )
-    surface.PlaySound( "ui/buttonclick.wav" )
+	surface.PlaySound( "ui/buttonclick.wav" )
     if bVal then
        self.Animation = Derma_Anim( "Active", self , function( pnl, Animation, delta, data )
-            self.SetAnimtionPos = self.CheckAnim(delta,5,13)
+            self.SetAnimtionPos = self.CheckAnim(delta,1,20)
        end)
        self.Animation:Start(0.2)
        self.Think = function(self)
@@ -210,7 +213,7 @@ function PANEL:OnChange( bVal )
         net.SendToServer()
     else
         self.Animation = Derma_Anim( "Active", self , function( pnl, Animation, delta, data )
-            self.SetAnimtionPos = self.CheckAnim(delta,19,-14)
+            self.SetAnimtionPos = self.CheckAnim(delta,19,-18)
         end)
         self.Animation:Start(0.2)
         self.Think = function(self)

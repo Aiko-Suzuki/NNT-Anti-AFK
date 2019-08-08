@@ -150,24 +150,24 @@ function ReloadAntiAfkConfig(ply)
     if ply:IsValid() then
         net.Start("nnt-antiak-settings")
             local temptable = {
-                ["AFK_WARN_TIME"] = AFK_WARN_TIME,
-                ["AFK_TIME"] = AFK_TIME,
-                ["AFK_ADMINBYPASS"] = AFK_ADMINBYPASS,
-                ["AFK_ADMINUBYPASS"] = AFK_ADMINUBYPASS,
-                ["AFK_ENABLE"] = AFK_ENABLE,
-                ["AFK_GHOST"] = AFK_GHOST,
-                ["AFK_DARKRPMONEY"] = AFK_DARKRPMONEY,
-                ["AFK_LANGUAGE"] = AFK_LANGUAGE,
-                ["AFK_THEME"] = AFK_THEME,
-                ["AFK_GODMODE"] = AFK_GODMODE,
-                ["AFK_JOBENABLE"] = AFK_JOBENABLE,
-                ["AFK_JOBNAME"] = AFK_JOBNAME,
-                ["AFK_ENABLETIME"] = AFK_ENABLETIME,
+                ["WARN"] = AFK_WARN_TIME,
+                ["KICK"] = AFK_TIME,
+                ["BYPASS"] = AFK_ADMINBYPASS,
+                ["UBYPASS"] = AFK_ADMINUBYPASS,
+                ["ANTIAFK"] = AFK_ENABLE,
+                ["GHOST"] = AFK_GHOST,
+                ["DARKPMONEY"] = AFK_DARKRPMONEY,
+                ["LANGUAGE"] = AFK_LANGUAGE,
+                ["THEME"] = AFK_THEME,
+                ["GODMODE"] = AFK_GODMODE,
+                ["JOBENABLE"] = AFK_JOBENABLE,
+                ["JOBNAME"] = AFK_JOBNAME,
+                ["ENABLETIME"] = AFK_ENABLETIME,
                 ["AFK_StartTimeHours"] = AFK_StartTimeHours,
                 ["AFK_StartTimeMinutes"] = AFK_StartTimeMinutes,
                 ["AFK_StopTimeHours"] = AFK_StopTimeHours,
                 ["AFK_StopTimeMinutes"] = AFK_StopTimeMinutes,
-                ["AFK_JOBREVERT"] = AFK_JOBREVERT
+                ["JOBREVERT"] = AFK_JOBREVERT
             }
             net.WriteString("LoadData")
             net.WriteTable(temptable)
@@ -374,24 +374,24 @@ net.Receive("nnt-antiak-settings", function(len,ply)
             print("[ANTI-AFK] : Starting to load data")
             net.Start("nnt-antiak-settings")
                 local temptable = {
-                    ["AFK_WARN_TIME"] = AFK_WARN_TIME,
-                    ["AFK_TIME"] = AFK_TIME,
-                    ["AFK_ADMINBYPASS"] = AFK_ADMINBYPASS,
-                    ["AFK_ADMINUBYPASS"] = AFK_ADMINUBYPASS,
-                    ["AFK_ENABLE"] = AFK_ENABLE,
-                    ["AFK_GHOST"] = AFK_GHOST,
-                    ["AFK_DARKRPMONEY"] = AFK_DARKRPMONEY,
-                    ["AFK_LANGUAGE"] = AFK_LANGUAGE,
-                    ["AFK_THEME"] = AFK_THEME,
-                    ["AFK_GODMODE"] = AFK_GODMODE,
-                    ["AFK_JOBENABLE"] = AFK_JOBENABLE,
-                    ["AFK_JOBNAME"] = AFK_JOBNAME,
-                    ["AFK_ENABLETIME"] = AFK_ENABLETIME,
+                    ["WARN"] = AFK_WARN_TIME,
+                    ["KICK"] = AFK_TIME,
+                    ["BYPASS"] = AFK_ADMINBYPASS,
+                    ["UBYPASS"] = AFK_ADMINUBYPASS,
+                    ["ANTIAFK"] = AFK_ENABLE,
+                    ["GHOST"] = AFK_GHOST,
+                    ["DARKPMONEY"] = AFK_DARKRPMONEY,
+                    ["LANGUAGE"] = AFK_LANGUAGE,
+                    ["THEME"] = AFK_THEME,
+                    ["GODMODE"] = AFK_GODMODE,
+                    ["JOBENABLE"] = AFK_JOBENABLE,
+                    ["JOBNAME"] = AFK_JOBNAME,
+                    ["ENABLETIME"] = AFK_ENABLETIME,
                     ["AFK_StartTimeHours"] = AFK_StartTimeHours,
                     ["AFK_StartTimeMinutes"] = AFK_StartTimeMinutes,
                     ["AFK_StopTimeHours"] = AFK_StopTimeHours,
                     ["AFK_StopTimeMinutes"] = AFK_StopTimeMinutes,
-                    ["AFK_JOBREVERT"] = AFK_JOBREVERT
+                    ["JOBREVERT"] = AFK_JOBREVERT
                 }
                 net.WriteString("LoadData")
                 net.WriteTable(temptable)
