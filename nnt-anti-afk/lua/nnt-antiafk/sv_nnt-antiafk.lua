@@ -209,7 +209,7 @@ function AntiAFKSetConfig(settings,opt,data,ply)
                 TempConfigData.Settings.LANGUAGE = data
             end
         end
-         if opt == "THEME" then
+        if opt == "THEME" then
             if NNTAntiafkThemes[data] then
                 TempConfigData.Settings.THEME = data
                 print("[ANTI-AFK] : Themes has been changed to "..data)

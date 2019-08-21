@@ -5,10 +5,49 @@ AntiAfkSelTheme = "Large"
 
 
 include("sh_nnt-antiafk.lua")
-hook.Add( "Initialize", "NNT-AntiAFK-FinishLoading-Client", function()
-	include("nnt-antiafk/cl_skin.lua")
-end)
 
+surface.CreateFont( "AFKLarge", {
+	font = "Arial",
+	extended = false,
+	size = 60,
+} )
+
+surface.CreateFont( "AFKMedium", {
+	font = "Arial",
+	extended = false,
+	size = 30,
+} )
+
+surface.CreateFont( "AFKsmall", {
+	font = "Arial",
+	extended = false,
+	size = 21,
+} )
+
+surface.CreateFont( "AFKsmallK", {
+	font = "Arial",
+	extended = false,
+	size = 18,
+} )
+
+
+surface.CreateFont( "HUDLARGETEXT", {
+	font = "Arial",
+	size = 16,
+	weight = 1300,
+} )
+
+surface.CreateFont( "HUDLARGEMEDIUM", {
+	font = "Arial",
+	size = 15,
+	weight = 600,
+} )
+
+surface.CreateFont( "HUDLARGESMALL", {
+	font = "Arial",
+	size = 15,
+	weight = 530,
+} )
 
 surface.CreateFont( "HUGETIME", {
 	font = "Arial", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name
@@ -23,14 +62,6 @@ surface.CreateFont( "NNT-TITLE", {
 	size = 20,
 	weight = 500
 } )
-
-function timeToStr( time )
-	local tmp = time
-	local s = tmp % 60
-	tmp = math.floor( tmp / 60 )
-	local m = tmp
-	return string.format( "%02im %02is", m, s )
-end
 
 function timeToStr( time )
 	local tmp = time
@@ -586,13 +617,11 @@ local function NNTAntiafkAdminPanel(data)
 				AntiAFKSelectedTheme = k
 				if PreviewEnable then
 					if AfkPanelHUD != nil && AfkPanelHUD:IsValid()  then AfkPanelHUD:Close() end
-					NNTAntiafkThemes[AntiAFKSelectedTheme](PreviewScreen)
+					NNTAntiafkThemes[k](PreviewScreen)
 				end
 			end
 		end
 	end
-
-	SelectTheme:ChooseOption(AntiAfkSelTheme, "Large" )
 
 	local ApplyThemes = vgui.Create("nnt-small-btn")
 	ApplyThemes:SetParent( Themes )
@@ -604,7 +633,7 @@ local function NNTAntiafkAdminPanel(data)
 	ApplyThemes.DoClick = function ()
 		surface.PlaySound( "garrysmod/ui_click.wav")
 		net.Start("nnt-antiak-settings")
-			local temptable = {["LANGUAGE"] = AntiAFKSelectedLanguages }
+			local temptable = {["THEME"] = AntiAFKSelectedTheme }
 			net.WriteTable(temptable)
 			net.WriteString("SetSettings")
         net.SendToServer()
@@ -684,7 +713,7 @@ local function NNTAntiafkAdminPanel(data)
 	ApplyLanguages.DoClick = function ()
 			surface.PlaySound( "garrysmod/ui_click.wav")
 			net.Start("nnt-antiak-settings")
-				local temptable = {["THEME"] = AntiAFKSelectedTheme }
+				local temptable = {["LANGUAGE"] = AntiAFKSelectedLanguages }
 				net.WriteTable(temptable)
 				net.WriteString("SetSettings")
          net.SendToServer()
@@ -1236,9 +1265,10 @@ end
 net.Receive("AntiAfkSendHUDInfo", function()
 	local data1 = net.ReadString()
 	if (data1 == "AntiafkAdminSetAfk") then
-		NNTAntiafkAdminPanel("setafk")
+		NNTAntiafkAdminPanel()
 	elseif (data1 == "AntiafkMainHUD") then
-		NNTAntiafkThemes[AntiAfkSelTheme]()
+		if AfkPanelHUD != nil && AfkPanelHUD:IsValid()  then AfkPanelHUD:Close() end
+		NNTAntiafkThemes[AntiAfkSelTheme](false)
 	elseif (data1 == "AntiafkMainHUDSP") then
 		NNTAntiafkMainHUDSP()
 	elseif (data1 == "AntiafkAdminPanel") then

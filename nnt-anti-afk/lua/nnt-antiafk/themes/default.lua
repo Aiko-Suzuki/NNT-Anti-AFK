@@ -46,31 +46,31 @@ function Default_NNTAntiafkMainHUD(parent)
 		if not parent then Derma_DrawBackgroundBlur(AfkPanelHUD,1) end
 		draw.RoundedBox( 30, 0, 0, w, h,  Color(0, 0, 0, 235))
 		if not parent then
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] , "AFKLarge", pw  - w * 1.5  , ph / 16, Color( 255, 0, 0, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].. " " .. AntiAFKTimer.TimeLeft , "AFKMedium", ph - w * 1.5  , ph / 7, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["CANCEL"] , "AFKsmall", pw - w * 1.5  , ph / 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"]  , "AFKsmallK", pw - w * 1.5  , ph / 4, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+			draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] , "AFKLarge", ScrW() - w * 1.5  , ScrH()  / 16, Color( 255, 0, 0, 255 ), TEXT_ALIGN_CENTER )
+			draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["WARN"] .. AntiAFKTimer.TimeLeft , "AFKMedium", ScrH() /  2.2  , ScrH()  / 7, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+			draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["CANCEL"] , "AFKsmall", ScrW() - w * 1.5  , ScrH()  / 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+			draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"]  , "AFKsmallK", ScrW() - w * 1.5  , ScrH()  / 4, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
 		end
 	end
 
 	if not parent then
-	timer.Create( "AFKS:"..LocalPlayer():SteamID(), 30, 0, function()
+		timer.Create( "AFKS:"..LocalPlayer():SteamID(), 30, 0, function()
+			surface.PlaySound("buttons/button18.wav")
+			surface.PlaySound("buttons/button18.wav")
+			surface.PlaySound("buttons/button18.wav")
+		end)
+
+
+		net.Start("AFKHUD1")
+		net.Receive("AFKHUD1", function(len)
+			timer.Destroy("AFK:"..LocalPlayer():SteamID())
+			timer.Destroy("AFKS:"..LocalPlayer():SteamID())
+			AfkPanelHUD:Close()
+		end)
+
 		surface.PlaySound("buttons/button18.wav")
 		surface.PlaySound("buttons/button18.wav")
 		surface.PlaySound("buttons/button18.wav")
-	end)
-
-
-	net.Start("AFKHUD1")
-	net.Receive("AFKHUD1", function(len)
-		timer.Destroy("AFK:"..LocalPlayer():SteamID())
-		timer.Destroy("AFKS:"..LocalPlayer():SteamID())
-		AfkPanelHUD:Close()
-	end)
-
-	surface.PlaySound("buttons/button18.wav")
-	surface.PlaySound("buttons/button18.wav")
-	surface.PlaySound("buttons/button18.wav")
 	end
 
 
