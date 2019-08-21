@@ -132,9 +132,9 @@ function PANEL:Init()
 
 	self:SetMouseInputEnabled( true )
 	self:SetKeyboardInputEnabled( true )
-
 	self:SetCursor( "hand" )
 end
+
 
 function PANEL:IsDown()
 
@@ -145,6 +145,7 @@ end
 function PANEL:Paint( w, h )
 	surface.DisableClipping(true)
 	surface.SetDrawColor( 43, 187, 101, 255 )
+	if self.SetRed then surface.SetDrawColor( 186, 32, 32, 255 ) end
 	if self:IsDown() then surface.DrawRect( 0, 0, w, h ) else surface.DrawOutlinedRect( 0, 0, w, h ) surface.DrawOutlinedRect( 1, 1, w-2, h-2 ) end
 	--surface.DrawTexturedRect( 0, 0, w, h )
 	surface.DisableClipping(false)

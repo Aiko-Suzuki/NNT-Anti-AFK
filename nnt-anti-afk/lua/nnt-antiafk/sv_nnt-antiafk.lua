@@ -44,10 +44,8 @@ AFKDefaultConfig.Settings = {
         ["ENABLETIME"] = false,
         ["JOBREVERT"] = false
 }
-AFKDefaultConfig.UsersBypass = {
-    ["STEAM_0:0:100152240"] = "Aiko Suzuki"
-}
-AFKDefaultConfig.Version = "2.0.0"
+AFKDefaultConfig.UsersBypass = {}
+AFKDefaultConfig.Version = "3.0.0"
 
 
 util.AddNetworkString( "nnt-antiak-settings" )
@@ -199,7 +197,7 @@ function AntiAFKSetConfig(settings,opt,data,ply)
         if opt == "DARKPMONEY" then TempConfigData.Settings.DARKPMONEY = data end
         if opt == "GODMODE" then TempConfigData.Settings.GODMODE = data end
         if opt == "JOBENABLE" then TempConfigData.Settings.JOBENABLE = data end
-        if opt == "JOBNAME" then TempConfigData.Settings.JOBNAME = time end
+        if opt == "JOBNAME" then TempConfigData.Settings.JOBNAME = data end
         if opt == "ENABLETIME" then TempConfigData.Settings.ENABLETIME = data end
         if opt == "StartHours" then TempConfigData.TimeSettings.StartHours = data end
         if opt == "StartMinutes" then TempConfigData.TimeSettings.StartMinutes = data end
@@ -259,7 +257,7 @@ function AntiAFKSetConfig(settings,opt,data,ply)
             table.Merge(TempConfigData.UsersBypass,TempTable)
             local newdata = util.TableToJSON(TempConfigData,true)
             file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
-			print("[ANTI-AFK] : "..player.GetBySteamID(data):Nick().." Has been added to the whitelist")
+			print("[ANTI-AFK] : "..AFK_ADMINBYPASS_USERS[data].." Has been remove from the whitelist")
             if !ply == nil then
                 if ply:IsValid() then
                     ReloadAntiAfkConfig(ply)
@@ -717,7 +715,6 @@ concommand.Add( "setafkplayer", function( ply, cmd, args )-- need to change this
             else
                 targetply:SetNextAFK(arguments)
                 ply:ChatPrint("[ANTI-AFK] : ".. targetply:Nick() .." is now afk in ".. math.Round(targetply:GetNextAFK() - CurTime()) .. " secondes he will get kick" )
-                local AikoAfkPlayerSet = hook.Call( "AikoAfkPlayerSet", GAMEMODE, ply , targetply , arguments )
             end
         end
     else
@@ -772,7 +769,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                                     net.WriteString("AntiafkMainHUD")
                                 net.Send(ply)
                                 AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-			                    local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
+			                    hook.Call( "NNT-ANTIAFK_Warning", GAMEMODE, ply )
 			                    ply:SetAFK(true)
                                 return
 	                        else
@@ -784,7 +781,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                                 net.WriteString("AntiafkMainHUD")
                             net.Send(ply)
                             AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-			                local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
+			                hook.Call( "NNT-ANTIAFK_Warning", GAMEMODE, ply )
 			                ply:SetAFK(true)
                         end
 	                else
@@ -796,7 +793,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                             net.WriteString("AntiafkMainHUD")
                         net.Send(ply)
                         AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-			            local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
+			            hook.Call( "NNT-ANTIAFK_Warning", GAMEMODE, ply )
 			            ply:SetAFK(true)
 	                else
 	                    ply:SPSetAFK(true)
@@ -808,7 +805,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                         net.WriteString("AntiafkMainHUD")
                     net.Send(ply)
                     AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-				    local AikoAfkTimeBefore = hook.Call( "AikoAfkTimeBefore", GAMEMODE, ply )
+				    hook.Call( "NNT-ANTIAFK_Warning", GAMEMODE, ply )
 
 				end
 			elseif (CurTime() >= afktime + AFK_TIME) and (ply:IsAFK()) then
@@ -816,7 +813,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 				ply:SetNextAFK(nil)
 				ply:SPSetAFK(nil)
 				ply:Kick(AntiAfkTranslate[AFK_LANGUAGE]["KICKMESSAGES"])
-				local AikoAfkKICK = hook.Call( "AikoAfkKICK", GAMEMODE, ply )
+				hook.Call( "NNT-ANTIAFK_Kick", GAMEMODE, ply )
 			end
 		end
 	end
@@ -834,7 +831,7 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
 		        ply:SetAFK(false)
             end
 		    print(ply:Name() .. " est plus AFK !")
-		    local AikoAfkTimeAfter = hook.Call( "AikoAfkTimeAfter", GAMEMODE, ply )
+		    hook.Call( "NNT-ANTIAFK_UnWarning", GAMEMODE, ply )
                 if AFK_ADMINBYPASS_USERS[ply:SteamID()] and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
 		            if AFK_ADMINUBYPASS == false then
                         if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
@@ -877,7 +874,7 @@ end)
 hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
     if (string.StartWith( text , "/afktime" ) == true) then
         commands = "/afktime"
-        local AikoAfkCommands = hook.Call( "AikoAfkCommands", GAMEMODE, ply , commands)
+        hook.Call( "NNT-ANTIAFK_Command", GAMEMODE, ply , commands)
         ply:ConCommand("afktime")
         return"";
     -----------------------------------------------------------------
@@ -889,13 +886,13 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
             net.Start("AntiAfkSendHUDInfo")
                 net.WriteString("AntiafkAdminSetAfk")
             net.Send(ply)
-            local AikoAfkCommands = hook.Call( "AikoAfkCommands", GAMEMODE, ply , commands)
+            hook.Call( "NNT-ANTIAFK_Command", GAMEMODE, ply , commands)
         else
             net.Start("AntiAfkSendHUDInfo")
                 net.WriteString("AccessDeniedError")
             net.Send(ply)
             ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
-            local AikoAfkCommandsFail = hook.Call( "AikoAfkCommandsFail", GAMEMODE, ply , commands)
+            hook.Call( "NNT-ANTIAFK_CommandFail", GAMEMODE, ply , commands)
         end
         return"";
     -----------------------------------------------------------------
@@ -906,13 +903,13 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
             net.Start("AntiAfkSendHUDInfo")
                 net.WriteString("AntiafkAdminPanel")
             net.Send(ply)
-            local AikoAfkCommands = hook.Call( "AikoAfkCommands", GAMEMODE, ply , commands)
+            hook.Call( "NNT-ANTIAFK_Command", GAMEMODE, ply , commands)
         else
             net.Start("AntiAfkSendHUDInfo")
                 net.WriteString("AccessDeniedError")
             net.Send(ply)
             ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
-            local AikoAfkCommandsFail = hook.Call( "AikoAfkCommandsFail", GAMEMODE, ply , commands)
+            hook.Call( "NNT-ANTIAFK_CommandFail", GAMEMODE, ply , commands)
         end
 
         return"";
@@ -925,7 +922,7 @@ hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
             ply:ChatPrint("/akfpanel : Open Panel to change settings [Live Change] and see settings [SuperAdmin only]")
             ply:ChatPrint("/afkhelp : Print this messages in the chat ")
         commands = "/afkhelp"
-        local AikoAfkCommands = hook.Call( "AikoAfkCommands", GAMEMODE, ply , commands)
+        hook.Call( "NNT-ANTIAFK_Command", GAMEMODE, ply , commands)
         return"";
     end
 end )

@@ -7,13 +7,6 @@ AntiAfkTranslate.ES = {
     ["MOVEKEY"] = "(Tecla de Movimiento / Espacio / Tecla de Uso / Tecla de Recarga / Tecla de Zoom)",
 	["NAME"] = "Español",
 
-    -- Admin Menu
-    ["GENSETTINGS"] = "Configuración General !",
-    ["GROUPSUSERSW"] = "Whitelist !",
-    ["TIMESSETTINGS"] = "Configuración del Tiempo !",
-    ["THEME"] = "Temas !",
-    ["LANGUAGESET"] = "Lenguajes !",
-
     --Server Side
 	["KICKMESSAGES"] = "¡Has sido kickeado por AFK!",
     ["NOWAFK"] = "esta AFK!",

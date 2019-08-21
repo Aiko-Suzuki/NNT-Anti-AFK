@@ -1,7 +1,17 @@
-function Default_NNTAntiafkMainHUD()
+function Default_NNTAntiafkMainHUD(parent)
+	if parent then
+		w = parent:GetWide() / 2
+		h = parent:GetTall() / 2
 
-	local w = ScrW() / 2
-    local h = ScrH() / 2
+		pw = parent:GetWide()
+		ph = parent:GetTall() 
+	else
+		w = ScrW() / 2
+    	h = ScrH() / 2
+
+		pw = ScrW()
+		ph = ScrH() 
+	end
 
 	AntiAFKTimer = AntiAFKTimer or {}
     VarTimeleft = "00m 00s"
@@ -21,8 +31,11 @@ function Default_NNTAntiafkMainHUD()
 	end)
 
 	AfkPanelHUD = vgui.Create( "DFrame" )
-	AfkPanelHUD:SetPos( ScrW() - w * 1.5  , h-200 )
-	AfkPanelHUD:SetSize( ScrW()/2, ScrH() / 3 )
+	if parent then 
+		AfkPanelHUD:SetParent(parent) 
+	end
+	AfkPanelHUD:SetPos( pw  - w * 1.5  , h / 1.4 )
+	AfkPanelHUD:SetSize( pw /2, ph / 3 )
 	AfkPanelHUD:SetTitle( "" )
 	AfkPanelHUD:SetDraggable( true )
 	AfkPanelHUD:ShowCloseButton( false )
@@ -30,15 +43,17 @@ function Default_NNTAntiafkMainHUD()
 	AfkPanelHUD:SetMouseInputEnabled()
 	AfkPanelHUD:SetDraggable(false)
 	function AfkPanelHUD:Paint(w, h)
-		Derma_DrawBackgroundBlur(AfkPanelHUD,1)
+		if not parent then Derma_DrawBackgroundBlur(AfkPanelHUD,1) end
 		draw.RoundedBox( 30, 0, 0, w, h,  Color(0, 0, 0, 235))
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] , "AFKLarge", ScrW() - w * 1.5  , ScrH() / 16, Color( 255, 0, 0, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].. " " .. AntiAFKTimer.TimeLeft , "AFKMedium", ScrW() - w * 1.5  , ScrH() / 7, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["CANCEL"] , "AFKsmall", ScrW() - w * 1.5  , ScrH() / 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
-		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"]  , "AFKsmallK", ScrW() - w * 1.5  , ScrH() / 4, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		if not parent then
+		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"] , "AFKLarge", pw  - w * 1.5  , ph / 16, Color( 255, 0, 0, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["WARN"].. " " .. AntiAFKTimer.TimeLeft , "AFKMedium", ph - w * 1.5  , ph / 7, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["CANCEL"] , "AFKsmall", pw - w * 1.5  , ph / 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"]  , "AFKsmallK", pw - w * 1.5  , ph / 4, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		end
 	end
 
-
+	if not parent then
 	timer.Create( "AFKS:"..LocalPlayer():SteamID(), 30, 0, function()
 		surface.PlaySound("buttons/button18.wav")
 		surface.PlaySound("buttons/button18.wav")
@@ -56,6 +71,7 @@ function Default_NNTAntiafkMainHUD()
 	surface.PlaySound("buttons/button18.wav")
 	surface.PlaySound("buttons/button18.wav")
 	surface.PlaySound("buttons/button18.wav")
+	end
 
 
 end
