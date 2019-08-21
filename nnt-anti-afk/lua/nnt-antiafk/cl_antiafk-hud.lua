@@ -584,8 +584,8 @@ local function NNTAntiafkAdminPanel(data)
 		for k,v in pairs(NNTAntiafkThemes) do
 			if k == value then
 				AntiAFKSelectedTheme = k
-				if PreviewEnable then 
-					if AfkPanelHUD:IsValid() then AfkPanelHUD:Close() end
+				if PreviewEnable then
+					if AfkPanelHUD != nil && AfkPanelHUD:IsValid()  then AfkPanelHUD:Close() end
 					NNTAntiafkThemes[AntiAFKSelectedTheme](PreviewScreen)
 				end
 			end
