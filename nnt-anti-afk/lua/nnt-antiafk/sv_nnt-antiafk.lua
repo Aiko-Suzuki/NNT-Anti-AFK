@@ -87,12 +87,13 @@ util.AddNetworkString( "AFKHUDR" )
 -- Starting to load Script !
 print("[ANTI-AFK] : Checking if config file are there")
 
+-- Check if the configuration file exist if not create it with the default table
 function AnitAfkfirstloadconfiguration()
         if not file.Exists( "nnt-antiafk", "DATA" ) then file.CreateDir("nnt-antiafk") end
         if (file.Size( "nnt-antiafk/AntiAfkConfig.txt", "DATA" ) > 0) then
-                local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
-                AntiAFKConfig = util.JSONToTable(x)
-                print("[ANTI-AFK] : Loading of config finished !")
+            local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
+            AntiAFKConfig = util.JSONToTable(x)
+            print("[ANTI-AFK] : Loading of config finished !")
         else
             print("[ANTI-AFK] : Config not found reloading ...\nAnd Creating File !")
             local x = util.TableToJSON(AFKDefaultConfig,true)
@@ -101,6 +102,7 @@ function AnitAfkfirstloadconfiguration()
                 local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
                 AntiAFKConfig = util.JSONToTable(x)
                 print("[ANTI-AFK] : Loading of config finished !")
+
             end
         end
 end
@@ -117,6 +119,8 @@ end
  \______/ |________/ \______/    |__/   |______/ \______/ |__/  \__/       \______/ |__/             \______/  \______/ |__/  \__/|__/      |______/ \______/
 ]]
 
+
+-- Reload the configuration and send it to a player if he was the one to change the config.
 function ReloadAntiAfkConfig(ply)
     local noewmotherfucker = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
     AntiAFKConfig = util.JSONToTable(noewmotherfucker)
@@ -182,9 +186,15 @@ function ReloadAntiAfkConfig(ply)
     end
 end
 
-
-function AntiAFKSetConfig(settings,opt,data,ply)
-    local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
+-- settings = What type of settings to change (Settings,BypassGroups,UsersBypass)
+-- opt = What option you what to change with the "settings" , 
+-- option avaible for Settings (ANTIAFK, WARN, KICK, BYPASS, UBYPASS, GHOST, DARKPMONEY, GODMODE, JOBENABLE, JOBNAME, ENABLETIME, StartHours , StartMinutes, StopHours, StopMinutes, JOBREVERT, LANGUAGE, THEME)
+-- option avaible for BypassGroups (DEL, ADD)
+-- option avaible for UsersBypass (DEL, ADD)
+-- data = data for the change 
+-- ply = player to use (Only used for whitelist )
+function AntiAFKSetConfig(settings,opt,data,ply) 
+    local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA") 
     local AntiAFKConfig = util.JSONToTable(x)
     local TempConfigData = AntiAFKConfig
     if settings == "Settings" then
@@ -266,10 +276,6 @@ function AntiAFKSetConfig(settings,opt,data,ply)
                 ReloadAntiAfkConfig()
             end
         end
-    elseif settings == "ULX" then
-        TempConfigData.ULX = data
-        local newdata = util.TableToJSON(TempConfigData,true)
-        file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
     end
 end
 
@@ -656,7 +662,7 @@ hook.Add( "Initialize", "NNT-AntiAFK-FinishLoading", function()
                 end
             end
         end)
-    print("[ANTI-AFK] Finished Loading")
+        print("[ANTI-AFK] Finished Loading")
     end
 end)
 
