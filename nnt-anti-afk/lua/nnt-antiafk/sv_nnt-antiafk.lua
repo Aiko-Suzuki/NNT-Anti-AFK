@@ -1,138 +1,87 @@
---[[
- /$$$$$$$  /$$$$$$$$ /$$$$$$$$ /$$$$$$  /$$   /$$ /$$    /$$$$$$$$       /$$$$$$$   /$$$$$$  /$$$$$$$$ /$$$$$$
-| $$__  $$| $$_____/| $$_____//$$__  $$| $$  | $$| $$   |__  $$__/      | $$__  $$ /$$__  $$|__  $$__//$$__  $$
-| $$  \ $$| $$      | $$     | $$  \ $$| $$  | $$| $$      | $$         | $$  \ $$| $$  \ $$   | $$  | $$  \ $$
-| $$  | $$| $$$$$   | $$$$$  | $$$$$$$$| $$  | $$| $$      | $$         | $$  | $$| $$$$$$$$   | $$  | $$$$$$$$
-| $$  | $$| $$__/   | $$__/  | $$__  $$| $$  | $$| $$      | $$         | $$  | $$| $$__  $$   | $$  | $$__  $$
-| $$  | $$| $$      | $$     | $$  | $$| $$  | $$| $$      | $$         | $$  | $$| $$  | $$   | $$  | $$  | $$
-| $$$$$$$/| $$$$$$$$| $$     | $$  | $$|  $$$$$$/| $$$$$$$$| $$         | $$$$$$$/| $$  | $$   | $$  | $$  | $$
-|_______/ |________/|__/     |__/  |__/ \______/ |________/|__/         |_______/ |__/  |__/   |__/  |__/  |__/
-]]
 NNT = NNT or {}
 NNT.ANTI_AFK = NNT.ANTI_AFK or {}
-
-
 include("sh_nnt-antiafk.lua")
-
 AntiAFKPlayerEyesTrack = {}
-
 AntiAFKConfig = {}
-
 AFKDefaultConfig = {}
-AFKDefaultConfig.BypassGroups = {
-        "superadmin"
-}
+AFKDefaultConfig.BypassGroups = {"superadmin"}
+
 AFKDefaultConfig.TimeSettings = {
     ["StartHours"] = 21,
     ["StartMinutes"] = 0,
     ["StopHours"] = 8,
     ["StopMinutes"] = 0
 }
+
 AFKDefaultConfig.Settings = {
-        ["WARN"] = 300,
-        ["KICK"] = 600,
-        ["BYPASS"] = false,
-        ["UBYPASS"] = false,
-        ["ANTIAFK"] = true,
-        ["LANGUAGE"] = "EN",
-        ["THEME"] = "Default",
-        ["GHOST"] = false,
-        ["DARKPMONEY"] = false,
-        ["GODMODE"] = false,
-        ["JOBENABLE"] = false,
-        ["JOBNAME"] = "Spectator",
-        ["ENABLETIME"] = false,
-        ["JOBREVERT"] = false
+    ["WARN"] = 300,
+    ["KICK"] = 600,
+    ["BYPASS"] = false,
+    ["UBYPASS"] = false,
+    ["ANTIAFK"] = true,
+    ["LANGUAGE"] = "EN",
+    ["THEME"] = "Default",
+    ["GHOST"] = false,
+    ["DARKPMONEY"] = false,
+    ["GODMODE"] = false,
+    ["JOBENABLE"] = false,
+    ["JOBNAME"] = "Spectator",
+    ["ENABLETIME"] = false,
+    ["JOBREVERT"] = false
 }
+
 AFKDefaultConfig.UsersBypass = {}
 AFKDefaultConfig.Version = "3.0.0"
-
-
-util.AddNetworkString( "nnt-antiak-settings" )
-
-util.AddNetworkString( "AntiAfkSendHUDInfo" ) -- BASIC HUD INFO LANGUAGE/WHAT TO OPEN
+util.AddNetworkString("nnt-antiak-settings")
+util.AddNetworkString("AntiAfkSendHUDInfo") -- BASIC HUD INFO LANGUAGE/WHAT TO OPEN
 util.AddNetworkString("BroadcastAFKPLAYER")
-
-util.AddNetworkString( "AntiAddBypassGroups" )-- BYPASS USER NET
-util.AddNetworkString( "AntiAfksenBypassGroups" )
-util.AddNetworkString( "AntiAfkloaBypassGroups" )
-util.AddNetworkString( "AntiRemBypassGroups" )
-
-util.AddNetworkString( "AntiAddBypassUsers" ) -- BYPASSGROUPS NET
-util.AddNetworkString( "AntiAfksenBypassUsers" )
-util.AddNetworkString( "AntiAfkloaBypassUsers" )
-util.AddNetworkString( "AntiRemBypassUsers" )
-
-
-util.AddNetworkString( "AFKHUD1" ) -- HUD REQUEST AND RESPOND
-util.AddNetworkString( "AFKHUD2" )
-util.AddNetworkString( "AFKHUDR" )
-
-
---[[
- /$$                                 /$$        /$$$$$$                       /$$$$$$  /$$
-| $$                                | $$       /$$__  $$                     /$$__  $$|__/
-| $$        /$$$$$$   /$$$$$$   /$$$$$$$      | $$  \__/  /$$$$$$  /$$$$$$$ | $$  \__/ /$$  /$$$$$$
-| $$       /$$__  $$ |____  $$ /$$__  $$      | $$       /$$__  $$| $$__  $$| $$$$    | $$ /$$__  $$
-| $$      | $$  \ $$  /$$$$$$$| $$  | $$      | $$      | $$  \ $$| $$  \ $$| $$_/    | $$| $$  \ $$
-| $$      | $$  | $$ /$$__  $$| $$  | $$      | $$    $$| $$  | $$| $$  | $$| $$      | $$| $$  | $$
-| $$$$$$$$|  $$$$$$/|  $$$$$$$|  $$$$$$$      |  $$$$$$/|  $$$$$$/| $$  | $$| $$      | $$|  $$$$$$$
-|________/ \______/  \_______/ \_______/       \______/  \______/ |__/  |__/|__/      |__/ \____  $$
-                                                                                           /$$  \ $$
-                                                                                          |  $$$$$$/
-                                                                                           \______/
-]]
-
-
+util.AddNetworkString("AntiAddBypassGroups") -- BYPASS USER NET
+util.AddNetworkString("AntiAfksenBypassGroups")
+util.AddNetworkString("AntiAfkloaBypassGroups")
+util.AddNetworkString("AntiRemBypassGroups")
+util.AddNetworkString("AntiAddBypassUsers") -- BYPASSGROUPS NET
+util.AddNetworkString("AntiAfksenBypassUsers")
+util.AddNetworkString("AntiAfkloaBypassUsers")
+util.AddNetworkString("AntiRemBypassUsers")
+util.AddNetworkString("AFKHUD1") -- HUD REQUEST AND RESPOND
+util.AddNetworkString("AFKHUD2")
+util.AddNetworkString("AFKHUDR")
 -- Starting to load Script !
 print("[ANTI-AFK] : Checking if config file are there")
 
 -- Check if the configuration file exist if not create it with the default table
 function AnitAfkfirstloadconfiguration()
-        if not file.Exists( "nnt-antiafk", "DATA" ) then file.CreateDir("nnt-antiafk") end
-        if (file.Size( "nnt-antiafk/AntiAfkConfig.txt", "DATA" ) > 0) then
-            local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
-            AntiAFKConfig = util.JSONToTable(x)
+    if not file.Exists("nnt-antiafk", "DATA") then
+        file.CreateDir("nnt-antiafk")
+    end
+
+    if (file.Size("nnt-antiafk/AntiAfkConfig.txt", "DATA") > 0) then
+        AntiAFKConfig = util.JSONToTable(file.Read("nnt-antiafk/AntiAfkConfig.txt", "DATA"))
+        print("[ANTI-AFK] : Loading of config finished !")
+    else
+        print("[ANTI-AFK] : Config not found reloading ...\nAnd Creating File !")
+        file.Write("nnt-antiafk/AntiAfkConfig.txt", util.TableToJSON(AFKDefaultConfig, true))
+
+        if (file.Size("nnt-antiafk/AntiAfkwarntime.txt", "DATA") > 0) then
+            AntiAFKConfig = util.JSONToTable(file.Read("nnt-antiafk/AntiAfkConfig.txt", "DATA"))
             print("[ANTI-AFK] : Loading of config finished !")
-        else
-            print("[ANTI-AFK] : Config not found reloading ...\nAnd Creating File !")
-            local x = util.TableToJSON(AFKDefaultConfig,true)
-            file.Write("nnt-antiafk/AntiAfkConfig.txt",x)
-            if (file.Size( "nnt-antiafk/AntiAfkwarntime.txt", "DATA" )  > 0) then
-                local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
-                AntiAFKConfig = util.JSONToTable(x)
-                print("[ANTI-AFK] : Loading of config finished !")
-
-            end
         end
+    end
 end
-
-
---[[
-  /$$$$$$  /$$$$$$$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$        /$$$$$$  /$$$$$$$$        /$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$$$$$  /$$$$$$
- /$$__  $$| $$_____/ /$$__  $$|__  $$__/|_  $$_/ /$$__  $$| $$$ | $$       /$$__  $$| $$_____/       /$$__  $$ /$$__  $$| $$$ | $$| $$_____/|_  $$_/ /$$__  $$
-| $$  \__/| $$      | $$  \__/   | $$     | $$  | $$  \ $$| $$$$| $$      | $$  \ $$| $$            | $$  \__/| $$  \ $$| $$$$| $$| $$        | $$  | $$  \__/
-| $$ /$$$$| $$$$$   |  $$$$$$    | $$     | $$  | $$  | $$| $$ $$ $$      | $$  | $$| $$$$$         | $$      | $$  | $$| $$ $$ $$| $$$$$     | $$  | $$ /$$$$
-| $$|_  $$| $$__/    \____  $$   | $$     | $$  | $$  | $$| $$  $$$$      | $$  | $$| $$__/         | $$      | $$  | $$| $$  $$$$| $$__/     | $$  | $$|_  $$
-| $$  \ $$| $$       /$$  \ $$   | $$     | $$  | $$  | $$| $$\  $$$      | $$  | $$| $$            | $$    $$| $$  | $$| $$\  $$$| $$        | $$  | $$  \ $$
-|  $$$$$$/| $$$$$$$$|  $$$$$$/   | $$    /$$$$$$|  $$$$$$/| $$ \  $$      |  $$$$$$/| $$            |  $$$$$$/|  $$$$$$/| $$ \  $$| $$       /$$$$$$|  $$$$$$/
- \______/ |________/ \______/    |__/   |______/ \______/ |__/  \__/       \______/ |__/             \______/  \______/ |__/  \__/|__/      |______/ \______/
-]]
-
 
 -- Reload the configuration and send it to a player if he was the one to change the config.
 function ReloadAntiAfkConfig(ply)
-    local noewmotherfucker = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA")
+    local noewmotherfucker = file.Read("nnt-antiafk/AntiAfkConfig.txt", "DATA")
     AntiAFKConfig = util.JSONToTable(noewmotherfucker)
     AFK_WARN_TIME = AntiAFKConfig.Settings.WARN
     AFK_TIME = AntiAFKConfig.Settings.KICK
     AFK_REPEAT = AFK_TIME - AFK_WARN_TIME
-    AFK_ENABLE =  AntiAFKConfig.Settings.ANTIAFK
+    AFK_ENABLE = AntiAFKConfig.Settings.ANTIAFK
     AFK_ADMINBYPASS = AntiAFKConfig.Settings.BYPASS
     AFK_ADMINUBYPASS = AntiAFKConfig.Settings.UBYPASS
     AFK_ADMINBYPASS_GROUPS = AntiAFKConfig.BypassGroups
     AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
-    AFK_LANGUAGE =  AntiAFKConfig.Settings.LANGUAGE
+    AFK_LANGUAGE = AntiAFKConfig.Settings.LANGUAGE
     AFK_THEME = AntiAFKConfig.Settings.THEME
     AFK_VERSION = AntiAFKConfig.Version
     AFK_GHOST = AntiAFKConfig.Settings.GHOST
@@ -142,15 +91,268 @@ function ReloadAntiAfkConfig(ply)
     AFK_JOBNAME = AntiAFKConfig.Settings.JOBNAME
     AFK_JOBREVERT = AntiAFKConfig.Settings.JOBREVERT
     AFK_ENABLETIME = AntiAFKConfig.Settings.ENABLETIME
-
     AFK_StartTimeHours = math.Round(AntiAFKConfig.TimeSettings.StartHours)
     AFK_StartTimeMinutes = math.Round(AntiAFKConfig.TimeSettings.StartMinutes)
-
     AFK_StopTimeHours = math.Round(AntiAFKConfig.TimeSettings.StopHours)
     AFK_StopTimeMinutes = math.Round(AntiAFKConfig.TimeSettings.StopMinutes)
-    if !ply == nil then
-    if ply:IsValid() then
+
+    if not ply == nil and ply:IsValid() then
         net.Start("nnt-antiak-settings")
+
+        local temptable = {
+            ["WARN"] = AFK_WARN_TIME,
+            ["KICK"] = AFK_TIME,
+            ["BYPASS"] = AFK_ADMINBYPASS,
+            ["UBYPASS"] = AFK_ADMINUBYPASS,
+            ["ANTIAFK"] = AFK_ENABLE,
+            ["GHOST"] = AFK_GHOST,
+            ["DARKPMONEY"] = AFK_DARKRPMONEY,
+            ["LANGUAGE"] = AFK_LANGUAGE,
+            ["THEME"] = AFK_THEME,
+            ["GODMODE"] = AFK_GODMODE,
+            ["JOBENABLE"] = AFK_JOBENABLE,
+            ["JOBNAME"] = AFK_JOBNAME,
+            ["ENABLETIME"] = AFK_ENABLETIME,
+            ["AFK_StartTimeHours"] = AFK_StartTimeHours,
+            ["AFK_StartTimeMinutes"] = AFK_StartTimeMinutes,
+            ["AFK_StopTimeHours"] = AFK_StopTimeHours,
+            ["AFK_StopTimeMinutes"] = AFK_StopTimeMinutes,
+            ["JOBREVERT"] = AFK_JOBREVERT
+        }
+
+        net.WriteString("LoadData")
+        net.WriteTable(temptable)
+        net.Send(ply)
+    end
+
+    if #player.GetAll() > 0 then
+        net.Start("AntiAfkSendHUDInfo")
+        net.WriteString(AFK_LANGUAGE)
+        net.Broadcast()
+        net.Start("AntiAfkSendHUDInfo")
+        net.WriteString(AFK_THEME)
+        net.Broadcast()
+    end
+end
+
+-- settings = What type of settings to change (Settings,BypassGroups,UsersBypass)
+-- opt = What option you what to change with the "settings" , 
+-- option avaible for Settings (ANTIAFK, WARN, KICK, BYPASS, UBYPASS, GHOST, DARKPMONEY, GODMODE, JOBENABLE, JOBNAME, ENABLETIME, StartHours , StartMinutes, StopHours, StopMinutes, JOBREVERT, LANGUAGE, THEME)
+-- option avaible for BypassGroups (DEL, ADD)
+-- option avaible for UsersBypass (DEL, ADD)
+-- data = data for the change 
+-- ply = player to use (Only used for whitelist )
+function AntiAFKSetConfig(settings, opt, data, ply)
+    local AntiAFKConfig = util.JSONToTable(file.Read("nnt-antiafk/AntiAfkConfig.txt", "DATA"))
+    local TempConfigData = AntiAFKConfig
+
+    if settings == "Settings" then
+        if opt == "ANTIAFK" then
+            TempConfigData.Settings.ANTIAFK = data
+        end
+
+        if opt == "WARN" then
+            TempConfigData.Settings.WARN = data
+        end
+
+        if opt == "KICK" then
+            TempConfigData.Settings.KICK = data
+        end
+
+        if opt == "BYPASS" then
+            TempConfigData.Settings.BYPASS = data
+        end
+
+        if opt == "UBYPASS" then
+            TempConfigData.Settings.UBYPASS = data
+        end
+
+        if opt == "GHOST" then
+            TempConfigData.Settings.GHOST = data
+        end
+
+        if opt == "DARKPMONEY" then
+            TempConfigData.Settings.DARKPMONEY = data
+        end
+
+        if opt == "GODMODE" then
+            TempConfigData.Settings.GODMODE = data
+        end
+
+        if opt == "JOBENABLE" then
+            TempConfigData.Settings.JOBENABLE = data
+        end
+
+        if opt == "JOBNAME" then
+            TempConfigData.Settings.JOBNAME = data
+        end
+
+        if opt == "ENABLETIME" then
+            TempConfigData.Settings.ENABLETIME = data
+        end
+
+        if opt == "StartHours" then
+            TempConfigData.TimeSettings.StartHours = data
+        end
+
+        if opt == "StartMinutes" then
+            TempConfigData.TimeSettings.StartMinutes = data
+        end
+
+        if opt == "StopHours" then
+            TempConfigData.TimeSettings.StopHours = data
+        end
+
+        if opt == "StopMinutes" then
+            TempConfigData.TimeSettings.StopMinutes = data
+        end
+
+        if opt == "JOBREVERT" then
+            TempConfigData.Settings.JOBREVERT = data
+        end
+
+        if opt == "LANGUAGE" and table.HasValue(AntiAfkDisponibleLang, data) then
+            TempConfigData.Settings.LANGUAGE = data
+        end
+
+        if opt == "THEME" and NNTAntiafkThemes[data] then
+            TempConfigData.Settings.THEME = data
+            print("[ANTI-AFK] : Themes has been changed to " .. data)
+        end
+
+        local newdata = util.TableToJSON(TempConfigData, true)
+        file.Write("nnt-antiafk/AntiAfkConfig.txt", newdata)
+        ReloadAntiAfkConfig()
+    elseif settings == "BypassGroups" then
+        if opt == "DEL" then
+            table.RemoveByValue(TempConfigData.BypassGroups, data)
+            local newdata = util.TableToJSON(TempConfigData, true)
+            file.Write("nnt-antiafk/AntiAfkConfig.txt", newdata)
+            ReloadAntiAfkConfig()
+        elseif opt == "ADD" then
+            local count = table.Count(AntiAFKConfig.BypassGroups)
+            table.insert(TempConfigData.BypassGroups, count + 1, data)
+            local newdata = util.TableToJSON(TempConfigData, true)
+            file.Write("nnt-antiafk/AntiAfkConfig.txt", newdata)
+            ReloadAntiAfkConfig()
+        end
+    elseif settings == "UsersBypass" then
+        if opt == "ADD" then
+            if string.StartWith(data, "STEAM_") then
+                if opt == "STEAM_0:0" then return end
+
+                local temptable = {
+                    [data] = player.GetBySteamID(data):Nick()
+                }
+
+                table.Merge(TempConfigData.UsersBypass, temptable)
+                local newdata = util.TableToJSON(TempConfigData, true)
+                file.Write("nnt-antiafk/AntiAfkConfig.txt", newdata)
+                print("[ANTI-AFK] : " .. player.GetBySteamID(data):Nick() .. " Has been added to the whitelist")
+                ReloadAntiAfkConfig()
+            end
+        elseif opt == "DEL" then
+            print(TempConfigData.UsersBypass[data])
+            local TempTable = {}
+
+            for k, v in pairs(TempConfigData.UsersBypass) do
+                if not (k == data) then
+                    TempTable[k] = v
+                end
+            end
+
+            table.Empty(TempConfigData.UsersBypass)
+            table.Merge(TempConfigData.UsersBypass, TempTable)
+            local newdata = util.TableToJSON(TempConfigData, true)
+            file.Write("nnt-antiafk/AntiAfkConfig.txt", newdata)
+            print("[ANTI-AFK] : " .. AFK_ADMINBYPASS_USERS[data] .. " Has been remove from the whitelist")
+
+            if not ply == nil and ply:IsValid() then
+                ReloadAntiAfkConfig(ply)
+            else
+                ReloadAntiAfkConfig()
+            end
+        end
+    end
+end
+
+--[[
+    GETTING STATS OF THE SERVER
+]]
+local function NNTUploadStats()
+    if AFK_VERSION == nil then
+        AFK_VERSION = "1.7.0"
+    end
+
+    local servercurrentinfo = {
+        ["servername"] = GetHostName(),
+        ["serverip"] = game.GetIPAddress(),
+        ["time"] = os.date("%H:%M:%S - %d/%m/%Y", Timestamp),
+        ["numplayer"] = player.GetCount() .. "/" .. game.MaxPlayers(),
+        ["afk"] = tostring(AFK_ENABLE),
+        ["version"] = AFK_VERSION
+    }
+
+    http.Post("http://api.natsu-net.ca:2095/api/v1/anti-afk/stats.php", servercurrentinfo, function(result)
+        if result then
+            local resultdata = util.JSONToTable(result)
+
+            if resultdata == nil then
+                print("[ANTI-AFK] Stats Error : Server API is offline !")
+
+                return
+            end
+
+            if resultdata.status == "Success" then
+                print("[ANTI-AFK] Stats Success : " .. resultdata.data)
+            elseif resultdata.status == "Error" then
+                print("[ANTI-AFK] Stats Error : " .. resultdata.type)
+            elseif resultdata.status == nil then
+                print("[ANTI-AFK] Stats  : API Server is not responding ...")
+            end
+        end
+    end)
+end
+
+AnitAfkfirstloadconfiguration() -- Just loading the function to load the config after checking if the file are there
+print("[ANTI-AFK] : Checking if config is update !")
+include("sv_update.lua")
+NNTAntiAFKCheckAndUpdate()
+print("[ANTI-AFK] : RELOAD CONF")
+ReloadAntiAfkConfig() -- reload the config to load all the config with the following format AFK_WARN_TIME, AFK_TIME, AFK_REPEAT, AFK_ENABLE, AFK_ADMINBYPASS, AFK_ADMINUBYPASS, AFK_ADMINBYPASS_GROUPS, AFK_ADMINBYPASS_USERS, AFK_LANGUAGE
+print("[ANTI-AFK] : FINISH RELOAD CONF")
+NNTUploadStats()
+--This allow me too see stats of your server ! every 1h
+timer.Create("NNTServerStats", 3600, 0, NNTUploadStats)
+
+net.Receive("AFKHUD2", function(len, ply)
+    net.Start("AFKHUDR")
+    net.WriteString(math.Round(ply:GetNextAFK() - CurTime()))
+    net.Send(ply)
+end)
+
+net.Receive("nnt-antiak-settings", function(len, ply)
+    if ply:IsSuperAdmin() then
+        local data5 = net.ReadTable()
+        local data4 = net.ReadString()
+
+        if data4 == "SetSettings" then
+            for k, v in pairs(data5) do
+                AntiAFKSetConfig("Settings", k, v)
+                net.Start("nnt-antiak-settings")
+
+                local temptable = {
+                    [k] = v
+                }
+
+                net.WriteString("Settings")
+                net.WriteTable(temptable)
+                net.Send(ply)
+            end
+        elseif data4 == "LoadData" then
+            print("[ANTI-AFK] : Starting to load data")
+            net.Start("nnt-antiak-settings")
+
             local temptable = {
                 ["WARN"] = AFK_WARN_TIME,
                 ["KICK"] = AFK_TIME,
@@ -171,355 +373,125 @@ function ReloadAntiAfkConfig(ply)
                 ["AFK_StopTimeMinutes"] = AFK_StopTimeMinutes,
                 ["JOBREVERT"] = AFK_JOBREVERT
             }
+
             net.WriteString("LoadData")
             net.WriteTable(temptable)
-        net.Send(ply)
-        end
-    end
-    if #player.GetAll( ) > 0 then
-        net.Start("AntiAfkSendHUDInfo")
-            net.WriteString(AFK_LANGUAGE)
-        net.Broadcast()
-        net.Start("AntiAfkSendHUDInfo")
-            net.WriteString(AFK_THEME)
-        net.Broadcast()
-    end
-end
-
--- settings = What type of settings to change (Settings,BypassGroups,UsersBypass)
--- opt = What option you what to change with the "settings" , 
--- option avaible for Settings (ANTIAFK, WARN, KICK, BYPASS, UBYPASS, GHOST, DARKPMONEY, GODMODE, JOBENABLE, JOBNAME, ENABLETIME, StartHours , StartMinutes, StopHours, StopMinutes, JOBREVERT, LANGUAGE, THEME)
--- option avaible for BypassGroups (DEL, ADD)
--- option avaible for UsersBypass (DEL, ADD)
--- data = data for the change 
--- ply = player to use (Only used for whitelist )
-function AntiAFKSetConfig(settings,opt,data,ply) 
-    local x = file.Read("nnt-antiafk/AntiAfkConfig.txt","DATA") 
-    local AntiAFKConfig = util.JSONToTable(x)
-    local TempConfigData = AntiAFKConfig
-    if settings == "Settings" then
-        if opt == "ANTIAFK" then  TempConfigData.Settings.ANTIAFK = data end
-        if opt == "WARN" then  TempConfigData.Settings.WARN = data end
-        if opt == "KICK" then  TempConfigData.Settings.KICK = data end
-        if opt == "BYPASS" then  TempConfigData.Settings.BYPASS = data end
-        if opt == "UBYPASS" then TempConfigData.Settings.UBYPASS = data end
-        if opt == "GHOST" then TempConfigData.Settings.GHOST = data end
-        if opt == "DARKPMONEY" then TempConfigData.Settings.DARKPMONEY = data end
-        if opt == "GODMODE" then TempConfigData.Settings.GODMODE = data end
-        if opt == "JOBENABLE" then TempConfigData.Settings.JOBENABLE = data end
-        if opt == "JOBNAME" then TempConfigData.Settings.JOBNAME = data end
-        if opt == "ENABLETIME" then TempConfigData.Settings.ENABLETIME = data end
-        if opt == "StartHours" then TempConfigData.TimeSettings.StartHours = data end
-        if opt == "StartMinutes" then TempConfigData.TimeSettings.StartMinutes = data end
-        if opt == "StopHours" then TempConfigData.TimeSettings.StopHours = data end
-        if opt == "StopMinutes" then TempConfigData.TimeSettings.StopMinutes = data end
-        if opt == "JOBREVERT" then TempConfigData.Settings.JOBREVERT = data end
-        if opt == "LANGUAGE" then
-            if table.HasValue(AntiAfkDisponibleLang, data) then
-                TempConfigData.Settings.LANGUAGE = data
-            end
-        end
-        if opt == "THEME" then
-            if NNTAntiafkThemes[data] then
-                TempConfigData.Settings.THEME = data
-                print("[ANTI-AFK] : Themes has been changed to "..data)
-            end
-        end
-        local newdata = util.TableToJSON(TempConfigData,true)
-        file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
-        ReloadAntiAfkConfig()
-    elseif settings == "BypassGroups" then
-        if opt == "DEL" then
-            table.RemoveByValue(TempConfigData.BypassGroups,data)
-            local newdata = util.TableToJSON(TempConfigData,true)
-            file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
-            ReloadAntiAfkConfig()
-        elseif opt == "ADD" then
-            local count = table.Count(AntiAFKConfig.BypassGroups)
-            table.insert(TempConfigData.BypassGroups, count + 1 , data)
-            local newdata = util.TableToJSON(TempConfigData,true)
-            file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
-            ReloadAntiAfkConfig()
-        end
-    elseif   settings == "UsersBypass" then
-        if opt == "ADD" then
-            if string.StartWith(data, "STEAM_") then
-                if opt == "STEAM_0:0" then return end
-                local count = table.Count(AntiAFKConfig.UsersBypass)
-                local temptable = {[data] = player.GetBySteamID(data):Nick()}
-                table.Merge(TempConfigData.UsersBypass, temptable)
-                local newdata = util.TableToJSON(TempConfigData,true)
-                file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
-				print("[ANTI-AFK] : "..player.GetBySteamID(data):Nick().." Has been added to the whitelist")
-                ReloadAntiAfkConfig()
-            else
-            end
-
-        elseif opt == "DEL" then
-            print(TempConfigData.UsersBypass[data])
-            local TempTable = {}
-            for k,v in pairs(TempConfigData.UsersBypass) do
-                if !(k == data) then
-                   TempTable[k] = v
-                end
-            end
-            table.Empty(TempConfigData.UsersBypass)
-            table.Merge(TempConfigData.UsersBypass,TempTable)
-            local newdata = util.TableToJSON(TempConfigData,true)
-            file.Write("nnt-antiafk/AntiAfkConfig.txt",newdata)
-			print("[ANTI-AFK] : "..AFK_ADMINBYPASS_USERS[data].." Has been remove from the whitelist")
-            if !ply == nil then
-                if ply:IsValid() then
-                    ReloadAntiAfkConfig(ply)
-                end
-            else
-                ReloadAntiAfkConfig()
-            end
-        end
-    end
-end
-
-/*
-    GETTING STATS OF THE SERVER
-*/
-
-local function NNTUploadStats()
-    if AFK_VERSION == nil then
-        AFK_VERSION = "1.7.0"
-    end
-    local servercurrentinfo = {
-        ["servername"] = GetHostName() ,
-        ["serverip"] = game.GetIPAddress() ,
-        ["time"] = os.date( "%H:%M:%S - %d/%m/%Y" , Timestamp ),
-        ["numplayer"] = player.GetCount().."/" .. game.MaxPlayers() ,
-        ["afk"] = tostring(AFK_ENABLE) ,
-        ["version"] = AFK_VERSION
-    }
-
-    http.Post( "http://api.natsu-net.ca:2095/api/v1/anti-afk/stats.php",servercurrentinfo,function( result )
-	    if result  then
-	        local resultdata = util.JSONToTable(result)
-
-            if resultdata == nil then print("[ANTI-AFK] Stats Error : Server API is offline !") return end
-
-            if resultdata.status == "Success" then
-                print("[ANTI-AFK] Stats Success : " .. resultdata.data)
-            elseif resultdata.status == "Error" then
-                print("[ANTI-AFK] Stats Error : " .. resultdata.type)
-            elseif resultdata.status == nil then
-                print("[ANTI-AFK] Stats  : API Server is not responding ...")
-            end
-	    end
-    end )
-end
-
---[[
- /$$        /$$$$$$   /$$$$$$  /$$$$$$$
-| $$       /$$__  $$ /$$__  $$| $$__  $$
-| $$      | $$  \ $$| $$  \ $$| $$  \ $$
-| $$      | $$  | $$| $$$$$$$$| $$  | $$
-| $$      | $$  | $$| $$__  $$| $$  | $$
-| $$      | $$  | $$| $$  | $$| $$  | $$
-| $$$$$$$$|  $$$$$$/| $$  | $$| $$$$$$$/
-|________/ \______/ |__/  |__/|_______/
-]]
-local Timer = {}
-
-AnitAfkfirstloadconfiguration() -- Just loading the function to load the config after checking if the file are there
-print("[ANTI-AFK] : Checking if config is update !")
-
-include("sv_update.lua")
-NNTAntiAFKCheckAndUpdate()
-
-print("[ANTI-AFK] : RELOAD CONF")
-ReloadAntiAfkConfig() -- reload the config to load all the config with the following format AFK_WARN_TIME, AFK_TIME, AFK_REPEAT, AFK_ENABLE, AFK_ADMINBYPASS, AFK_ADMINUBYPASS, AFK_ADMINBYPASS_GROUPS, AFK_ADMINBYPASS_USERS, AFK_LANGUAGE
-print("[ANTI-AFK] : FINISH RELOAD CONF")
-
-
-NNTUploadStats()
---This allow me too see stats of your server ! every 1h
-timer.Create("NNTServerStats", 3600 , 0 , NNTUploadStats)
-
---[[
- /$$   /$$             /$$           /$$       /$$ /$$
-| $$$ | $$            | $$          | $$      |__/| $$
-| $$$$| $$  /$$$$$$  /$$$$$$        | $$       /$$| $$$$$$$   /$$$$$$  /$$$$$$   /$$$$$$  /$$   /$$
-| $$ $$ $$ /$$__  $$|_  $$_/        | $$      | $$| $$__  $$ /$$__  $$|____  $$ /$$__  $$| $$  | $$
-| $$  $$$$| $$$$$$$$  | $$          | $$      | $$| $$  \ $$| $$  \__/ /$$$$$$$| $$  \__/| $$  | $$
-| $$\  $$$| $$_____/  | $$ /$$      | $$      | $$| $$  | $$| $$      /$$__  $$| $$      | $$  | $$
-| $$ \  $$|  $$$$$$$  |  $$$$/      | $$$$$$$$| $$| $$$$$$$/| $$     |  $$$$$$$| $$      |  $$$$$$$
-|__/  \__/ \_______/   \___/        |________/|__/|_______/ |__/      \_______/|__/       \____  $$
-                                                                                          /$$  | $$
-                                                                                         |  $$$$$$/
-                                                                                          \______/
-]]
-
-net.Receive("AFKHUD2", function(len, ply)
-    net.Start("AFKHUDR")
-        net.WriteString(math.Round(ply:GetNextAFK() - CurTime()))
-    net.Send(ply)
-end)
-
-net.Receive("nnt-antiak-settings", function(len,ply)
-    if ply:IsSuperAdmin() then
-        local data5 = net.ReadTable()
-        local data4 = net.ReadString()
-
-        if data4 == "SetSettings" then
-            for k,v in pairs(data5) do
-                AntiAFKSetConfig("Settings",k,v)
-                net.Start("nnt-antiak-settings")
-                    local temptable = {[k] = v}
-                    net.WriteString("Settings")
-                    net.WriteTable(temptable)
-                net.Send(ply)
-            end
-        elseif data4 == "LoadData" then
-            print("[ANTI-AFK] : Starting to load data")
-            net.Start("nnt-antiak-settings")
-                local temptable = {
-                    ["WARN"] = AFK_WARN_TIME,
-                    ["KICK"] = AFK_TIME,
-                    ["BYPASS"] = AFK_ADMINBYPASS,
-                    ["UBYPASS"] = AFK_ADMINUBYPASS,
-                    ["ANTIAFK"] = AFK_ENABLE,
-                    ["GHOST"] = AFK_GHOST,
-                    ["DARKPMONEY"] = AFK_DARKRPMONEY,
-                    ["LANGUAGE"] = AFK_LANGUAGE,
-                    ["THEME"] = AFK_THEME,
-                    ["GODMODE"] = AFK_GODMODE,
-                    ["JOBENABLE"] = AFK_JOBENABLE,
-                    ["JOBNAME"] = AFK_JOBNAME,
-                    ["ENABLETIME"] = AFK_ENABLETIME,
-                    ["AFK_StartTimeHours"] = AFK_StartTimeHours,
-                    ["AFK_StartTimeMinutes"] = AFK_StartTimeMinutes,
-                    ["AFK_StopTimeHours"] = AFK_StopTimeHours,
-                    ["AFK_StopTimeMinutes"] = AFK_StopTimeMinutes,
-                    ["JOBREVERT"] = AFK_JOBREVERT
-                }
-                net.WriteString("LoadData")
-                net.WriteTable(temptable)
             net.Send(ply)
-        elseif data4 == "LoadULX" then
-            for k,v in pairs(data5) do
-                local temptable = {}
-            end
         elseif data4 == "LoadAFKTime" then
             net.Start("nnt-antiak-settings")
-                net.WriteString("LoadAFKTime")
-                net.WriteTable({["AFK_TIME"] = AFK_TIME})
+            net.WriteString("LoadAFKTime")
+
+            net.WriteTable({
+                ["AFK_TIME"] = AFK_TIME
+            })
+
             net.Send(ply)
         end
     else
         net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
+        net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
     end
 end)
 
-net.Receive("AntiAddBypassUsers", function(len, ply) -- ADD USER TO THE USERS WHITELIST
+-- ADD USER TO THE USERS WHITELIST
+net.Receive("AntiAddBypassUsers", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
-        if string.StartWith(SomeShittyTest , " " ) then return end
-		if SomeShittyTest == "" then return end
+        if string.StartWith(SomeShittyTest, " ") then return end
+        if SomeShittyTest == "" then return end
         if AFK_ADMINBYPASS_USERS[SomeShittyTest] then return end
-        AntiAFKSetConfig("UsersBypass","ADD",SomeShittyTest)
+        AntiAFKSetConfig("UsersBypass", "ADD", SomeShittyTest)
         net.Start("AntiAfksenBypassUsers")
-            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.WriteTable(AFK_ADMINBYPASS_USERS)
         net.Send(ply)
     else
         net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
+        net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
     end
 end)
 
-net.Receive("AntiRemBypassUsers", function(len, ply) -- REMOVE USER FROM THE WHITE LIST
+-- REMOVE USER FROM THE WHITE LIST
+net.Receive("AntiRemBypassUsers", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
-        AntiAFKSetConfig("UsersBypass","DEL",SomeShittyTest)
+        AntiAFKSetConfig("UsersBypass", "DEL", SomeShittyTest)
         net.Start("AntiAfksenBypassUsers")
-            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.WriteTable(AFK_ADMINBYPASS_USERS)
         net.Send(ply)
     else
         net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
+        net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
     end
 end)
 
-net.Receive("AntiAfkloaBypassUsers", function(len, ply) -- LOAD USER FROM THE WHITELIST
+-- LOAD USER FROM THE WHITELIST
+net.Receive("AntiAfkloaBypassUsers", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         net.Start("AntiAfksenBypassUsers")
-            net.WriteTable(AFK_ADMINBYPASS_USERS)
+        net.WriteTable(AFK_ADMINBYPASS_USERS)
         net.Send(ply)
     else
         net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
+        net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
     end
 end)
 
-net.Receive("AntiAddBypassGroups", function(len, ply) -- ADD GROUPS TO THE GROUPS WHITELIST
+-- ADD GROUPS TO THE GROUPS WHITELIST
+net.Receive("AntiAddBypassGroups", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
-        if string.StartWith(SomeShittyTest , " " ) then return end
-		if SomeShittyTest == "" then return end
-        if table.HasValue(AFK_ADMINBYPASS_GROUPS,SomeShittyTest ) then return end
-        AntiAFKSetConfig("BypassGroups","ADD",SomeShittyTest)
+        if string.StartWith(SomeShittyTest, " ") then return end
+        if SomeShittyTest == "" then return end
+        if table.HasValue(AFK_ADMINBYPASS_GROUPS, SomeShittyTest) then return end
+        AntiAFKSetConfig("BypassGroups", "ADD", SomeShittyTest)
         net.Start("AntiAfksenBypassGroups")
-            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
+        net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
         net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
+        net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
     end
 end)
 
-net.Receive("AntiRemBypassGroups", function(len, ply)  -- REMOVE GROUPS FROM THE GROUPS WHITELIST
+-- REMOVE GROUPS FROM THE GROUPS WHITELIST
+net.Receive("AntiRemBypassGroups", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
-        AntiAFKSetConfig("BypassGroups","DEL",SomeShittyTest)
+        AntiAFKSetConfig("BypassGroups", "DEL", SomeShittyTest)
         net.Start("AntiAfksenBypassGroups")
-            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
+        net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
         net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
+        net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
     end
 end)
 
-net.Receive("AntiAfkloaBypassGroups", function(len, ply) -- LOAD GROUPS FROM THE GROUPS WHITELIST
+-- LOAD GROUPS FROM THE GROUPS WHITELIST
+net.Receive("AntiAfkloaBypassGroups", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         net.Start("AntiAfksenBypassGroups")
-            net.WriteTable(AFK_ADMINBYPASS_GROUPS)
+        net.WriteTable(AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
         net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
+        net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
     end
 end)
-
---[[
- /$$$$$$$$ /$$   /$$ /$$   /$$  /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$
-| $$_____/| $$  | $$| $$$ | $$ /$$__  $$|__  $$__/|_  $$_/ /$$__  $$| $$$ | $$
-| $$      | $$  | $$| $$$$| $$| $$  \__/   | $$     | $$  | $$  \ $$| $$$$| $$
-| $$$$$   | $$  | $$| $$ $$ $$| $$         | $$     | $$  | $$  | $$| $$ $$ $$
-| $$__/   | $$  | $$| $$  $$$$| $$         | $$     | $$  | $$  | $$| $$  $$$$
-| $$      | $$  | $$| $$\  $$$| $$    $$   | $$     | $$  | $$  | $$| $$\  $$$
-| $$      |  $$$$$$/| $$ \  $$|  $$$$$$/   | $$    /$$$$$$|  $$$$$$/| $$ \  $$
-|__/       \______/ |__/  \__/ \______/    |__/   |______/ \______/ |__/  \__/
-]]
 
 local PlyMeta = FindMetaTable("Player")
 
@@ -527,9 +499,10 @@ function PlyMeta:IsAFK()
     if self.HaveWarning == nil then
         return false
     else
-    return self.HaveWarning
+        return self.HaveWarning
     end
 end
+
 function PlyMeta:SPIsAFK()
     if self.SuperAbuse == nil then
         return false
@@ -541,32 +514,36 @@ end
 function PlyMeta:SetAFK(bool)
     if bool == false then
         self.HaveWarning = false
+
         local temporytable = {
-            ["PlayerName"] = self:Nick() ,
+            ["PlayerName"] = self:Nick(),
             ["AFKSTATE"] = self.HaveWarning
         }
+
         if self.Ghost then
             self:SetCollisionGroup(COLLISION_GROUP_NONE)
-            self:SetRenderMode( RENDERMODE_NORMAL )
-		    self:Fire( "alpha", 255, 0 )
+            self:SetRenderMode(RENDERMODE_NORMAL)
+            self:Fire("alpha", 255, 0)
             self.Ghost = false
         end
+
         if self.GodModeAFK then
             self:GodDisable()
             self.GodModeAFK = false
         end
+
         net.Start("BroadcastAFKPLAYER")
-            net.WriteTable(temporytable)
+        net.WriteTable(temporytable)
         net.Broadcast()
-        if AFK_JOBENABLE then
-            if AFK_JOBREVERT then
-                if self.PreviousTeam == nil then return end
-                if not (self.PreviousTeam == self:Team()) then
-                    if gmod.GetGamemode().Name == "DarkRP" then
-                        self:changeTeam(self.PreviousTeam)
-                    else
-                        self:SetTeam(self.PreviousTeam)
-                    end
+
+        if AFK_JOBENABLE and AFK_JOBREVERT then
+            if self.PreviousTeam == nil then return end
+
+            if not (self.PreviousTeam == self:Team()) then
+                if gmod.GetGamemode().Name == "DarkRP" then
+                    self:changeTeam(self.PreviousTeam)
+                else
+                    self:SetTeam(self.PreviousTeam)
                 end
             end
         end
@@ -577,38 +554,45 @@ function PlyMeta:SetAFK(bool)
                     if gmod.GetGamemode().Name == "DarkRP" then
                         if not (self:Team() == k) then
                             if AFK_JOBREVERT then
-                               self.PreviousTeam =  self:Team()
+                                self.PreviousTeam = self:Team()
                             end
+
                             self:changeTeam(k)
                         end
                     else
-                        if not ( self:Team() == k) then
+                        if not (self:Team() == k) then
                             if AFK_JOBREVERT then
-                               self.PreviousTeam =  self:Team()
+                                self.PreviousTeam = self:Team()
                             end
+
                             self:SetTeam(k)
                         end
                     end
                 end
             end
         end
+
         self.HaveWarning = true
+
         local temporytable = {
-            ["PlayerName"] = self:Nick() ,
+            ["PlayerName"] = self:Nick(),
             ["AFKSTATE"] = self.HaveWarning
         }
+
         if AFK_GHOST then
-            self:SetRenderMode( RENDERMODE_TRANSALPHA )
-			self:Fire( "alpha", 150, 0 )
+            self:SetRenderMode(RENDERMODE_TRANSALPHA)
+            self:Fire("alpha", 150, 0)
             self:SetCollisionGroup(COLLISION_GROUP_WORLD)
             self.Ghost = true
         end
+
         if AFK_GODMODE then
             self:GodEnable()
             self.GodModeAFK = true
         end
+
         net.Start("BroadcastAFKPLAYER")
-            net.WriteTable(temporytable)
+        net.WriteTable(temporytable)
         net.Broadcast()
     elseif bool == nil then
         self.HaveWarning = nil
@@ -620,7 +604,7 @@ function PlyMeta:SetNextAFK(time)
         self.NextAFK = nil
     else
         self.NextAFK = CurTime() + time
-        self:SetNWEntity("NextAFK",  CurTime() + time)
+        self:SetNWEntity("NextAFK", CurTime() + time)
     end
 end
 
@@ -631,50 +615,50 @@ end
 function PlyMeta:SPSetAFK(bool)
     if bool == false then
         self.SuperAbuse = false
+
         local temporytable = {
-            ["PlayerName"] = self:Nick() ,
+            ["PlayerName"] = self:Nick(),
             ["AFKSTATE"] = self.SuperAbuse
         }
+
         net.Start("BroadcastAFKPLAYER")
-            net.WriteTable(temporytable)
+        net.WriteTable(temporytable)
         net.Broadcast()
     elseif bool == true then
         self.SuperAbuse = true
+
         local temporytable = {
-            ["PlayerName"] = self:Nick() ,
+            ["PlayerName"] = self:Nick(),
             ["AFKSTATE"] = self.SuperAbuse
         }
+
         net.Start("BroadcastAFKPLAYER")
-            net.WriteTable(temporytable)
+        net.WriteTable(temporytable)
         net.Broadcast()
     elseif bool == nil then
         self.SuperAbuse = nil
     end
 end
 
-
-hook.Add( "Initialize", "NNT-AntiAFK-FinishLoading", function()
+hook.Add("Initialize", "NNT-AntiAFK-FinishLoading", function()
     if gmod.GetGamemode().Name == "DarkRP" then
         hook.Add("playerGetSalary", "AFKGetSalary", function(ply, amount)
-            if AFK_DARKRPMONEY then
-                if ply.HaveWarning then
-                    return false, DarkRP.getPhrase("salary_frozen"), 0
-                end
-            end
+            if AFK_DARKRPMONEY and ply.HaveWarning then return false, DarkRP.getPhrase("salary_frozen"), 0 end
         end)
+
         print("[ANTI-AFK] Finished Loading")
     end
 end)
 
-
 local function getMinutes(hours, minutes)
-    return (hours*60)+minutes
+    return (hours * 60) + minutes
 end
 
 local function IsTimeBetween(StartH, StartM, StopH, StopM, TestH, TestM)
     if (StopH < StartH) then
-        local StopHOrg=StopH
+        local StopHOrg = StopH
         StopH = StopH + 24
+
         if (TestH <= StopHOrg) then
             TestH = TestH + 24
         end
@@ -683,252 +667,241 @@ local function IsTimeBetween(StartH, StartM, StopH, StopM, TestH, TestM)
     local StartTVal = getMinutes(StartH, StartM)
     local StopTVal = getMinutes(StopH, StopM)
     local curTVal = getMinutes(TestH, TestM)
-    return (curTVal >= StartTVal and curTVal <= StopTVal)
+
+    return curTVal >= StartTVal and curTVal <= StopTVal
 end
 
-local function IsNowBetween(StartH,StartM,StopH,StopM)
+local function IsNowBetween(StartH, StartM, StopH, StopM)
     local time = os.date("*t")
+
     return IsTimeBetween(StartH, StartM, StopH, StopM, time.hour, time.min)
 end
---[[
-  /$$$$$$   /$$$$$$  /$$   /$$  /$$$$$$   /$$$$$$  /$$       /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
- /$$__  $$ /$$__  $$| $$$ | $$ /$$__  $$ /$$__  $$| $$      | $$_____/       /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$ /$$__  $$| $$$ | $$| $$__  $$
-| $$  \__/| $$  \ $$| $$$$| $$| $$  \__/| $$  \ $$| $$      | $$            | $$  \__/| $$  \ $$| $$$$  /$$$$| $$$$  /$$$$| $$  \ $$| $$$$| $$| $$  \ $$
-| $$      | $$  | $$| $$ $$ $$|  $$$$$$ | $$  | $$| $$      | $$$$$         | $$      | $$  | $$| $$ $$/$$ $$| $$ $$/$$ $$| $$$$$$$$| $$ $$ $$| $$  | $$
-| $$      | $$  | $$| $$  $$$$ \____  $$| $$  | $$| $$      | $$__/         | $$      | $$  | $$| $$  $$$| $$| $$  $$$| $$| $$__  $$| $$  $$$$| $$  | $$
-| $$    $$| $$  | $$| $$\  $$$ /$$  \ $$| $$  | $$| $$      | $$            | $$    $$| $$  | $$| $$\  $ | $$| $$\  $ | $$| $$  | $$| $$\  $$$| $$  | $$
-|  $$$$$$/|  $$$$$$/| $$ \  $$|  $$$$$$/|  $$$$$$/| $$$$$$$$| $$$$$$$$      |  $$$$$$/|  $$$$$$/| $$ \/  | $$| $$ \/  | $$| $$  | $$| $$ \  $$| $$$$$$$/
- \______/  \______/ |__/  \__/ \______/  \______/ |________/|________/       \______/  \______/ |__/     |__/|__/     |__/|__/  |__/|__/  \__/|_______/
-]]
 
-concommand.Add( "afktime", function( ply, cmd, args )
-        ply:ChatPrint("[ANTI-AFK] : Time before kick " .. AFK_TIME.. " secondes")
-        ply:ChatPrint("[ANTI-AFK] : You should get a warning " .. AFK_WARN_TIME .. " secondes after being afk ")
-        ply:ChatPrint("[ANTI-AFK] : Its been " ..  AFK_TIME - math.Round(ply:GetNextAFK() - CurTime()) .. " secondes since u are afk !")
-        ply:ChatPrint("[ANTI-AFK] : "..  math.Round(ply:GetNextAFK() - CurTime()) .. " Secondes left before the kick")
+concommand.Add("afktime", function(ply, cmd, args)
+    ply:ChatPrint("[ANTI-AFK] : Time before kick " .. AFK_TIME .. " secondes")
+    ply:ChatPrint("[ANTI-AFK] : You should get a warning " .. AFK_WARN_TIME .. " secondes after being afk ")
+    ply:ChatPrint("[ANTI-AFK] : Its been " .. AFK_TIME - math.Round(ply:GetNextAFK() - CurTime()) .. " secondes since u are afk !")
+    ply:ChatPrint("[ANTI-AFK] : " .. math.Round(ply:GetNextAFK() - CurTime()) .. " Secondes left before the kick")
 end)
 
-concommand.Add( "setafkplayer", function( ply, cmd, args )-- need to change this in net library ...
+-- need to change this in net library ...
+concommand.Add("setafkplayer", function(ply, cmd, args)
     if (ply:GetUserGroup() == "superadmin") then
         if args[1] == "NULL" then return end
         targetply = player.GetBySteamID(args[1])
-        arguments = tonumber(args[2] , 10)
+        arguments = tonumber(args[2], 10)
+
         if (targetply:IsBot() == false) then
             tplyc = CurTime() + arguments
+
             if (tplyc < CurTime() + 120) then
-                ply:ChatPrint("[ANTI-AFK] : Commands was not exectued because player have less then 120 secondes left before getting kick" )
+                ply:ChatPrint("[ANTI-AFK] : Commands was not exectued because player have less then 120 secondes left before getting kick")
+
                 return
             else
                 targetply:SetNextAFK(arguments)
-                ply:ChatPrint("[ANTI-AFK] : ".. targetply:Nick() .." is now afk in ".. math.Round(targetply:GetNextAFK() - CurTime()) .. " secondes he will get kick" )
+                ply:ChatPrint("[ANTI-AFK] : " .. targetply:Nick() .. " is now afk in " .. math.Round(targetply:GetNextAFK() - CurTime()) .. " secondes he will get kick")
             end
         end
     else
         net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
+        net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : U are not a SuperAdmin !")
     end
 end)
---[[
-  /$$$$$$  /$$$$$$$$ /$$   /$$       /$$   /$$  /$$$$$$  /$$   /$$ /$$$$$$$  /$$       /$$$$$$ /$$   /$$  /$$$$$$
- /$$__  $$| $$_____/| $$  /$$/      | $$  | $$ /$$__  $$| $$$ | $$| $$__  $$| $$      |_  $$_/| $$$ | $$ /$$__  $$
-| $$  \ $$| $$      | $$ /$$/       | $$  | $$| $$  \ $$| $$$$| $$| $$  \ $$| $$        | $$  | $$$$| $$| $$  \__/
-| $$$$$$$$| $$$$$   | $$$$$/        | $$$$$$$$| $$$$$$$$| $$ $$ $$| $$  | $$| $$        | $$  | $$ $$ $$| $$ /$$$$
-| $$__  $$| $$__/   | $$  $$        | $$__  $$| $$__  $$| $$  $$$$| $$  | $$| $$        | $$  | $$  $$$$| $$|_  $$
-| $$  | $$| $$      | $$\  $$       | $$  | $$| $$  | $$| $$\  $$$| $$  | $$| $$        | $$  | $$\  $$$| $$  \ $$
-| $$  | $$| $$      | $$ \  $$      | $$  | $$| $$  | $$| $$ \  $$| $$$$$$$/| $$$$$$$$ /$$$$$$| $$ \  $$|  $$$$$$/
-|__/  |__/|__/      |__/  \__/      |__/  |__/|__/  |__/|__/  \__/|_______/ |________/|______/|__/  \__/ \______/
-]]
 
-hook.Add("PlayerInitialSpawn", "MakeAFKVarAndSendLanguage", function(ply) -- little hook to send the language to the player
-	ply:SetNextAFK(AFK_TIME)
+-- little hook to send the language to the player
+hook.Add("PlayerInitialSpawn", "MakeAFKVarAndSendLanguage", function(ply)
+    ply:SetNextAFK(AFK_TIME)
     net.Start("AntiAfkSendHUDInfo")
-            net.WriteString(AFK_LANGUAGE)
+    net.WriteString(AFK_LANGUAGE)
     net.Send(ply)
     net.Start("nnt-antiak-settings")
-        net.WriteString("LoadAFKTime")
-        net.WriteTable({["AFK_TIME"] = AFK_TIME})
+    net.WriteString("LoadAFKTime")
+
+    net.WriteTable({
+        ["AFK_TIME"] = AFK_TIME
+    })
+
     net.Send(ply)
 end)
 
 hook.Add("Think", "NNT-AFKPLAYERS", function()
-	for _, ply in pairs (player.GetHumans()) do
-		if ( ply:IsConnected() and ply:IsFullyAuthenticated() ) then
-            if !AFK_ENABLE then
-                    ply:SetNextAFK(AFK_TIME)
+    for _, ply in pairs(player.GetHumans()) do
+        if (ply:IsConnected() and ply:IsFullyAuthenticated()) then
+            if not AFK_ENABLE then
+                ply:SetNextAFK(AFK_TIME)
+
                 return
             end
-            if AFK_ENABLETIME then
-                if not IsNowBetween(AFK_StartTimeHours, AFK_StartTimeMinutes, AFK_StopTimeHours, AFK_StopTimeMinutes) then return end
+
+            if AFK_ENABLETIME and not IsNowBetween(AFK_StartTimeHours, AFK_StartTimeMinutes, AFK_StopTimeHours, AFK_StopTimeMinutes) then return end
+
+            if (not ply:GetNextAFK()) then
+                ply:SetNextAFK(AFK_TIME)
             end
-			if (!ply:GetNextAFK()) then
-				ply:SetNextAFK(AFK_TIME)
-			end
-			local afktime = ply:GetNextAFK() - AFK_TIME
-			if (CurTime() >= afktime + AFK_WARN_TIME) and (!ply:IsAFK()) and (!ply:SPIsAFK()) then
-                if AFK_ADMINBYPASS_USERS[ply:SteamID()] and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
-		            if AFK_ADMINUBYPASS == false then
-                        if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
-		                    if AFK_ADMINBYPASS == false then
+
+            local afktime = ply:GetNextAFK() - AFK_TIME
+
+            if (CurTime() >= afktime + AFK_WARN_TIME) and (not ply:IsAFK()) and (not ply:SPIsAFK()) then
+                if AFK_ADMINBYPASS_USERS[ply:SteamID()] and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
+                    if AFK_ADMINUBYPASS == false then
+                        if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
+                            if AFK_ADMINBYPASS == false then
                                 net.Start("AntiAfkSendHUDInfo")
-                                    net.WriteString("AntiafkMainHUD")
+                                net.WriteString("AntiafkMainHUD")
                                 net.Send(ply)
                                 AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-			                    hook.Call( "NNT-ANTIAFK_Warning", GAMEMODE, ply )
-			                    ply:SetAFK(true)
+                                hook.Call("NNT-ANTIAFK_Warning", GAMEMODE, ply)
+                                ply:SetAFK(true)
+
                                 return
-	                        else
-	                            ply:SPSetAFK(true)
+                            else
+                                ply:SPSetAFK(true)
+
                                 return
-	                        end
+                            end
                         else
                             net.Start("AntiAfkSendHUDInfo")
-                                net.WriteString("AntiafkMainHUD")
+                            net.WriteString("AntiafkMainHUD")
                             net.Send(ply)
                             AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-			                hook.Call( "NNT-ANTIAFK_Warning", GAMEMODE, ply )
-			                ply:SetAFK(true)
+                            hook.Call("NNT-ANTIAFK_Warning", GAMEMODE, ply)
+                            ply:SetAFK(true)
                         end
-	                else
-	                    ply:SPSetAFK(true)
-	                end
-			    elseif table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
-		            if AFK_ADMINBYPASS == false then
+                    else
+                        ply:SPSetAFK(true)
+                    end
+                elseif table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
+                    if AFK_ADMINBYPASS == false then
                         net.Start("AntiAfkSendHUDInfo")
-                            net.WriteString("AntiafkMainHUD")
+                        net.WriteString("AntiafkMainHUD")
                         net.Send(ply)
                         AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-			            hook.Call( "NNT-ANTIAFK_Warning", GAMEMODE, ply )
-			            ply:SetAFK(true)
-	                else
-	                    ply:SPSetAFK(true)
-	               end
-			    else
-				    print("[ANTI-AFK]" ..ply:Name() .. "est maintenant AFK !")
-				    ply:SetAFK(true)
-				    net.Start("AntiAfkSendHUDInfo")
-                        net.WriteString("AntiafkMainHUD")
+                        hook.Call("NNT-ANTIAFK_Warning", GAMEMODE, ply)
+                        ply:SetAFK(true)
+                    else
+                        ply:SPSetAFK(true)
+                    end
+                else
+                    print("[ANTI-AFK]" .. ply:Name() .. "est maintenant AFK !")
+                    ply:SetAFK(true)
+                    net.Start("AntiAfkSendHUDInfo")
+                    net.WriteString("AntiafkMainHUD")
                     net.Send(ply)
                     AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-				    hook.Call( "NNT-ANTIAFK_Warning", GAMEMODE, ply )
-
-				end
-			elseif (CurTime() >= afktime + AFK_TIME) and (ply:IsAFK()) then
-				ply:SetAFK(nil)
-				ply:SetNextAFK(nil)
-				ply:SPSetAFK(nil)
-				ply:Kick(AntiAfkTranslate[AFK_LANGUAGE]["KICKMESSAGES"])
-				hook.Call( "NNT-ANTIAFK_Kick", GAMEMODE, ply )
-			end
-		end
-	end
+                    hook.Call("NNT-ANTIAFK_Warning", GAMEMODE, ply)
+                end
+            elseif (CurTime() >= afktime + AFK_TIME) and (ply:IsAFK()) then
+                ply:SetAFK(nil)
+                ply:SetNextAFK(nil)
+                ply:SPSetAFK(nil)
+                ply:Kick(AntiAfkTranslate[AFK_LANGUAGE]["KICKMESSAGES"])
+                hook.Call("NNT-ANTIAFK_Kick", GAMEMODE, ply)
+            end
+        end
+    end
 end)
 
 hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
-    if ply:InVehicle() or !ply:InVehicle() and !(ply:GetAimVector() == AntiAFKPlayerEyesTrack[ply:SteamID()]) then
+    if ply:InVehicle() or not ply:InVehicle() and not (ply:GetAimVector() == AntiAFKPlayerEyesTrack[ply:SteamID()]) then
         ply:SetNextAFK(AFK_TIME)
         AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-	    if ply:IsAFK() or ply:SPIsAFK() then
+
+        if ply:IsAFK() or ply:SPIsAFK() then
             if ply:SPIsAFK() then
                 ply:SPSetAFK(false)
             end
+
             if ply:IsAFK() then
-		        ply:SetAFK(false)
+                ply:SetAFK(false)
             end
-		    print(ply:Name() .. " est plus AFK !")
-		    hook.Call( "NNT-ANTIAFK_UnWarning", GAMEMODE, ply )
-                if AFK_ADMINBYPASS_USERS[ply:SteamID()] and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
-		            if AFK_ADMINUBYPASS == false then
-                        if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup() ) and (!ply:SPIsAFK()) and (!ply:IsAFK()) then
-		                    if AFK_ADMINBYPASS == false then
-		                        net.Start("AFKHUD1")
-                                    net.WriteString("true")
-                                net.Send(ply)
-                                return
-	                        else
-	                            return
-	                        end
-                        else
-                           	net.Start("AFKHUD1")
-                                net.WriteString("true")
+
+            print(ply:Name() .. " est plus AFK !")
+            hook.Call("NNT-ANTIAFK_UnWarning", GAMEMODE, ply)
+
+            if AFK_ADMINBYPASS_USERS[ply:SteamID()] and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
+                if AFK_ADMINUBYPASS == false then
+                    if table.HasValue(AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
+                        if AFK_ADMINBYPASS == false then
+                            net.Start("AFKHUD1")
+                            net.WriteString("true")
                             net.Send(ply)
+
+                            return
+                        else
                             return
                         end
-	                else
-	                    return
-	                end
-                else
-		            net.Start("AFKHUD1")
+                    else
+                        net.Start("AFKHUD1")
                         net.WriteString("true")
-                    net.Send(ply)
+                        net.Send(ply)
+
+                        return
+                    end
+                else
+                    return
                 end
-	    end
-	end
-end)
---[[
-  /$$$$$$  /$$   /$$  /$$$$$$  /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$  /$$$$$$  /$$   /$$ /$$$$$$$
- /$$__  $$| $$  | $$ /$$__  $$|__  $$__/       /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$ /$$__  $$| $$$ | $$| $$__  $$
-| $$  \__/| $$  | $$| $$  \ $$   | $$         | $$  \__/| $$  \ $$| $$$$  /$$$$| $$$$  /$$$$| $$  \ $$| $$$$| $$| $$  \ $$
-| $$      | $$$$$$$$| $$$$$$$$   | $$         | $$      | $$  | $$| $$ $$/$$ $$| $$ $$/$$ $$| $$$$$$$$| $$ $$ $$| $$  | $$
-| $$      | $$__  $$| $$__  $$   | $$         | $$      | $$  | $$| $$  $$$| $$| $$  $$$| $$| $$__  $$| $$  $$$$| $$  | $$
-| $$    $$| $$  | $$| $$  | $$   | $$         | $$    $$| $$  | $$| $$\  $ | $$| $$\  $ | $$| $$  | $$| $$\  $$$| $$  | $$
-|  $$$$$$/| $$  | $$| $$  | $$   | $$         |  $$$$$$/|  $$$$$$/| $$ \/  | $$| $$ \/  | $$| $$  | $$| $$ \  $$| $$$$$$$/
- \______/ |__/  |__/|__/  |__/   |__/          \______/  \______/ |__/     |__/|__/     |__/|__/  |__/|__/  \__/|_______/
-]]
-
-hook.Add( "PlayerSay", "Antiafkcommand", function( ply, text, public )
-    if (string.StartWith( text , "/afktime" ) == true) then
-        commands = "/afktime"
-        hook.Call( "NNT-ANTIAFK_Command", GAMEMODE, ply , commands)
-        ply:ConCommand("afktime")
-        return"";
-    -----------------------------------------------------------------
-    -----------------------------------------------------------------
-    elseif(string.StartWith( text , "/setafk" ) == true) then
-        commands = "/setafk"
-        if (ply:GetUserGroup() == "superadmin") then
-
-            net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AntiafkAdminSetAfk")
-            net.Send(ply)
-            hook.Call( "NNT-ANTIAFK_Command", GAMEMODE, ply , commands)
-        else
-            net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
-            net.Send(ply)
-            ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
-            hook.Call( "NNT-ANTIAFK_CommandFail", GAMEMODE, ply , commands)
+            else
+                net.Start("AFKHUD1")
+                net.WriteString("true")
+                net.Send(ply)
+            end
         end
-        return"";
-    -----------------------------------------------------------------
-    -----------------------------------------------------------------
-    elseif(string.StartWith( text , "/afkpanel" ) == true) then
-        commands = "/afkpanel"
-        if (ply:GetUserGroup() == "superadmin") then
-            net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AntiafkAdminPanel")
-            net.Send(ply)
-            hook.Call( "NNT-ANTIAFK_Command", GAMEMODE, ply , commands)
-        else
-            net.Start("AntiAfkSendHUDInfo")
-                net.WriteString("AccessDeniedError")
-            net.Send(ply)
-            ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
-            hook.Call( "NNT-ANTIAFK_CommandFail", GAMEMODE, ply , commands)
-        end
-
-        return"";
-    -----------------------------------------------------------------
-    -----------------------------------------------------------------
-    elseif(string.StartWith( text , "/afkhelp" ) == true) then
-            ply:ChatPrint("Disponible commands :")
-            ply:ChatPrint("/afktime : Show Afk time before warn , kick etc..")
-            ply:ChatPrint("/setafk : Open panel to set a player how much time is left before kick [SuperAdmin only]")
-            ply:ChatPrint("/akfpanel : Open Panel to change settings [Live Change] and see settings [SuperAdmin only]")
-            ply:ChatPrint("/afkhelp : Print this messages in the chat ")
-        commands = "/afkhelp"
-        hook.Call( "NNT-ANTIAFK_Command", GAMEMODE, ply , commands)
-        return"";
     end
-end )
+end)
+
+hook.Add("PlayerSay", "Antiafkcommand", function(ply, text, public)
+    if string.StartWith(text, "/afktime") then
+        commands = "/afktime"
+        hook.Call("NNT-ANTIAFK_Command", GAMEMODE, ply, commands)
+        ply:ConCommand("afktime")
+
+        return ""
+    elseif (string.StartWith(text, "/setafk") or zthen) then
+        commands = "/setafk"
+
+        if (ply:GetUserGroup() == "superadmin") then
+            net.Start("AntiAfkSendHUDInfo")
+            net.WriteString("AntiafkAdminSetAfk")
+            net.Send(ply)
+            hook.Call("NNT-ANTIAFK_Command", GAMEMODE, ply, commands)
+        else
+            net.Start("AntiAfkSendHUDInfo")
+            net.WriteString("AccessDeniedError")
+            net.Send(ply)
+            ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
+            hook.Call("NNT-ANTIAFK_CommandFail", GAMEMODE, ply, commands)
+        end
+
+        return ""
+    elseif (string.StartWith(text, "/afkpanel") == true) then
+        commands = "/afkpanel"
+
+        if (ply:GetUserGroup() == "superadmin") then
+            net.Start("AntiAfkSendHUDInfo")
+            net.WriteString("AntiafkAdminPanel")
+            net.Send(ply)
+            hook.Call("NNT-ANTIAFK_Command", GAMEMODE, ply, commands)
+        else
+            net.Start("AntiAfkSendHUDInfo")
+            net.WriteString("AccessDeniedError")
+            net.Send(ply)
+            ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
+            hook.Call("NNT-ANTIAFK_CommandFail", GAMEMODE, ply, commands)
+        end
+
+        return ""
+    elseif (string.StartWith(text, "/afkhelp") == true) then
+        ply:ChatPrint("Disponible commands :")
+        ply:ChatPrint("/afktime : Show Afk time before warn , kick etc..")
+        ply:ChatPrint("/setafk : Open panel to set a player how much time is left before kick [SuperAdmin only]")
+        ply:ChatPrint("/akfpanel : Open Panel to change settings [Live Change] and see settings [SuperAdmin only]")
+        ply:ChatPrint("/afkhelp : Print this messages in the chat ")
+        commands = "/afkhelp"
+        hook.Call("NNT-ANTIAFK_Command", GAMEMODE, ply, commands)
+
+        return ""
+    end
+end)

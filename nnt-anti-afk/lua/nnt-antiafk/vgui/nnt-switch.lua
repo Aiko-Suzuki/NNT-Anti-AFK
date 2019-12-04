@@ -1,232 +1,225 @@
-
 local PANEL = {}
-
-AccessorFunc( PANEL, "m_bChecked", "Checked", FORCE_BOOL )
-
-Derma_Hook( PANEL, "Paint", "Paint", "CheckBox" )
-Derma_Hook( PANEL, "ApplySchemeSettings", "Scheme", "CheckBox" )
-Derma_Hook( PANEL, "PerformLayout", "Layout", "CheckBox" )
-
-Derma_Install_Convar_Functions( PANEL )
+AccessorFunc(PANEL, "m_bChecked", "Checked", FORCE_BOOL)
+Derma_Hook(PANEL, "Paint", "Paint", "CheckBox")
+Derma_Hook(PANEL, "ApplySchemeSettings", "Scheme", "CheckBox")
+Derma_Hook(PANEL, "PerformLayout", "Layout", "CheckBox")
+Derma_Install_Convar_Functions(PANEL)
 
 function PANEL:Init()
-
-	self:SetSize( 15, 15 )
-	self:SetText( "" )
-
+    self:SetSize(15, 15)
+    self:SetText("")
 end
 
 function PANEL:IsEditing()
-	return self.Depressed
+    return self.Depressed
 end
 
-function PANEL:SetValue( val )
+function PANEL:SetValue(val)
+    -- Tobool bugs out with "0.00"
+    if (tonumber(val) == 0) then
+        val = 0
+    end
 
-	if ( tonumber( val ) == 0 ) then val = 0 end // Tobool bugs out with "0.00"
-	val = tobool( val )
+    val = tobool(val)
+    self:SetChecked(val)
+    self.m_bValue = val
+    self:OnChange(val)
 
-	self:SetChecked( val )
-	self.m_bValue = val
+    if (val) then
+        val = "1"
+    else
+        val = "0"
+    end
 
-	self:OnChange( val )
-
-	if ( val ) then val = "1" else val = "0" end
-	self:ConVarChanged( val )
-
+    self:ConVarChanged(val)
 end
 
 function PANEL:DoClick()
-
-	self:Toggle()
-
+    self:Toggle()
 end
 
 function PANEL:Toggle()
-
-	if ( self:GetChecked() == nil || !self:GetChecked() ) then
-		self:SetValue( true )
-	else
-		self:SetValue( false )
-	end
-
+    if (self:GetChecked() == nil or not self:GetChecked()) then
+        self:SetValue(true)
+    else
+        self:SetValue(false)
+    end
 end
+
 function PANEL:Paint()
-
 end
 
-function PANEL:OnChange( bVal )
-
-	-- For override
-
+function PANEL:OnChange(bVal)
+    -- For override
 end
 
 function PANEL:Think()
-
-	self:ConVarStringThink()
-
+    self:ConVarStringThink()
 end
 
 -- No example for this control
-function PANEL:GenerateExample( class, tabs, w, h )
+function PANEL:GenerateExample(class, tabs, w, h)
 end
 
-derma.DefineControl( "NNTCheckBox", "Simple Checkbox", PANEL, "DButton" )
-
+derma.DefineControl("NNTCheckBox", "Simple Checkbox", PANEL, "DButton")
 --[[---------------------------------------------------------
 	DCheckBoxLabel
 -----------------------------------------------------------]]
-
 local PANEL = {}
-
-AccessorFunc( PANEL, "m_iIndent", "Indent" )
+AccessorFunc(PANEL, "m_iIndent", "Indent")
 
 function PANEL:Init()
-	self:SetTall( 16 )
+    self:SetTall(16)
+    self.Button = vgui.Create("NNTCheckBox", self)
+    self.Label = vgui.Create("DLabel", self)
+    self.Label:SetMouseInputEnabled(true)
 
-	self.Button = vgui.Create( "NNTCheckBox", self )
+    self.Label.DoClick = function()
+        self:Toggle()
+    end
 
-	self.Label = vgui.Create( "DLabel", self )
-	self.Label:SetMouseInputEnabled( true )
-	self.Label.DoClick = function() self:Toggle() end
-	self.SetAnimtionPos = 1
+    self.SetAnimtionPos = 1
+
     timer.Simple(0.2, function()
-		self.Button.OnChange =  function( _, val )
-			self:OnChange( val ) 
-		end
-	end)
-	timer.Simple(0.3, function()
-		if self:GetChecked() then
-			self.SetAnimtionPos = 19
-		end
-	end)
+        self.Button.OnChange = function(_, val)
+            self:OnChange(val)
+        end
+    end)
 
+    timer.Simple(0.3, function()
+        if self:GetChecked() then
+            self.SetAnimtionPos = 19
+        end
+    end)
 end
 
-
-function PANEL:SetDark( b )
-	self.Label:SetDark( b )
+function PANEL:SetDark(b)
+    self.Label:SetDark(b)
 end
 
-function PANEL:SetBright( b )
-	self.Label:SetBright( b )
+function PANEL:SetBright(b)
+    self.Label:SetBright(b)
 end
 
-function PANEL:SetConVar( cvar )
-	self.Button:SetConVar( cvar )
+function PANEL:SetConVar(cvar)
+    self.Button:SetConVar(cvar)
 end
 
-function PANEL:SetValue( val )
-	self.Button:SetValue( val )
+function PANEL:SetValue(val)
+    self.Button:SetValue(val)
 end
 
-function PANEL:SetChecked( val )
-	self.Button:SetChecked( val )
+function PANEL:SetChecked(val)
+    self.Button:SetChecked(val)
 end
 
-function PANEL:GetChecked( val )
-	return self.Button:GetChecked()
+function PANEL:GetChecked(val)
+    return self.Button:GetChecked()
 end
 
 function PANEL:Toggle()
-	self.Button:Toggle()
+    self.Button:Toggle()
 end
 
 function PANEL:PerformLayout()
-
-	local x = self.m_iIndent || 0
-
-	self.Button:SetSize( 38, 20 )
-	self.Button:SetPos( x, math.floor( ( self:GetTall() - self.Button:GetTall() ) / 2 ) )
-
-	self.Label:SizeToContents()
-	self.Label:SetPos( x + self.Button:GetWide() + 9, 1 )
-
-
+    local x = self.m_iIndent or 0
+    self.Button:SetSize(38, 20)
+    self.Button:SetPos(x, math.floor((self:GetTall() - self.Button:GetTall()) / 2))
+    self.Label:SizeToContents()
+    self.Label:SetPos(x + self.Button:GetWide() + 9, 1)
 end
 
-function PANEL:SetTextColor( color )
-
-	self.Label:SetTextColor( color )
-
+function PANEL:SetTextColor(color)
+    self.Label:SetTextColor(color)
 end
 
 function PANEL:SizeToContents()
-
-	self:InvalidateLayout( true ) -- Update the size of the DLabel and the X offset
-	self:SetWide( self.Label.x + self.Label:GetWide() )
-	self:SetTall( math.max( self.Button:GetTall(), self.Label:GetTall() ) )
-	self:InvalidateLayout() -- Update the positions of all children
-
+    self:InvalidateLayout(true) -- Update the size of the DLabel and the X offset
+    self:SetWide(self.Label.x + self.Label:GetWide())
+    self:SetTall(math.max(self.Button:GetTall(), self.Label:GetTall()))
+    self:InvalidateLayout() -- Update the positions of all children
 end
 
-function PANEL:SetText( text )
-
-	self.Label:SetText( text )
-	self:SizeToContents()
-
+function PANEL:SetText(text)
+    self.Label:SetText(text)
+    self:SizeToContents()
 end
 
-function PANEL:SetFont( font )
-
-	self.Label:SetFont( font )
-	self:SizeToContents()
-
+function PANEL:SetFont(font)
+    self.Label:SetFont(font)
+    self:SizeToContents()
 end
 
 function PANEL:GetText()
-
-	return self.Label:GetText()
-
+    return self.Label:GetText()
 end
 
 function PANEL:Paint()
     DisableClipping(true)
-	draw.RoundedBox(4, 3, 5, 32, 8, Color(66, 66, 66))
-	if ( self:GetChecked() ) then
-		draw.RoundedBox(6.5,self.SetAnimtionPos, 1, 16, 16, Color(40, 176, 0))
-	else
-		draw.RoundedBox(6.5,self.SetAnimtionPos, 1, 16, 16, Color(192, 15, 0))
-	end
-	DisableClipping(false)
+    draw.RoundedBox(4, 3, 5, 32, 8, Color(66, 66, 66))
+
+    if (self:GetChecked()) then
+        draw.RoundedBox(6.5, self.SetAnimtionPos, 1, 16, 16, Color(40, 176, 0))
+    else
+        draw.RoundedBox(6.5, self.SetAnimtionPos, 1, 16, 16, Color(192, 15, 0))
+    end
+
+    DisableClipping(false)
+
     return true
 end
 
-function PANEL.CheckAnim( fraction, beginning, change ) -- USED FOR THE ANIMATION !
-	return change * ( fraction ^ 2 ) + beginning
+-- USED FOR THE ANIMATION !
+function PANEL.CheckAnim(fraction, beginning, change)
+    return change * (fraction ^ 2) + beginning
 end
 
-function PANEL:OnChange( bVal )
-	surface.PlaySound( "ui/buttonclick.wav" )
+function PANEL:OnChange(bVal)
+    surface.PlaySound("ui/buttonclick.wav")
+
     if bVal then
-       self.Animation = Derma_Anim( "Active", self , function( pnl, Animation, delta, data )
-            self.SetAnimtionPos = self.CheckAnim(delta,1,20)
-       end)
-       self.Animation:Start(0.2)
-       self.Think = function(self)
-           if self.Animation:Active() then
-               self.Animation:Run()
-           end
-       end
-        net.Start("nnt-antiak-settings")
-            net.WriteTable({ [self.netdata] = true })
-            net.WriteString("SetSettings")
-        net.SendToServer()
-    else
-        self.Animation = Derma_Anim( "Active", self , function( pnl, Animation, delta, data )
-            self.SetAnimtionPos = self.CheckAnim(delta,19,-18)
+        self.Animation = Derma_Anim("Active", self, function(pnl, Animation, delta, data)
+            self.SetAnimtionPos = self.CheckAnim(delta, 1, 20)
         end)
+
         self.Animation:Start(0.2)
+
         self.Think = function(self)
             if self.Animation:Active() then
                 self.Animation:Run()
             end
         end
+
         net.Start("nnt-antiak-settings")
-            net.WriteTable({ [self.netdata] = false })
-            net.WriteString("SetSettings")
+
+        net.WriteTable({
+            [self.netdata] = true
+        })
+
+        net.WriteString("SetSettings")
+        net.SendToServer()
+    else
+        self.Animation = Derma_Anim("Active", self, function(pnl, Animation, delta, data)
+            self.SetAnimtionPos = self.CheckAnim(delta, 19, -18)
+        end)
+
+        self.Animation:Start(0.2)
+
+        self.Think = function(self)
+            if self.Animation:Active() then
+                self.Animation:Run()
+            end
+        end
+
+        net.Start("nnt-antiak-settings")
+
+        net.WriteTable({
+            [self.netdata] = false
+        })
+
+        net.WriteString("SetSettings")
         net.SendToServer()
     end
 end
 
-
-derma.DefineControl( "nnt-switch", "nnt-switch skin", PANEL, "DPanel" )
+derma.DefineControl("nnt-switch", "nnt-switch skin", PANEL, "DPanel")
