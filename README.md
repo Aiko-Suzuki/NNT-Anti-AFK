@@ -1,6 +1,16 @@
-# NNT-ANTI-AFK (Workshop version)
+# NNT-ANTI-AFK
+## Simple Guide
+#### How to install
+1. Dowload lastest version in the[ release tab](http://https://github.com/Aiko-Suzuki/NNT-Anti-AFK/releases/latest/ " release tab") or by clicking [here](https://github.com/Aiko-Suzuki/NNT-Anti-AFK/releases/latest/download/nnt-anti-afk.zip "here").
+2. Extract the `nnt-anti-afk` folder in your addons folder.
+3. Restart your server !
 
-### Information !
+#### How to config
+1. Set your self superadmin with ulx,fadmin, etc.
+2. Type in the chat `/afkpanel` and the config panel will open !
+
+## Information !
+
 #### Version 3.2.0 
 
 ##### Chat Command:
@@ -31,14 +41,4 @@
 - Themes
 - Multiple language support
 
-##### In coming features:
-- Logs in the panel
-- Temp bypass so you can add a user for like 10 minutes etc...
-- Maybe a permission manager ?
-
-
-If you want to help me fix or add a translation dm on discord ! (Aiko Shimizu#9799)
-
 Thanks to [Wex[A]rt](https://steamcommunity.com/sharedfiles/filedetails/?id=1659857487) for the spanish translation !
-
-Icons made by Freepik and Chanut from www.flaticon.com is licensed by CC 3.0
