@@ -1,7 +1,7 @@
 # NNT-ANTI-AFK (Workshop version)
 
 ### Information !
-#### Version 3.0.0
+#### Version 3.2.0 
 
 ##### Chat Command:
 - /setafk [Set time left before player get kick for afk (SuperAdmin Only !)]
