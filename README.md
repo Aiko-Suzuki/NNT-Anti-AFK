@@ -43,3 +43,5 @@
 - Multiple language support
 
 Thanks to [Wex[A]rt](https://steamcommunity.com/sharedfiles/filedetails/?id=1659857487) for the spanish translation !
+
+Copyright (C) 2019 Aiko Suzuki
