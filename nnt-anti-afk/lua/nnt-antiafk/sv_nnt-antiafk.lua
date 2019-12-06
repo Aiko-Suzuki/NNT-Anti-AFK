@@ -32,6 +32,8 @@ AFKDefaultConfig.Settings = {
 
 AFKDefaultConfig.UsersBypass = {}
 AFKDefaultConfig.Version = "3.0.0"
+
+--Net Add
 util.AddNetworkString("nnt-antiak-settings")
 util.AddNetworkString("AntiAfkSendHUDInfo") -- BASIC HUD INFO LANGUAGE/WHAT TO OPEN
 util.AddNetworkString("BroadcastAFKPLAYER")
@@ -46,6 +48,7 @@ util.AddNetworkString("AntiRemBypassUsers")
 util.AddNetworkString("AFKHUD1") -- HUD REQUEST AND RESPOND
 util.AddNetworkString("AFKHUD2")
 util.AddNetworkString("AFKHUDR")
+
 -- Starting to load Script !
 print("[ANTI-AFK] : Checking if config file are there")
 
@@ -642,7 +645,7 @@ end
 
 hook.Add("Initialize", "NNT-AntiAFK-FinishLoading", function()
     if gmod.GetGamemode().Name == "DarkRP" then
-        hook.Add("playerGetSalary", "AFKGetSalary", function(ply, amount)
+        hook.Add("playerGetSalary", "AFKGetSalary", function(ply, _)
             if AFK_DARKRPMONEY and ply.HaveWarning then return false, DarkRP.getPhrase("salary_frozen"), 0 end
         end)
 
@@ -677,7 +680,7 @@ local function IsNowBetween(StartH, StartM, StopH, StopM)
     return IsTimeBetween(StartH, StartM, StopH, StopM, time.hour, time.min)
 end
 
-concommand.Add("afktime", function(ply, cmd, args)
+concommand.Add("afktime", function(ply, _, _)
     ply:ChatPrint("[ANTI-AFK] : Time before kick " .. AFK_TIME .. " secondes")
     ply:ChatPrint("[ANTI-AFK] : You should get a warning " .. AFK_WARN_TIME .. " secondes after being afk ")
     ply:ChatPrint("[ANTI-AFK] : Its been " .. AFK_TIME - math.Round(ply:GetNextAFK() - CurTime()) .. " secondes since u are afk !")
@@ -685,7 +688,7 @@ concommand.Add("afktime", function(ply, cmd, args)
 end)
 
 -- need to change this in net library ...
-concommand.Add("setafkplayer", function(ply, cmd, args)
+concommand.Add("setafkplayer", function(ply, _, args)
     if (ply:GetUserGroup() == "superadmin") then
         if args[1] == "NULL" then return end
         targetply = player.GetBySteamID(args[1])
@@ -804,7 +807,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
     end
 end)
 
-hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
+hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, _)
     if ply:InVehicle() or not ply:InVehicle() and not (ply:GetAimVector() == AntiAFKPlayerEyesTrack[ply:SteamID()]) then
         ply:SetNextAFK(AFK_TIME)
         AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
@@ -852,7 +855,7 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, key)
     end
 end)
 
-hook.Add("PlayerSay", "Antiafkcommand", function(ply, text, public)
+hook.Add("PlayerSay", "Antiafkcommand", function(ply, text, _)
     if string.StartWith(text, "/afktime") then
         commands = "/afktime"
         hook.Call("NNT-ANTIAFK_Command", GAMEMODE, ply, commands)

@@ -1309,7 +1309,7 @@ local function NNTAntiafkAdminPanel(data)
 
     list_btn.DoClick = function()
         surface.PlaySound("garrysmod/ui_click.wav")
-        LocalPlayer():ConCommand("setafkplayer '" .. taplayer .. "' "  .. math.Round(SetPlayerAFKSliderSelect:GetValue()) * 60)
+        LocalPlayer():ConCommand("setafkplayer '" .. taplayer .. "' " .. math.Round(SetPlayerAFKSliderSelect:GetValue()) * 60)
     end
 
     if data == "setafk" then
