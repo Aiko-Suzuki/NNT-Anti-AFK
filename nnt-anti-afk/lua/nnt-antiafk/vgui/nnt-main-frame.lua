@@ -159,16 +159,18 @@ function PANEL:Think()
     end
 end
 
+local main_bg = Material("nnt-antiafk/main-bg.png")
+
 function PANEL:Paint(w, h)
     surface.SetDrawColor(255, 255, 255, 255)
-    surface.SetMaterial(Material("nnt-antiafk/Main-BG-D.png"))
+    surface.SetMaterial(main_bg)
     surface.DrawTexturedRect(0, 0, 500, 400)
 
     return true
 end
 
 function PANEL:OnMousePressed()
-    local screenX, screenY = self:LocalToScreen(0, 0)
+    local _, screenY = self:LocalToScreen(0, 0)
 
     if (self:GetDraggable() and gui.MouseY() < (screenY + 22)) then
         self.Dragging = {gui.MouseX() - self.x, gui.MouseY() - self.y}

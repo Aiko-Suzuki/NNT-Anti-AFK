@@ -39,7 +39,7 @@ function Default_NNTAntiafkMainHUD(parent)
     AfkPanelHUD:SetTitle("")
     AfkPanelHUD:SetDraggable(true)
     AfkPanelHUD:ShowCloseButton(false)
-    AfkPanelHUD:SetKeyBoardInputEnabled()
+    AfkPanelHUD:SetKeyboardInputEnabled()
     AfkPanelHUD:SetMouseInputEnabled()
     AfkPanelHUD:SetDraggable(false)
 
