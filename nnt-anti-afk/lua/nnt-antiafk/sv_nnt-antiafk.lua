@@ -31,9 +31,7 @@ AFKDefaultConfig.Settings = {
 }
 
 AFKDefaultConfig.UsersBypass = {}
-AFKDefaultConfig.Version = "3.0.0"
-
---Net Add
+AFKDefaultConfig.Version = "3.2.1"
 util.AddNetworkString("nnt-antiak-settings")
 util.AddNetworkString("AntiAfkSendHUDInfo") -- BASIC HUD INFO LANGUAGE/WHAT TO OPEN
 util.AddNetworkString("BroadcastAFKPLAYER")
