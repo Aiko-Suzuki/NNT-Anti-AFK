@@ -12,7 +12,7 @@
 ## Information !
 
 #### Version 3.2.0 
-#####[Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=1659857487 "Workshop")
+####[Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=1659857487 "Workshop")
 
 ##### Chat Command:
 - /setafk [Set time left before player get kick for afk (SuperAdmin Only !)]
