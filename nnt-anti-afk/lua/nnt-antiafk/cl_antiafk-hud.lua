@@ -174,7 +174,7 @@ local function NNTAntiafkAdminPanel(data)
         switchTable[netdata].check = NNTCheckBox
     end
 
-    NNTAddCheckBox("Avitvate Anti-AFK", 1, 1, "ANTIAFK", GeneralSettingsM)
+    NNTAddCheckBox("Anti-AFK", 1, 1, "ANTIAFK", GeneralSettingsM)
     NNTAddCheckBox("User's Whitelist", 2, 1, "UBYPASS", GeneralSettingsM)
     NNTAddCheckBox("Groups Whitelist", 3, 1, "BYPASS", GeneralSettingsM)
     NNTAddCheckBox("Ghost Mode", 4, 1, "GHOST", GeneralSettingsM)
@@ -200,14 +200,14 @@ local function NNTAntiafkAdminPanel(data)
     local KickSliderSelect = vgui.Create("nnt-slider", GeneralSettingsM)
     KickSliderSelect:SetPos(178, 35)
     KickSliderSelect:SetSize(250, 20)
-    KickSliderSelect:SetMin(5)
+    KickSliderSelect:SetMin(3)
     KickSliderSelect:SetMax(60)
     KickSliderSelect:SetDecimals(0)
     local WarnSliderSelect = vgui.Create("nnt-slider", GeneralSettingsM)
     WarnSliderSelect:SetPos(178, 95)
     WarnSliderSelect:SetSize(250, 20)
-    WarnSliderSelect:SetMin(2)
-    WarnSliderSelect:SetMax(55)
+    WarnSliderSelect:SetMin(1)
+    WarnSliderSelect:SetMax(58)
     WarnSliderSelect:SetDecimals(0)
     local list_btn = vgui.Create("nnt-small-btn", GeneralSettingsM)
     list_btn:SetText("APPLY CHANGE")
@@ -240,7 +240,7 @@ local function NNTAntiafkAdminPanel(data)
             LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time above or equal to 180 in the kick time !")
         end
 
-        if math.Round(WarnSliderSelect:GetValue()) >= 2 then
+        if math.Round(WarnSliderSelect:GetValue()) >= 1 then
             net.Start("nnt-antiak-settings")
 
             local temptable = {
@@ -252,7 +252,7 @@ local function NNTAntiafkAdminPanel(data)
             net.SendToServer()
             LocalPlayer():ChatPrint("[ANTI-AFK] Warn Time has been save !")
         else
-            LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time above or equal to 30 in the warn time !")
+            LocalPlayer():ChatPrint("[ANTI-AFK] You need to enter a time above or equal to 1 in the warn time !")
         end
     end
 
@@ -1066,7 +1066,7 @@ local function NNTAntiafkAdminPanel(data)
         else
             for k, v in pairs(WhitelistedGroup) do
                 local btn = AdminPanelGroups_view:Add("DButton")
-                btn:SetText("SteamID : " .. k .. ",  Name : " .. v)
+                btn:SetText(v)
                 btn:Dock(TOP)
                 btn:DockMargin(0, 0, 0, 1)
                 btn.Selected = false
@@ -1090,8 +1090,7 @@ local function NNTAntiafkAdminPanel(data)
             end
         end
     end
-
-    if ulx then
+    if CAMI then
         local GroupList = vgui.Create("DComboBox", WhitelistG)
         GroupList:SetPos(135, 335)
         GroupList:SetSize(130, 20)
@@ -1112,9 +1111,9 @@ local function NNTAntiafkAdminPanel(data)
             AddminGroupTolist()
             GroupList:Clear()
 
-            for k, v in pairs(ulx.group_names) do
-                if not (table.HasValue(antiusergroupsstring, v)) then
-                    GroupList:AddChoice(v)
+            for k, v in pairs(CAMI.GetUsergroups()) do
+                if not (table.HasValue(antiusergroupsstring, k)) then
+                    GroupList:AddChoice(k)
                 end
             end
         end)
@@ -1297,7 +1296,7 @@ local function NNTAntiafkAdminPanel(data)
     SetPlayerAFKSliderSelect:SetSize(300, 20)
     --SetPlayerAFKSliderSelect:SetText( "Kick Time [Minutes]" )
     SetPlayerAFKSliderSelect:SetMin(2)
-    SetPlayerAFKSliderSelect:SetMax(60)
+    SetPlayerAFKSliderSelect:SetMax(120)
     SetPlayerAFKSliderSelect:SetDecimals(0)
     SetPlayerAFKSliderSelect:SetValue(5)
     local list_btn = vgui.Create("nnt-small-btn")
@@ -1309,7 +1308,8 @@ local function NNTAntiafkAdminPanel(data)
 
     list_btn.DoClick = function()
         surface.PlaySound("garrysmod/ui_click.wav")
-        LocalPlayer():ConCommand("setafkplayer '" .. taplayer .. "' " .. math.Round(SetPlayerAFKSliderSelect:GetValue()) * 60)
+        print(taplayer)
+        LocalPlayer():ConCommand("setafkplayer \"" .. taplayer .. "\" " .. math.Round(SetPlayerAFKSliderSelect:GetValue()) * 60)
     end
 
     if data == "setafk" then

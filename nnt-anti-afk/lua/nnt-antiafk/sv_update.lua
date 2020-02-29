@@ -1,19 +1,19 @@
 local function LoadConfigFromFile()
-    local noewmotherfucker = file.Read("nnt-antiafk/AntiAfkConfig.txt", "DATA")
-    AntiAFKConfig = util.JSONToTable(noewmotherfucker)
-    AFK_WARN_TIME = AntiAFKConfig.Settings.WARN
-    AFK_TIME = AntiAFKConfig.Settings.KICK
+    local noewmotherfucker = file.Read("nnt-antiafk/AntiAFKConfig.txt", "DATA")
+    NNT.ANTI_AFK.Config = util.JSONToTable(noewmotherfucker)
+    AFK_WARN_TIME = NNT.ANTI_AFK.Config.Settings.WARN
+    AFK_TIME = NNT.ANTI_AFK.Config.Settings.KICK
     AFK_REPEAT = AFK_TIME - AFK_WARN_TIME
-    AFK_ENABLE = AntiAFKConfig.Settings.ANTIAFK
-    AFK_ADMINBYPASS = AntiAFKConfig.Settings.BYPASS
-    AFK_ADMINUBYPASS = AntiAFKConfig.Settings.UBYPASS
-    AFK_ADMINBYPASS_GROUPS = AntiAFKConfig.BypassGroups
-    AFK_ADMINBYPASS_USERS = AntiAFKConfig.UsersBypass
-    AFK_LANGUAGE = AntiAFKConfig.Settings.LANGUAGE
-    AFK_THEME = AntiAFKConfig.Settings.THEME
-    AFK_VERSION = AntiAFKConfig.Version
-    AFK_GHOST = AntiAFKConfig.Settings.GHOST
-    AFK_DARKRPMONEY = AntiAFKConfig.Settings.DARKPMONEY
+    AFK_ENABLE = NNT.ANTI_AFK.Config.Settings.ANTIAFK
+    AFK_ADMINBYPASS = NNT.ANTI_AFK.Config.Settings.BYPASS
+    AFK_ADMINUBYPASS = NNT.ANTI_AFK.Config.Settings.UBYPASS
+    AFK_ADMINBYPASS_GROUPS = NNT.ANTI_AFK.Config.BypassGroups
+    AFK_ADMINBYPASS_USERS = NNT.ANTI_AFK.Config.UsersBypass
+    AFK_LANGUAGE = NNT.ANTI_AFK.Config.Settings.LANGUAGE
+    AFK_THEME = NNT.ANTI_AFK.Config.Settings.THEME
+    AFK_VERSION = NNT.ANTI_AFK.Config.Version
+    AFK_GHOST = NNT.ANTI_AFK.Config.Settings.GHOST
+    AFK_DARKRPMONEY = NNT.ANTI_AFK.Config.Settings.DARKPMONEY
 end
 
 local function checkafkdata(data, name)
@@ -35,7 +35,7 @@ local function checkafkdata(data, name)
     end
 end
 
-function NNTAntiAFKUpdate()
+local function NNTAntiAFKUpdate()
     if AFK_GHOST == nil then
         AFK_GHOST = false
     end
@@ -48,17 +48,17 @@ function NNTAntiAFKUpdate()
         AFK_GODMODE = false
     end
 
-    AFKDefaultConfigUpdate = {}
-    AFKDefaultConfigUpdate.BypassGroups = AFK_ADMINBYPASS_GROUPS
+    NNT.ANTI_AFK.DefaultConfigUpdate = {}
+    NNT.ANTI_AFK.DefaultConfigUpdate.BypassGroups = AFK_ADMINBYPASS_GROUPS
 
-    AFKDefaultConfigUpdate.TimeSettings = {
+    NNT.ANTI_AFK.DefaultConfigUpdate.TimeSettings = {
         ["StartHours"] = checkafkdata(AFK_StartTimeHours, "StartHours"),
         ["StartMinutes"] = checkafkdata(AFK_StartTimeMinutes, "StartMinutes"),
         ["StopHours"] = checkafkdata(AFK_StopTimeHours, "StopHours"),
         ["StopMinutes"] = checkafkdata(AFK_StopTimeMinutes, "StopMinutes")
     }
 
-    AFKDefaultConfigUpdate.Settings = {
+    NNT.ANTI_AFK.DefaultConfigUpdate.Settings = {
         ["WARN"] = checkafkdata(AFK_WARN_TIME, "WARN"),
         ["KICK"] = checkafkdata(AFK_TIME, "KICK"),
         ["BYPASS"] = checkafkdata(AFK_ADMINBYPASS),
@@ -75,14 +75,14 @@ function NNTAntiAFKUpdate()
         ["JOBREVERT"] = checkafkdata(AFK_JOBREVERT)
     }
 
-    AFKDefaultConfigUpdate.UsersBypass = AntiAFKConfig.UsersBypass
-    AFKDefaultConfigUpdate.Version = NNTAntiAfkCurrentVersion
-    local newdata = util.TableToJSON(AFKDefaultConfigUpdate, true)
-    file.Write("nnt-antiafk/AntiAfkConfig.txt", newdata)
-    ReloadAntiAfkConfig()
+    NNT.ANTI_AFK.DefaultConfigUpdate.UsersBypass = NNT.ANTI_AFK.Config.UsersBypass
+    NNT.ANTI_AFK.DefaultConfigUpdate.Version = NNTAntiAfkCurrentVersion
+    local newdata = util.TableToJSON(NNT.ANTI_AFK.DefaultConfigUpdate, true)
+    file.Write("nnt-antiafk/AntiAFKConfig.txt", newdata)
+    NNT.ANTI_AFK:ReloadConfig()
 end
 
-function NNTCheckVersion(stringasdasd)
+local function NNTCheckVersion(stringasdasd)
     local Really = string.Split(stringasdasd, ".")
     local stringversion = Really[1] .. Really[2] .. Really[3]
     local numversion = tonumber(stringversion, 10)
