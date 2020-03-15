@@ -1,3 +1,5 @@
+AddCSLuaFile()
+
 NNTAntiAfkCurrentVersion = "3.2.0"
 
 if CLIENT then
