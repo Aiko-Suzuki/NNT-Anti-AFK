@@ -1,6 +1,6 @@
 AntiAfkLanguage = "EN"
 AntiAfkSelTheme = "Large"
-include("sh_nnt-antiafk.lua")
+include("nnt-antiafk/sh_nnt-antiafk.lua")
 
 surface.CreateFont("AFKLarge", {
     font = "Arial",

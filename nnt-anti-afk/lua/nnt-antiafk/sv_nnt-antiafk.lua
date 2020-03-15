@@ -1,7 +1,7 @@
 NNT = NNT or {}
 
-include("sv_update.lua")
-include("sh_nnt-antiafk.lua")
+include("nnt-antiafk/sv_update.lua")
+include("nnt-antiafk/sh_nnt-antiafk.lua")
 
 util.AddNetworkString("nnt-antiak-settings")
 util.AddNetworkString("AntiAfkSendHUDInfo") -- BASIC HUD INFO LANGUAGE/WHAT TO OPEN
@@ -108,7 +108,7 @@ NNT.ANTI_AFK = NNT.ANTI_AFK or {
             print("[ANTI-AFK] : Config not found reloading ...\nAnd Creating File !")
             file.Write("nnt-antiafk/AntiAFKConfig.txt", util.TableToJSON(self.DefaultConfig, true))
 
-            if (file.Size("nnt-antiafk/AntiAfkwarntime.txt", "DATA") > 0) then
+            if (file.Size("nnt-antiafk/AntiAFKConfig.txt", "DATA") > 0) then
                 print("[ANTI-AFK] : Loading of Config !")
                 self.Config = util.JSONToTable(file.Read("nnt-antiafk/AntiAFKConfig.txt", "DATA"))
                 print("[ANTI-AFK] : Loading of Config finished !")
