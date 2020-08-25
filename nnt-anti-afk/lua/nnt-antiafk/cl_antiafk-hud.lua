@@ -1330,6 +1330,8 @@ end
                                                                                          |  $$$$$$/
                                                                                           \______/
 ]]
+
+
 net.Receive("AntiAfkSendHUDInfo", function()
     local data1 = net.ReadString()
 

@@ -1,8 +1,6 @@
 NNT = NNT or {}
-
 include("nnt-antiafk/sv_update.lua")
 include("nnt-antiafk/sh_nnt-antiafk.lua")
-
 util.AddNetworkString("nnt-antiak-settings")
 util.AddNetworkString("AntiAfkSendHUDInfo") -- BASIC HUD INFO LANGUAGE/WHAT TO OPEN
 util.AddNetworkString("BroadcastAFKPLAYER")
@@ -17,6 +15,7 @@ util.AddNetworkString("AntiRemBypassUsers")
 util.AddNetworkString("AFKHUD1") -- HUD REQUEST AND RESPOND
 util.AddNetworkString("AFKHUD2")
 util.AddNetworkString("AFKHUDR")
+
 -- $$$$$$$$\                              $$\     $$\                     
 -- $$  _____|                             $$ |    \__|                    
 -- $$ |   $$\   $$\ $$$$$$$\   $$$$$$$\ $$$$$$\   $$\  $$$$$$\  $$$$$$$\  
@@ -25,7 +24,6 @@ util.AddNetworkString("AFKHUDR")
 -- $$ |   $$ |  $$ |$$ |  $$ |$$ |        $$ |$$\ $$ |$$ |  $$ |$$ |  $$ |
 -- $$ |   \$$$$$$  |$$ |  $$ |\$$$$$$$\   \$$$$  |$$ |\$$$$$$  |$$ |  $$ |
 -- \__|    \______/ \__|  \__| \_______|   \____/ \__| \______/ \__|  \__|
-
 local function getMinutes(hours, minutes)
     return (hours * 60) + minutes
 end
@@ -52,6 +50,13 @@ local function IsNowBetween(StartH, StartM, StopH, StopM)
 
     return IsTimeBetween(StartH, StartM, StopH, StopM, time.hour, time.min)
 end
+
+local function IsKeyExist(tb, key)
+    for k, _ in pairs(tb) do
+        if k == key then return true end
+    end
+end
+
 -- $$\      $$\            $$\               
 -- $$$\    $$$ |           $$ |              
 -- $$$$\  $$$$ | $$$$$$\ $$$$$$\    $$$$$$\  
@@ -60,7 +65,7 @@ end
 -- $$ |\$  /$$ |$$   ____| $$ |$$\ $$  __$$ |
 -- $$ | \_/ $$ |\$$$$$$$\  \$$$$  |\$$$$$$$ |
 -- \__|     \__| \_______|  \____/  \_______|
-NNT.ANTI_AFK = NNT.ANTI_AFK or {
+NNT.ANTI_AFK = {
     AntiAFKPlayerEyesTrack = {},
     Config = {},
     DefaultConfig = {
@@ -184,88 +189,18 @@ NNT.ANTI_AFK = NNT.ANTI_AFK or {
             net.Broadcast()
         end
     end,
-    -- settings = What type of settings to change (Settings,BypassGroups,UsersBypass)
-    -- opt = What option you what to change with the "settings" , 
-    -- option avaible for Settings (ANTIAFK, WARN, KICK, BYPASS, UBYPASS, GHOST, DARKPMONEY, GODMODE, JOBENABLE, JOBNAME, ENABLETIME, StartHours , StartMinutes, StopHours, StopMinutes, JOBREVERT, LANGUAGE, THEME)
-    -- option avaible for BypassGroups (DEL, ADD)
-    -- option avaible for UsersBypass (DEL, ADD)
-    -- data = data for the change 
-    -- ply = player to use (Only used for whitelist )
+    -- settings = What type of settings to change (Settings,BypassGroups,UsersBypass) -- opt = What option you what to change with the "settings" ,  -- option avaible for Settings (ANTIAFK, WARN, KICK, BYPASS, UBYPASS, GHOST, DARKPMONEY, GODMODE, JOBENABLE, JOBNAME, ENABLETIME, StartHours , StartMinutes, StopHours, StopMinutes, JOBREVERT, LANGUAGE, THEME) -- option avaible for BypassGroups (DEL, ADD) -- option avaible for UsersBypass (DEL, ADD) -- data = data for the change  -- ply = player to use (Only used for whitelist )
     SetConfig = function(self, settings, opt, data, ply)
         local tmp = self.Config
 
         if settings == "Settings" then
-            if opt == "ANTIAFK" then
-                tmp.Settings.ANTIAFK = data
-            end
-
-            if opt == "WARN" then
-                tmp.Settings.WARN = data
-            end
-
-            if opt == "KICK" then
-                tmp.Settings.KICK = data
-            end
-
-            if opt == "BYPASS" then
-                tmp.Settings.BYPASS = data
-            end
-
-            if opt == "UBYPASS" then
-                tmp.Settings.UBYPASS = data
-            end
-
-            if opt == "GHOST" then
-                tmp.Settings.GHOST = data
-            end
-
-            if opt == "DARKPMONEY" then
-                tmp.Settings.DARKPMONEY = data
-            end
-
-            if opt == "GODMODE" then
-                tmp.Settings.GODMODE = data
-            end
-
-            if opt == "JOBENABLE" then
-                tmp.Settings.JOBENABLE = data
-            end
-
-            if opt == "JOBNAME" then
-                tmp.Settings.JOBNAME = data
-            end
-
-            if opt == "ENABLETIME" then
-                tmp.Settings.ENABLETIME = data
-            end
-
-            if opt == "StartHours" then
-                tmp.TimeSettings.StartHours = data
-            end
-
-            if opt == "StartMinutes" then
-                tmp.TimeSettings.StartMinutes = data
-            end
-
-            if opt == "StopHours" then
-                tmp.TimeSettings.StopHours = data
-            end
-
-            if opt == "StopMinutes" then
-                tmp.TimeSettings.StopMinutes = data
-            end
-
-            if opt == "JOBREVERT" then
-                tmp.Settings.JOBREVERT = data
-            end
-
             if opt == "LANGUAGE" and table.HasValue(AntiAfkDisponibleLang, data) then
                 tmp.Settings.LANGUAGE = data
-            end
-
-            if opt == "THEME" and NNTAntiafkThemes[data] then
+            elseif opt == "THEME" and NNTAntiafkThemes[data] then
                 tmp.Settings.THEME = data
                 print("[ANTI-AFK] : Themes has been changed to " .. data)
+            elseif IsKeyExist(tmp.Settings, opt) then
+                tmp.Settings[opt] = data
             end
 
             local newdata = util.TableToJSON(tmp, true)
@@ -324,10 +259,9 @@ NNT.ANTI_AFK = NNT.ANTI_AFK or {
         end
     end
 }
+
 NNT.ANTI_AFK.__index = NNT.ANTI_AFK
 NNT.ANTI_AFK:AntiAFKInit()
-
-
 local PlyMeta = FindMetaTable("Player")
 
 function PlyMeta:IsAFK()
@@ -374,7 +308,7 @@ function PlyMeta:SetAFK(bool)
         if NNT.ANTI_AFK.AFK_JOBENABLE and NNT.ANTI_AFK.AFK_JOBREVERT then
             if self.PreviousTeam == nil then return end
 
-            if not (self.PreviousTeam == self:Team()) then
+            if (self.PreviousTeam ~= self:Team()) then
                 if gmod.GetGamemode().Name == "DarkRP" then
                     self:changeTeam(self.PreviousTeam)
                 else
@@ -386,22 +320,14 @@ function PlyMeta:SetAFK(bool)
         if NNT.ANTI_AFK.AFK_JOBENABLE then
             for k in pairs(team.GetAllTeams()) do
                 if team.GetName(k) == NNT.ANTI_AFK.AFK_JOBNAME then
-                    if gmod.GetGamemode().Name == "DarkRP" then
-                        if not (self:Team() == k) then
-                            if NNT.ANTI_AFK.AFK_JOBREVERT then
-                                self.PreviousTeam = self:Team()
-                            end
+                    if NNT.ANTI_AFK.AFK_JOBREVERT then
+                        self.PreviousTeam = self:Team()
+                    end
 
-                            self:changeTeam(k)
-                        end
-                    else
-                        if not (self:Team() == k) then
-                            if NNT.ANTI_AFK.AFK_JOBREVERT then
-                                self.PreviousTeam = self:Team()
-                            end
-
-                            self:SetTeam(k)
-                        end
+                    if gmod.GetGamemode().Name == "DarkRP" and (self:Team() ~= k) then
+                        self:changeTeam(k)
+                    elseif (self:Team() ~= k) then
+                        self:SetTeam(k)
                     end
                 end
             end
@@ -474,6 +400,7 @@ function PlyMeta:SPSetAFK(bool)
         self.SuperAbuse = nil
     end
 end
+
 -- $$\   $$\            $$\                                       $$\       $$\                     
 -- $$$\  $$ |           $$ |                                      $$ |      \__|                    
 -- $$$$\ $$ | $$$$$$\ $$$$$$\   $$\  $$\  $$\  $$$$$$\   $$$$$$\  $$ |  $$\ $$\ $$$$$$$\   $$$$$$\  
@@ -661,7 +588,6 @@ end)
 -- $$ |  $$\ $$ |  $$ |$$ | $$ | $$ |$$ | $$ | $$ |$$  __$$ |$$ |  $$ |$$ |  $$ |
 -- \$$$$$$  |\$$$$$$  |$$ | $$ | $$ |$$ | $$ | $$ |\$$$$$$$ |$$ |  $$ |\$$$$$$$ |
 --  \______/  \______/ \__| \__| \__|\__| \__| \__| \_______|\__|  \__| \_______|
-
 concommand.Add("afktime", function(ply, _, _)
     ply:ChatPrint("[ANTI-AFK] : Time before kick " .. NNT.ANTI_AFK.AFK_TIME .. " secondes")
     ply:ChatPrint("[ANTI-AFK] : You should get a warning " .. NNT.ANTI_AFK.AFK_WARN_TIME .. " secondes after being afk ")
@@ -672,11 +598,28 @@ end)
 -- need to change this in net library ...
 concommand.Add("setafkplayer", function(ply, _, args)
     if (ply:GetUserGroup() == "superadmin") then
-        if args[1] == "NULL" then ply:ChatPrint("[ANTI-AFK] : Player not found or missing args !") return end
+        if args[1] == "NULL" then
+            ply:ChatPrint("[ANTI-AFK] : Player not found or missing args !")
+
+            return
+        end
+
         targetply = player.GetBySteamID(args[1])
-        if not targetply then ply:ChatPrint("[ANTI-AFK] : Player not found or missing args !") return end
+
+        if not targetply then
+            ply:ChatPrint("[ANTI-AFK] : Player not found or missing args !")
+
+            return
+        end
+
         arguments = tonumber(args[2], 10)
-        if not arguments then ply:ChatPrint("[ANTI-AFK] : Player not found or missing args !") return end
+
+        if not arguments then
+            ply:ChatPrint("[ANTI-AFK] : Player not found or missing args !")
+
+            return
+        end
+
         if (targetply:IsBot() == false) then
             tplyc = CurTime() + arguments
 
@@ -740,21 +683,10 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
             if (CurTime() >= afktime + NNT.ANTI_AFK.AFK_WARN_TIME) and (not ply:IsAFK()) and (not ply:SPIsAFK()) then
                 if NNT.ANTI_AFK.AFK_ADMINBYPASS_USERS[ply:SteamID()] and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
                     if NNT.ANTI_AFK.AFK_ADMINUBYPASS == false then
-                        if table.HasValue(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
-                            if NNT.ANTI_AFK.AFK_ADMINBYPASS == false then
-                                net.Start("AntiAfkSendHUDInfo")
-                                net.WriteString("AntiafkMainHUD")
-                                net.Send(ply)
-                                NNT.ANTI_AFK.AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
-                                hook.Call("NNT-ANTIAFK_Warning", GAMEMODE, ply)
-                                ply:SetAFK(true)
+                        if table.HasValue(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and not ply:SPIsAFK() and not ply:IsAFK() and NNT.ANTI_AFK.AFK_ADMINBYPASS then
+                            ply:SPSetAFK(true)
 
-                                return
-                            else
-                                ply:SPSetAFK(true)
-
-                                return
-                            end
+                            return
                         else
                             net.Start("AntiAfkSendHUDInfo")
                             net.WriteString("AntiafkMainHUD")
@@ -816,16 +748,12 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, _)
 
             if NNT.ANTI_AFK.AFK_ADMINBYPASS_USERS[ply:SteamID()] and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
                 if NNT.ANTI_AFK.AFK_ADMINUBYPASS == false then
-                    if table.HasValue(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
-                        if NNT.ANTI_AFK.AFK_ADMINBYPASS == false then
-                            net.Start("AFKHUD1")
-                            net.WriteString("true")
-                            net.Send(ply)
+                    if table.HasValue(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and (not ply:SPIsAFK()) and (not ply:IsAFK()) and not NNT.ANTI_AFK.AFK_ADMINBYPASS then
+                        net.Start("AFKHUD1")
+                        net.WriteString("true")
+                        net.Send(ply)
 
-                            return
-                        else
-                            return
-                        end
+                        return
                     else
                         net.Start("AFKHUD1")
                         net.WriteString("true")
