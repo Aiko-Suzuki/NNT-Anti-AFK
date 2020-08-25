@@ -1,4 +1,7 @@
 # NNT-ANTI-AFK
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0c53c10dda384d9ebc6b131dbbaceb80)](https://app.codacy.com/manual/Aiko-Suzuki/NNT-Anti-AFK?utm_source=github.com&utm_medium=referral&utm_content=Aiko-Suzuki/NNT-Anti-AFK&utm_campaign=Badge_Grade_Dashboard)
+
 ## Simple Guide
 #### How to install
 1. Dowload lastest version in the[ release tab](http://https://github.com/Aiko-Suzuki/NNT-Anti-AFK/releases/latest/ " release tab") or by clicking [here](https://github.com/Aiko-Suzuki/NNT-Anti-AFK/releases/latest/download/nnt-anti-afk.zip "here").
