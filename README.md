@@ -27,6 +27,7 @@
 - English / Full
 - French / Afk warning and chat
 - Spanish / Afk warning and chat
+- Russian / Full
 
 ##### Themes:
 - Default
