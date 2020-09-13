@@ -1,4 +1,3 @@
-AntiAfkLanguage = "EN"
 AntiAfkSelTheme = "Large"
 include("nnt-antiafk/sh_nnt-antiafk.lua")
 
@@ -137,7 +136,6 @@ local function NNTAntiafkAdminPanel(data)
     local WhitelistG = NNTNavPageCreationMain("WL Groups", "nnt-antiafk/users.png", false)
     local SetAFKMenu = NNTNavPageCreationMain("Set AFK", "nnt-antiafk/clock.png", false)
     local Themes = NNTNavPageCreationMain("Themes", "nnt-antiafk/theme.png", false)
-    local Languages = NNTNavPageCreationMain("Languages", "nnt-antiafk/translate.png", false)
     --[[
   /$$$$$$                                                   /$$        /$$$$$$              /$$     /$$     /$$     /$$                              
  /$$__  $$                                                 | $$       /$$__  $$            | $$    | $$    | $$    |__/                              
@@ -684,73 +682,10 @@ local function NNTAntiafkAdminPanel(data)
         end
     end
 
-    local TranslatePreviewGenTable = {}
-
-    local function TranslatePreviewGen(e, t)
-        local pos = table.Count(TranslatePreviewGenTable)
-        local dlabel = vgui.Create("DLabel", Languages)
-        dlabel:SetPos(10, 10 + (20 * pos))
-        dlabel:SetText(AntiAfkTranslate[e][t])
-        dlabel:SizeToContents()
-        TranslatePreviewGenTable[t] = dlabel
-    end
-
-    local function getLangTable(e)
-        if table.Count(TranslatePreviewGenTable) > 0 then
-            for k, v in pairs(TranslatePreviewGenTable) do
-                v:Remove()
-            end
-
-            table.Empty(TranslatePreviewGenTable)
-        end
-
-        for k, v in pairs(AntiAfkTranslate[e]) do
-            TranslatePreviewGen(e, k)
-        end
-    end
-
-    getLangTable(AntiAfkLanguage)
-    local SelectTranslate = vgui.Create("DComboBox", Languages)
-    SelectTranslate:SetPos(155, 270)
-    SelectTranslate:SetSize(100, 20)
-    SelectTranslate:SetValue(AntiAfkTranslate[AntiAfkLanguage]["NAME"])
-
-    for k, v in pairs(AntiAfkTranslate) do
-        SelectTranslate:AddChoice(v["NAME"])
-    end
-
-    SelectTranslate.OnSelect = function(self, index, value)
-        for k, v in pairs(AntiAfkTranslate) do
-            if v["NAME"] == value then
-                AntiAFKSelectedLanguages = k
-                getLangTable(k)
-            end
-        end
-    end
-
-    local ApplyLanguages = vgui.Create("nnt-small-btn")
-    ApplyLanguages:SetParent(Languages)
-    ApplyLanguages:SetText("APPLY LANGUAGES")
-    ApplyLanguages:SetPos(80, 305)
-    ApplyLanguages:SetSize(250, 20)
-    ApplyLanguages:SetFont("DermaDefaultBold")
-    ApplyLanguages:SetColor(Color(255, 255, 255))
-
-    ApplyLanguages.DoClick = function()
-        surface.PlaySound("garrysmod/ui_click.wav")
-        net.Start("nnt-antiak-settings")
-
-        local temptable = {
-            ["LANGUAGE"] = AntiAFKSelectedLanguages
-        }
-
-        net.WriteTable(temptable)
-        net.WriteString("SetSettings")
-        net.SendToServer()
-    end
-
     net.Start("nnt-antiak-settings")
+
     net.WriteTable({"Pleasedata"})
+
     net.WriteString("LoadData")
     net.SendToServer()
 
@@ -793,9 +728,6 @@ local function NNTAntiafkAdminPanel(data)
                         JobSelection:SetValue(v)
                         JobSelected = v
                     end
-                elseif k == "LANGUAGE" then
-                    AntiAfkLanguage = v
-                    AntiAFKSelectedLanguages = v
                 elseif k == "THEME" then
                     AntiAfkSelTheme = v
                     AntiAFKSelectedTheme = v
@@ -1090,6 +1022,7 @@ local function NNTAntiafkAdminPanel(data)
             end
         end
     end
+
     if CAMI then
         local GroupList = vgui.Create("DComboBox", WhitelistG)
         GroupList:SetPos(135, 335)
@@ -1330,8 +1263,6 @@ end
                                                                                          |  $$$$$$/
                                                                                           \______/
 ]]
-
-
 net.Receive("AntiAfkSendHUDInfo", function()
     local data1 = net.ReadString()
 
@@ -1350,9 +1281,6 @@ net.Receive("AntiAfkSendHUDInfo", function()
     elseif table.HasValue(NNTAntiafkThemes, data1) then
         AntiAfkSelTheme = data1
         print("ANTIAFK: THEMES SELECTED : " .. AntiAfkSelTheme)
-    elseif table.HasValue(AntiAfkDisponibleLang, data1) then
-        AntiAfkLanguage = data1
-        print("ANTIAFK: LANGUAGE SETTINGS RECEIVED : " .. AntiAfkLanguage)
     elseif (data1 == "AccessDeniedError") then
         notification.AddLegacy("[NNT] ANTI-AFK : Access Denied !", NOTIFY_ERROR, 3)
         surface.PlaySound("buttons/button18.wav")
@@ -1364,10 +1292,10 @@ net.Receive("BroadcastAFKPLAYER", function()
     local data2 = net.ReadTable()
 
     if data2["AFKSTATE"] == true then
-        afktext = AntiAfkTranslate[AntiAfkLanguage]["NOWAFK"]
+        afktext = language.GetPhrase("nnt.now_afk")
         afkcolor = Color(198, 0, 0)
     elseif data2["AFKSTATE"] == false then
-        afktext = AntiAfkTranslate[AntiAfkLanguage]["NOLONGERAFK"]
+        afktext = language.GetPhrase("nnt.nolonger_afk")
         afkcolor = Color(0, 0, 198)
     end
 

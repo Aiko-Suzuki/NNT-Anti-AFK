@@ -84,7 +84,6 @@ NNT.ANTI_AFK = {
             ["BYPASS"] = false,
             ["UBYPASS"] = false,
             ["ANTIAFK"] = true,
-            ["LANGUAGE"] = "EN",
             ["THEME"] = "Default",
             ["GHOST"] = false,
             ["DARKPMONEY"] = false,
@@ -136,7 +135,6 @@ NNT.ANTI_AFK = {
         self.AFK_ADMINUBYPASS = self.Config.Settings.UBYPASS
         self.AFK_ADMINBYPASS_GROUPS = self.Config.BypassGroups
         self.AFK_ADMINBYPASS_USERS = self.Config.UsersBypass
-        self.AFK_LANGUAGE = self.Config.Settings.LANGUAGE
         self.AFK_THEME = self.Config.Settings.THEME
         self.AFK_VERSION = self.Config.Version
         self.AFK_GHOST = self.Config.Settings.GHOST
@@ -162,7 +160,6 @@ NNT.ANTI_AFK = {
                 ["ANTIAFK"] = self.AFK_ENABLE,
                 ["GHOST"] = self.AFK_GHOST,
                 ["DARKPMONEY"] = self.AFK_DARKRPMONEY,
-                ["LANGUAGE"] = self.AFK_LANGUAGE,
                 ["THEME"] = self.AFK_THEME,
                 ["GODMODE"] = self.AFK_GODMODE,
                 ["JOBENABLE"] = self.AFK_JOBENABLE,
@@ -182,9 +179,6 @@ NNT.ANTI_AFK = {
 
         if #player.GetAll() > 0 then
             net.Start("AntiAfkSendHUDInfo")
-            net.WriteString(self.AFK_LANGUAGE)
-            net.Broadcast()
-            net.Start("AntiAfkSendHUDInfo")
             net.WriteString(self.AFK_THEME)
             net.Broadcast()
         end
@@ -194,9 +188,7 @@ NNT.ANTI_AFK = {
         local tmp = self.Config
 
         if settings == "Settings" then
-            if opt == "LANGUAGE" and table.HasValue(AntiAfkDisponibleLang, data) then
-                tmp.Settings.LANGUAGE = data
-            elseif opt == "THEME" and NNTAntiafkThemes[data] then
+            if opt == "THEME" and NNTAntiafkThemes[data] then
                 tmp.Settings.THEME = data
                 print("[ANTI-AFK] : Themes has been changed to " .. data)
             elseif IsKeyExist(tmp.Settings, opt) then
@@ -448,7 +440,6 @@ net.Receive("nnt-antiak-settings", function(len, ply)
                 ["ANTIAFK"] = NNT.ANTI_AFK.AFK_ENABLE,
                 ["GHOST"] = NNT.ANTI_AFK.AFK_GHOST,
                 ["DARKPMONEY"] = NNT.ANTI_AFK.AFK_DARKRPMONEY,
-                ["LANGUAGE"] = NNT.ANTI_AFK.AFK_LANGUAGE,
                 ["THEME"] = NNT.ANTI_AFK.AFK_THEME,
                 ["GODMODE"] = NNT.ANTI_AFK.AFK_GODMODE,
                 ["JOBENABLE"] = NNT.ANTI_AFK.AFK_JOBENABLE,
@@ -650,9 +641,6 @@ end)
 -- \__|  \__| \______/  \______/ \__|  \__|
 hook.Add("PlayerInitialSpawn", "MakeAFKVarAndSendLanguage", function(ply)
     ply:SetNextAFK(NNT.ANTI_AFK.AFK_TIME)
-    net.Start("AntiAfkSendHUDInfo")
-    net.WriteString(NNT.ANTI_AFK.AFK_LANGUAGE)
-    net.Send(ply)
     net.Start("nnt-antiak-settings")
     net.WriteString("LoadAFKTime")
 

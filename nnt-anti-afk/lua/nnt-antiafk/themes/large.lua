@@ -51,10 +51,10 @@ function Large_NNTAntiafkMainHUD(parent)
         draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 235))
 
         if not parent then
-            draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["MAINTEXT"], "AFKLarge", pw / 2, ph / 16, Color(255, 0, 0, 255), TEXT_ALIGN_CENTER)
-            draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["WARN"] .. AntiAFKTimer.TimeLeft, "AFKMedium", pw / 2, ph / 7, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-            draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["CANCEL"], "AFKsmall", pw / 2, ph / 5, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-            draw.DrawText(AntiAfkTranslate[AntiAfkLanguage]["MOVEKEY"], "AFKsmallK", pw / 2, ph / 4, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+            draw.DrawText("#nnt.main_text", "AFKLarge", pw / 2, ph / 16, Color(255, 0, 0, 255), TEXT_ALIGN_CENTER)
+            draw.DrawText(language.GetPhrase("nnt.warn") .. AntiAFKTimer.TimeLeft, "AFKMedium", pw / 2, ph / 7, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+            draw.DrawText("#nnt.cancel", "AFKsmall", pw / 2, ph / 5, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+            draw.DrawText("#nnt.move_key", "AFKsmallK", pw / 2, ph / 4, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
         end
     end
 

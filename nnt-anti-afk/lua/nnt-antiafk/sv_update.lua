@@ -9,7 +9,6 @@ local function LoadConfigFromFile()
     AFK_ADMINUBYPASS = NNT.ANTI_AFK.Config.Settings.UBYPASS
     AFK_ADMINBYPASS_GROUPS = NNT.ANTI_AFK.Config.BypassGroups
     AFK_ADMINBYPASS_USERS = NNT.ANTI_AFK.Config.UsersBypass
-    AFK_LANGUAGE = NNT.ANTI_AFK.Config.Settings.LANGUAGE
     AFK_THEME = NNT.ANTI_AFK.Config.Settings.THEME
     AFK_VERSION = NNT.ANTI_AFK.Config.Version
     AFK_GHOST = NNT.ANTI_AFK.Config.Settings.GHOST
@@ -64,7 +63,6 @@ local function NNTAntiAFKUpdate()
         ["BYPASS"] = checkafkdata(AFK_ADMINBYPASS),
         ["UBYPASS"] = checkafkdata(AFK_ADMINUBYPASS),
         ["ANTIAFK"] = checkafkdata(AFK_ENABLE),
-        ["LANGUAGE"] = checkafkdata(AFK_LANGUAGE),
         ["THEME"] = checkafkdata(AFK_THEME, "THEME"),
         ["GHOST"] = checkafkdata(AFK_GHOST),
         ["DARKPMONEY"] = checkafkdata(AFK_DARKRPMONEY),
