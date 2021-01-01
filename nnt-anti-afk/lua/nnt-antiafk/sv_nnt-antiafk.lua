@@ -710,7 +710,7 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                 ply:SetAFK(nil)
                 ply:SetNextAFK(nil)
                 ply:SPSetAFK(nil)
-                ply:Kick(AntiAfkTranslate[NNT.ANTI_AFK.AFK_LANGUAGE]["KICKMESSAGES"])
+                ply:Kick("#nnt.kick_message")
                 hook.Call("NNT-ANTIAFK_Kick", GAMEMODE, ply)
             end
         end
