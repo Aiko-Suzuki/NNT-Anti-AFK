@@ -224,7 +224,8 @@ local function NNTAntiafkAdminPanel(data)
                 return
             end
 
-            net.Start("nnt-antiak-settings")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("nnt-antiak-settings")
 
             local temptable = {
                 ["KICK"] = math.Round(KickSliderSelect:GetValue()) * 60
@@ -239,7 +240,8 @@ local function NNTAntiafkAdminPanel(data)
         end
 
         if math.Round(WarnSliderSelect:GetValue()) >= 1 then
-            net.Start("nnt-antiak-settings")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("nnt-antiak-settings")
 
             local temptable = {
                 ["WARN"] = math.Round(WarnSliderSelect:GetValue()) * 60
@@ -514,7 +516,8 @@ local function NNTAntiafkAdminPanel(data)
         local stopdata = string.Split(Stoptime:GetValue(), " : ")
         local SecondHours = stopdata[1]
         local SecondMinutes = stopdata[2]
-        net.Start("nnt-antiak-settings")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("nnt-antiak-settings")
 
         local temptable = {
             ["StartHours"] = FirstHours,
@@ -589,7 +592,8 @@ local function NNTAntiafkAdminPanel(data)
         surface.PlaySound("garrysmod/ui_click.wav")
 
         if checkifjobByNameExist(JobSelected) then
-            net.Start("nnt-antiak-settings")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("nnt-antiak-settings")
 
             local temptable = {
                 ["JOBNAME"] = JobSelected
@@ -641,7 +645,8 @@ local function NNTAntiafkAdminPanel(data)
 
     ApplyThemes.DoClick = function()
         surface.PlaySound("garrysmod/ui_click.wav")
-        net.Start("nnt-antiak-settings")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("nnt-antiak-settings")
 
         local temptable = {
             ["THEME"] = AntiAFKSelectedTheme
@@ -682,14 +687,15 @@ local function NNTAntiafkAdminPanel(data)
         end
     end
 
-    net.Start("nnt-antiak-settings")
+    net.Start("NNT:AntiAFK:Main")
+    net.WriteString("nnt-antiak-settings")
 
     net.WriteTable({"Pleasedata"})
 
     net.WriteString("LoadData")
     net.SendToServer()
 
-    net.Receive("nnt-antiak-settings", function()
+    RegisterNet("nnt-antiak-settings", function()
         local data5 = net.ReadString()
         local data4 = net.ReadTable()
 
@@ -842,10 +848,11 @@ local function NNTAntiafkAdminPanel(data)
     UserList:SetPos(135, 335)
     UserList:SetSize(130, 20)
     UserList:SetValue("Select!")
-    net.Start("AntiAfkloaBypassUsers")
+    net.Start("NNT:AntiAFK:Main")
+    net.WriteString("AntiAfkloaBypassUsers")
     net.SendToServer()
 
-    net.Receive("AntiAfksenBypassUsers", function(len)
+    RegisterNet("AntiAfksenBypassUsers", function(len)
         table.Empty(WhitelistedUser)
         table.Empty(WhitelistedUserBtn)
         AdminPanelUsers_view:Clear()
@@ -913,7 +920,8 @@ local function NNTAntiafkAdminPanel(data)
             return
         end
 
-        net.Start("AntiAddBypassUsers")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAddBypassUsers")
         net.WriteString(SelectedPlayeris:SteamID())
         net.SendToServer()
     end
@@ -928,7 +936,8 @@ local function NNTAntiafkAdminPanel(data)
 
     delbutton.DoClick = function()
         surface.PlaySound("ui/buttonclick.wav")
-        net.Start("AntiRemBypassUsers")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiRemBypassUsers")
         net.WriteString(tauser)
         net.SendToServer()
     end
@@ -1028,10 +1037,11 @@ local function NNTAntiafkAdminPanel(data)
         GroupList:SetPos(135, 335)
         GroupList:SetSize(130, 20)
         GroupList:SetValue("Select a group")
-        net.Start("AntiAfkloaBypassGroups")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkloaBypassGroups")
         net.SendToServer()
 
-        net.Receive("AntiAfksenBypassGroups", function(len)
+        RegisterNet("AntiAfksenBypassGroups", function(len)
             AdminPanelGroups_view:Clear()
             table.Empty(WhitelistedGroup)
             table.Empty(WhitelistedGroupBtn)
@@ -1055,10 +1065,11 @@ local function NNTAntiafkAdminPanel(data)
             SelectedGroups = value
         end
     else
-        net.Start("AntiAfkloaBypassGroups")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkloaBypassGroups")
         net.SendToServer()
 
-        net.Receive("AntiAfksenBypassGroups", function(len)
+        RegisterNet("AntiAfksenBypassGroups", function(len)
             AdminPanelGroups_view:Clear()
             table.Empty(WhitelistedGroup)
             table.Empty(WhitelistedGroupBtn)
@@ -1111,7 +1122,8 @@ local function NNTAntiafkAdminPanel(data)
             return
         end
 
-        net.Start("AntiAddBypassGroups")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAddBypassGroups")
         net.WriteString(SelectedGroups)
         net.SendToServer()
     end
@@ -1126,7 +1138,8 @@ local function NNTAntiafkAdminPanel(data)
 
     delbutton.DoClick = function()
         surface.PlaySound("ui/buttonclick.wav")
-        net.Start("AntiRemBypassGroups")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiRemBypassGroups")
         net.WriteString(tagroups)
         net.SendToServer()
     end
@@ -1263,7 +1276,29 @@ end
                                                                                          |  $$$$$$/
                                                                                           \______/
 ]]
-net.Receive("AntiAfkSendHUDInfo", function()
+
+
+// lua switch statement alternative
+local NetSwitch = {
+    case = function(self,case)
+        if (self[case]) then self[case]() else self.default() end
+    end,
+    default = function() print("Tried to use a non registered netName") end
+}
+
+// Create a function to register net in the netswitch
+local function RegisterNet(netname, func)
+    NetSwitch[netname] = func
+end
+
+
+net.Receive("NNT:AntiAFK:Main",function(len,ply)
+    local netName = net.ReadString()
+    NetSwitch:case(netName)
+end)
+
+
+RegisterNet("AntiAfkSendHUDInfo", function()
     local data1 = net.ReadString()
 
     if (data1 == "AntiafkAdminSetAfk") then
@@ -1288,7 +1323,7 @@ net.Receive("AntiAfkSendHUDInfo", function()
     end
 end)
 
-net.Receive("BroadcastAFKPLAYER", function()
+RegisterNet("BroadcastAFKPLAYER", function()
     local data2 = net.ReadTable()
 
     if data2["AFKSTATE"] == true then
@@ -1302,7 +1337,7 @@ net.Receive("BroadcastAFKPLAYER", function()
     chat.AddText(Color(255, 255, 255), "[ANTI-AFK]: ", Color(0, 198, 0), data2["PlayerName"], afkcolor, " ", afktext)
 end)
 
-net.Receive("nnt-antiak-settings", function()
+RegisterNet("nnt-antiak-settings", function()
     local data5 = net.ReadString()
     local data4 = net.ReadTable()
 

@@ -150,7 +150,8 @@ NNT.ANTI_AFK = {
         self.AFK_StopTimeMinutes = math.Round(self.Config.TimeSettings.StopMinutes)
 
         if not ply == nil and ply:IsValid() then
-            net.Start("nnt-antiak-settings")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("nnt-antiak-settings")
 
             local temptable = {
                 ["WARN"] = self.AFK_WARN_TIME,
@@ -178,7 +179,8 @@ NNT.ANTI_AFK = {
         end
 
         if #player.GetAll() > 0 then
-            net.Start("AntiAfkSendHUDInfo")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("AntiAfkSendHUDInfo")
             net.WriteString(self.AFK_THEME)
             net.Broadcast()
         end
@@ -231,7 +233,7 @@ NNT.ANTI_AFK = {
                 local TempTable = {}
 
                 for k, v in pairs(tmp.UsersBypass) do
-                    if not (k == data) then
+                    if k ~= data then
                         TempTable[k] = v
                     end
                 end
@@ -293,7 +295,8 @@ function PlyMeta:SetAFK(bool)
             self.GodModeAFK = false
         end
 
-        net.Start("BroadcastAFKPLAYER")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("BroadcastAFKPLAYER")
         net.WriteTable(temporytable)
         net.Broadcast()
 
@@ -344,7 +347,8 @@ function PlyMeta:SetAFK(bool)
             self.GodModeAFK = true
         end
 
-        net.Start("BroadcastAFKPLAYER")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("BroadcastAFKPLAYER")
         net.WriteTable(temporytable)
         net.Broadcast()
     elseif bool == nil then
@@ -374,7 +378,8 @@ function PlyMeta:SPSetAFK(bool)
             ["AFKSTATE"] = self.SuperAbuse
         }
 
-        net.Start("BroadcastAFKPLAYER")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("BroadcastAFKPLAYER")
         net.WriteTable(temporytable)
         net.Broadcast()
     elseif bool == true then
@@ -385,7 +390,8 @@ function PlyMeta:SPSetAFK(bool)
             ["AFKSTATE"] = self.SuperAbuse
         }
 
-        net.Start("BroadcastAFKPLAYER")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("BroadcastAFKPLAYER")
         net.WriteTable(temporytable)
         net.Broadcast()
     elseif bool == nil then
@@ -404,13 +410,40 @@ end
 --                                                                                        $$\   $$ |
 --                                                                                        \$$$$$$  |
 --                                                                                         \______/ 
-net.Receive("AFKHUD2", function(len, ply)
-    net.Start("AFKHUDR")
+util.AddNetworkString("NNT:AntiAFK:Main")
+
+-- lua switch statement alternative
+local NetSwitch = {
+    case = function(self, case)
+        if (self[case]) then
+            self[case]()
+        else
+            self.default()
+        end
+    end,
+    default = function()
+        print("Tried to use a non registered netName")
+    end
+}
+
+-- Create a function to register net in the netswitch
+local function RegisterNet(netname, func)
+    NetSwitch[netname] = func
+end
+
+net.Receive("NNT:AntiAFK:Main", function(len, ply)
+    local netName = net.ReadString()
+    NetSwitch:case(netName)
+end)
+
+RegisterNet("AFKHUD2", function(len, ply)
+    net.Start("NNT:AntiAFK:Main")
+    net.WriteString("AFKHUDR")
     net.WriteString(math.Round(ply:GetNextAFK() - CurTime()))
     net.Send(ply)
 end)
 
-net.Receive("nnt-antiak-settings", function(len, ply)
+RegisterNet("nnt-antiak-settings", function(len, ply)
     if ply:IsSuperAdmin() then
         local data5 = net.ReadTable()
         local data4 = net.ReadString()
@@ -418,7 +451,8 @@ net.Receive("nnt-antiak-settings", function(len, ply)
         if data4 == "SetSettings" then
             for k, v in pairs(data5) do
                 NNT.ANTI_AFK:SetConfig("Settings", k, v)
-                net.Start("nnt-antiak-settings")
+                net.Start("NNT:AntiAFK:Main")
+                net.WriteString("nnt-antiak-settings")
 
                 local temptable = {
                     [k] = v
@@ -430,7 +464,8 @@ net.Receive("nnt-antiak-settings", function(len, ply)
             end
         elseif data4 == "LoadData" then
             print("[ANTI-AFK] : Starting to load data")
-            net.Start("nnt-antiak-settings")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("nnt-antiak-settings")
 
             local temptable = {
                 ["WARN"] = NNT.ANTI_AFK.AFK_WARN_TIME,
@@ -456,7 +491,8 @@ net.Receive("nnt-antiak-settings", function(len, ply)
             net.WriteTable(temptable)
             net.Send(ply)
         elseif data4 == "LoadAFKTime" then
-            net.Start("nnt-antiak-settings")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("nnt-antiak-settings")
             net.WriteString("LoadAFKTime")
 
             net.WriteTable({
@@ -466,7 +502,8 @@ net.Receive("nnt-antiak-settings", function(len, ply)
             net.Send(ply)
         end
     else
-        net.Start("AntiAfkSendHUDInfo")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkSendHUDInfo")
         net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
@@ -474,18 +511,20 @@ net.Receive("nnt-antiak-settings", function(len, ply)
 end)
 
 -- ADD USER TO THE USERS WHITELIST
-net.Receive("AntiAddBypassUsers", function(len, ply)
+RegisterNet("AntiAddBypassUsers", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
         if string.StartWith(SomeShittyTest, " ") then return end
         if SomeShittyTest == "" then return end
         if NNT.ANTI_AFK.AFK_ADMINBYPASS_USERS[SomeShittyTest] then return end
         NNT.ANTI_AFK:SetConfig("UsersBypass", "ADD", SomeShittyTest)
-        net.Start("AntiAfksenBypassUsers")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfksenBypassUsers")
         net.WriteTable(NNT.ANTI_AFK.AFK_ADMINBYPASS_USERS)
         net.Send(ply)
     else
-        net.Start("AntiAfkSendHUDInfo")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkSendHUDInfo")
         net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
@@ -493,15 +532,17 @@ net.Receive("AntiAddBypassUsers", function(len, ply)
 end)
 
 -- REMOVE USER FROM THE WHITE LIST
-net.Receive("AntiRemBypassUsers", function(len, ply)
+RegisterNet("AntiRemBypassUsers", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
         NNT.ANTI_AFK:SetConfig("UsersBypass", "DEL", SomeShittyTest)
-        net.Start("AntiAfksenBypassUsers")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfksenBypassUsers")
         net.WriteTable(NNT.ANTI_AFK.AFK_ADMINBYPASS_USERS)
         net.Send(ply)
     else
-        net.Start("AntiAfkSendHUDInfo")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkSendHUDInfo")
         net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
@@ -509,13 +550,15 @@ net.Receive("AntiRemBypassUsers", function(len, ply)
 end)
 
 -- LOAD USER FROM THE WHITELIST
-net.Receive("AntiAfkloaBypassUsers", function(len, ply)
+RegisterNet("AntiAfkloaBypassUsers", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
-        net.Start("AntiAfksenBypassUsers")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfksenBypassUsers")
         net.WriteTable(NNT.ANTI_AFK.AFK_ADMINBYPASS_USERS)
         net.Send(ply)
     else
-        net.Start("AntiAfkSendHUDInfo")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkSendHUDInfo")
         net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
@@ -523,18 +566,20 @@ net.Receive("AntiAfkloaBypassUsers", function(len, ply)
 end)
 
 -- ADD GROUPS TO THE GROUPS WHITELIST
-net.Receive("AntiAddBypassGroups", function(len, ply)
+RegisterNet("AntiAddBypassGroups", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
         if string.StartWith(SomeShittyTest, " ") then return end
         if SomeShittyTest == "" then return end
         if table.HasValue(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS, SomeShittyTest) then return end
         NNT.ANTI_AFK:SetConfig("BypassGroups", "ADD", SomeShittyTest)
-        net.Start("AntiAfksenBypassGroups")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfksenBypassGroups")
         net.WriteTable(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
-        net.Start("AntiAfkSendHUDInfo")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkSendHUDInfo")
         net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
@@ -542,15 +587,17 @@ net.Receive("AntiAddBypassGroups", function(len, ply)
 end)
 
 -- REMOVE GROUPS FROM THE GROUPS WHITELIST
-net.Receive("AntiRemBypassGroups", function(len, ply)
+RegisterNet("AntiRemBypassGroups", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
         SomeShittyTest = net.ReadString()
         NNT.ANTI_AFK:SetConfig("BypassGroups", "DEL", SomeShittyTest)
-        net.Start("AntiAfksenBypassGroups")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfksenBypassGroups")
         net.WriteTable(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
-        net.Start("AntiAfkSendHUDInfo")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkSendHUDInfo")
         net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
@@ -558,13 +605,15 @@ net.Receive("AntiRemBypassGroups", function(len, ply)
 end)
 
 -- LOAD GROUPS FROM THE GROUPS WHITELIST
-net.Receive("AntiAfkloaBypassGroups", function(len, ply)
+RegisterNet("AntiAfkloaBypassGroups", function(len, ply)
     if (ply:GetUserGroup() == "superadmin") then
-        net.Start("AntiAfksenBypassGroups")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfksenBypassGroups")
         net.WriteTable(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
     else
-        net.Start("AntiAfkSendHUDInfo")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkSendHUDInfo")
         net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
@@ -624,7 +673,8 @@ concommand.Add("setafkplayer", function(ply, _, args)
             end
         end
     else
-        net.Start("AntiAfkSendHUDInfo")
+        net.Start("NNT:AntiAFK:Main")
+        net.WriteString("AntiAfkSendHUDInfo")
         net.WriteString("AccessDeniedError")
         net.Send(ply)
         ply:ChatPrint("[ANTI-AFK] : U are not a SuperAdmin !")
@@ -641,7 +691,8 @@ end)
 -- \__|  \__| \______/  \______/ \__|  \__|
 hook.Add("PlayerInitialSpawn", "MakeAFKVarAndSendLanguage", function(ply)
     ply:SetNextAFK(NNT.ANTI_AFK.AFK_TIME)
-    net.Start("nnt-antiak-settings")
+    net.Start("NNT:AntiAFK:Main")
+    net.WriteString("nnt-antiak-settings")
     net.WriteString("LoadAFKTime")
 
     net.WriteTable({
@@ -676,7 +727,8 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
 
                             return
                         else
-                            net.Start("AntiAfkSendHUDInfo")
+                            net.Start("NNT:AntiAFK:Main")
+                            net.WriteString("AntiAfkSendHUDInfo")
                             net.WriteString("AntiafkMainHUD")
                             net.Send(ply)
                             NNT.ANTI_AFK.AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
@@ -688,7 +740,8 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                     end
                 elseif table.HasValue(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
                     if NNT.ANTI_AFK.AFK_ADMINBYPASS == false then
-                        net.Start("AntiAfkSendHUDInfo")
+                        net.Start("NNT:AntiAFK:Main")
+                        net.WriteString("AntiAfkSendHUDInfo")
                         net.WriteString("AntiafkMainHUD")
                         net.Send(ply)
                         NNT.ANTI_AFK.AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
@@ -700,7 +753,8 @@ hook.Add("Think", "NNT-AFKPLAYERS", function()
                 else
                     print("[ANTI-AFK]" .. ply:Name() .. "est maintenant AFK !")
                     ply:SetAFK(true)
-                    net.Start("AntiAfkSendHUDInfo")
+                    net.Start("NNT:AntiAFK:Main")
+                    net.WriteString("AntiAfkSendHUDInfo")
                     net.WriteString("AntiafkMainHUD")
                     net.Send(ply)
                     NNT.ANTI_AFK.AntiAFKPlayerEyesTrack[ply:SteamID()] = ply:GetAimVector()
@@ -737,13 +791,15 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, _)
             if NNT.ANTI_AFK.AFK_ADMINBYPASS_USERS[ply:SteamID()] and (not ply:SPIsAFK()) and (not ply:IsAFK()) then
                 if NNT.ANTI_AFK.AFK_ADMINUBYPASS == false then
                     if table.HasValue(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS, ply:GetUserGroup()) and (not ply:SPIsAFK()) and (not ply:IsAFK()) and not NNT.ANTI_AFK.AFK_ADMINBYPASS then
-                        net.Start("AFKHUD1")
+                        net.Start("NNT:AntiAFK:Main")
+                        net.WriteString("AFKHUD1")
                         net.WriteString("true")
                         net.Send(ply)
 
                         return
                     else
-                        net.Start("AFKHUD1")
+                        net.Start("NNT:AntiAFK:Main")
+                        net.WriteString("AFKHUD1")
                         net.WriteString("true")
                         net.Send(ply)
 
@@ -753,7 +809,8 @@ hook.Add("KeyPress", "NNT-AFK-PlayerMoved", function(ply, _)
                     return
                 end
             else
-                net.Start("AFKHUD1")
+                net.Start("NNT:AntiAFK:Main")
+                net.WriteString("AFKHUD1")
                 net.WriteString("true")
                 net.Send(ply)
             end
@@ -772,12 +829,14 @@ hook.Add("PlayerSay", "Antiafkcommand", function(ply, text, _)
         commands = "/setafk"
 
         if (ply:GetUserGroup() == "superadmin") then
-            net.Start("AntiAfkSendHUDInfo")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("AntiAfkSendHUDInfo")
             net.WriteString("AntiafkAdminSetAfk")
             net.Send(ply)
             hook.Call("NNT-ANTIAFK_Command", GAMEMODE, ply, commands)
         else
-            net.Start("AntiAfkSendHUDInfo")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("AntiAfkSendHUDInfo")
             net.WriteString("AccessDeniedError")
             net.Send(ply)
             ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
@@ -789,12 +848,14 @@ hook.Add("PlayerSay", "Antiafkcommand", function(ply, text, _)
         commands = "/afkpanel"
 
         if (ply:GetUserGroup() == "superadmin") then
-            net.Start("AntiAfkSendHUDInfo")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("AntiAfkSendHUDInfo")
             net.WriteString("AntiafkAdminPanel")
             net.Send(ply)
             hook.Call("NNT-ANTIAFK_Command", GAMEMODE, ply, commands)
         else
-            net.Start("AntiAfkSendHUDInfo")
+            net.Start("NNT:AntiAFK:Main")
+            net.WriteString("AntiAfkSendHUDInfo")
             net.WriteString("AccessDeniedError")
             net.Send(ply)
             ply:ChatPrint("[ANTI-AFK] : You don't have the permission to accces the panel !")
