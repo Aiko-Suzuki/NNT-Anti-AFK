@@ -494,7 +494,7 @@ end)
 
 -- REMOVE USER FROM THE WHITE LIST
 net.Receive("AntiRemBypassUsers", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
+    if ply:IsSuperAdmin() then
         SomeShittyTest = net.ReadString()
         NNT.ANTI_AFK:SetConfig("UsersBypass", "DEL", SomeShittyTest)
         net.Start("AntiAfksenBypassUsers")
@@ -510,7 +510,7 @@ end)
 
 -- LOAD USER FROM THE WHITELIST
 net.Receive("AntiAfkloaBypassUsers", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
+    if ply:IsSuperAdmin() then
         net.Start("AntiAfksenBypassUsers")
         net.WriteTable(NNT.ANTI_AFK.AFK_ADMINBYPASS_USERS)
         net.Send(ply)
@@ -524,7 +524,7 @@ end)
 
 -- ADD GROUPS TO THE GROUPS WHITELIST
 net.Receive("AntiAddBypassGroups", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
+    if ply:IsSuperAdmin() then
         SomeShittyTest = net.ReadString()
         if string.StartWith(SomeShittyTest, " ") then return end
         if SomeShittyTest == "" then return end
@@ -543,7 +543,7 @@ end)
 
 -- REMOVE GROUPS FROM THE GROUPS WHITELIST
 net.Receive("AntiRemBypassGroups", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
+    if ply:IsSuperAdmin() then
         SomeShittyTest = net.ReadString()
         NNT.ANTI_AFK:SetConfig("BypassGroups", "DEL", SomeShittyTest)
         net.Start("AntiAfksenBypassGroups")
@@ -559,7 +559,7 @@ end)
 
 -- LOAD GROUPS FROM THE GROUPS WHITELIST
 net.Receive("AntiAfkloaBypassGroups", function(len, ply)
-    if (ply:GetUserGroup() == "superadmin") then
+    if ply:IsSuperAdmin() then
         net.Start("AntiAfksenBypassGroups")
         net.WriteTable(NNT.ANTI_AFK.AFK_ADMINBYPASS_GROUPS)
         net.Send(ply)
@@ -588,7 +588,7 @@ end)
 
 -- need to change this in net library ...
 concommand.Add("setafkplayer", function(ply, _, args)
-    if (ply:GetUserGroup() == "superadmin") then
+    if ply:IsSuperAdmin() then
         if args[1] == "NULL" then
             ply:ChatPrint("[ANTI-AFK] : Player not found or missing args !")
 
@@ -771,7 +771,7 @@ hook.Add("PlayerSay", "Antiafkcommand", function(ply, text, _)
     elseif (string.StartWith(text, "/setafk") or zthen) then
         commands = "/setafk"
 
-        if (ply:GetUserGroup() == "superadmin") then
+        if ply:IsSuperAdmin() then
             net.Start("AntiAfkSendHUDInfo")
             net.WriteString("AntiafkAdminSetAfk")
             net.Send(ply)
@@ -788,7 +788,7 @@ hook.Add("PlayerSay", "Antiafkcommand", function(ply, text, _)
     elseif (string.StartWith(text, "/afkpanel") == true) then
         commands = "/afkpanel"
 
-        if (ply:GetUserGroup() == "superadmin") then
+        if ply:IsSuperAdmin() then
             net.Start("AntiAfkSendHUDInfo")
             net.WriteString("AntiafkAdminPanel")
             net.Send(ply)
